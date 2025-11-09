@@ -73,7 +73,7 @@ const Header = () => {
                             <i className="fa-solid fa-chevron-down"></i>
                           </Link>
                           <ul className="submenu">
-                            <li><Link href="/destination">our Destination</Link></li>
+                            <li><Link href="/destinations">All Destinations</Link></li>
                             <li><Link href="/destination-details">Destination Details</Link></li>
                           </ul>
                         </li>

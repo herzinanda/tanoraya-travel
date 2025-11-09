@@ -1,10 +1,12 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { Dancing_Script, Manrope } from "next/font/google";
-import './globals.css';
-import Script from 'next/script';
-import Header from '@/component/main/layout/Header';
-import Footer from '@/component/main/layout/Footer';
+import "./globals.css";
+import Script from "next/script";
+import Header from "@/component/main/layout/Header";
+import Footer from "@/component/main/layout/Footer";
+import SearchArea from "@/component/main/layout/SearchArea";
+import OffcanvasMenu from "@/component/main/layout/OffcanvasMenu";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -19,7 +21,8 @@ const dancingScript = Dancing_Script({
 
 export const metadata: Metadata = {
   title: "Tanoraya Travel",
-  description: "Explore the world with Tanoraya Travel - Your gateway to unforgettable journeys and adventures.",
+  description:
+    "Explore the world with Tanoraya Travel - Your gateway to unforgettable journeys and adventures.",
 };
 
 export default function RootLayout({
@@ -32,7 +35,7 @@ export default function RootLayout({
       <head>
         {/* Favicon */}
         <link rel="shortcut icon" href="/img/favicon.svg" />
-        
+
         {/* Template CSS */}
         <link rel="stylesheet" href="/css/all.min.css" />
         <link rel="stylesheet" href="/css/animate.css" />
@@ -45,36 +48,30 @@ export default function RootLayout({
       </head>
       <body className={`${manrope.variable} ${dancingScript.variable}`}>
         {/* Preloader */}
-        {/* <Preloader /> */}
-        
-        {/* Mouse Cursor (Optional, JS-heavy) */}
-        {/* <div className="mouse-cursor cursor-outer"></div>
-        <div className="mouse-cursor cursor-inner"></div> */}
-        
-        {/* Back To Top Button */}
-        {/* <BackToTop /> */}
-        
-        {/* Offcanvas Menu */}
-        {/* <OffcanvasMenu /> */}
 
-        {/* Search Area */}
-        {/* <SearchPopup /> */}
+        {/* <PreLoader /> */}
+        {/* Mouse Cursor (Optional, JS-heavy) */}
+        <div className="mouse-cursor cursor-outer"></div>
+        <div className="mouse-cursor cursor-inner"></div>
+        <OffcanvasMenu />
+        <SearchArea />
 
         {/* Header */}
         <Header />
-        
+
         {/* Page Content */}
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
 
         {/* Footer */}
         <Footer />
-        
+
         {/* Template JS */}
         <Script src="/js/jquery-3.7.1.min.js" strategy="beforeInteractive" />
         <Script src="/js/viewport.jquery.js" strategy="beforeInteractive" />
-        <Script src="/js/bootstrap.bundle.min.js" strategy="beforeInteractive" />
+        <Script
+          src="/js/bootstrap.bundle.min.js"
+          strategy="beforeInteractive"
+        />
         <Script src="/js/jquery.nice-select.min.js" strategy="lazyOnload" />
         <Script src="/js/jquery.waypoints.js" strategy="lazyOnload" />
         <Script src="/js/jquery.counterup.min.js" strategy="lazyOnload" />
@@ -84,7 +81,6 @@ export default function RootLayout({
         <Script src="/js/wow.min.js" strategy="lazyOnload" />
         {/* main.js is last as it depends on the others */}
         <Script src="/js/main.js" strategy="lazyOnload" />
-
       </body>
     </html>
   );
