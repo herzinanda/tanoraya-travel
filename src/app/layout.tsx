@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { Dancing_Script, Manrope } from "next/font/google";
-import "./globals.css";
+import "./(main)/globals.css";
 import Script from "next/script";
 import Header from "@/component/main/layout/Header";
 import Footer from "@/component/main/layout/Footer";
