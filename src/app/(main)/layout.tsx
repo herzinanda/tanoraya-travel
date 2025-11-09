@@ -2,6 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import type { Metadata } from "next";
 import { Dancing_Script, Manrope } from "next/font/google";
 import './globals.css';
+import Script from 'next/script';
+import Header from '@/component/main/layout/Header';
+import Footer from '@/component/main/layout/Footer';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -26,8 +29,62 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} ${dancingScript.variable} bg-white text-gray-900`}>
-        {children}
+      <head>
+        {/* Favicon */}
+        <link rel="shortcut icon" href="/img/favicon.svg" />
+        
+        {/* Template CSS */}
+        <link rel="stylesheet" href="/css/all.min.css" />
+        <link rel="stylesheet" href="/css/animate.css" />
+        <link rel="stylesheet" href="/css/magnific-popup.css" />
+        <link rel="stylesheet" href="/css/meanmenu.css" />
+        <link rel="stylesheet" href="/css/swiper-bundle.min.css" />
+        <link rel="stylesheet" href="/css/nice-select.css" />
+        <link rel="stylesheet" href="/css/flacticon.css" />
+        <link rel="stylesheet" href="/css/main.css" />
+      </head>
+      <body className={`${manrope.variable} ${dancingScript.variable}`}>
+        {/* Preloader */}
+        {/* <Preloader /> */}
+        
+        {/* Mouse Cursor (Optional, JS-heavy) */}
+        {/* <div className="mouse-cursor cursor-outer"></div>
+        <div className="mouse-cursor cursor-inner"></div> */}
+        
+        {/* Back To Top Button */}
+        {/* <BackToTop /> */}
+        
+        {/* Offcanvas Menu */}
+        {/* <OffcanvasMenu /> */}
+
+        {/* Search Area */}
+        {/* <SearchPopup /> */}
+
+        {/* Header */}
+        <Header />
+        
+        {/* Page Content */}
+        <main>
+          {children}
+        </main>
+
+        {/* Footer */}
+        <Footer />
+        
+        {/* Template JS */}
+        <Script src="/js/jquery-3.7.1.min.js" strategy="beforeInteractive" />
+        <Script src="/js/viewport.jquery.js" strategy="beforeInteractive" />
+        <Script src="/js/bootstrap.bundle.min.js" strategy="beforeInteractive" />
+        <Script src="/js/jquery.nice-select.min.js" strategy="lazyOnload" />
+        <Script src="/js/jquery.waypoints.js" strategy="lazyOnload" />
+        <Script src="/js/jquery.counterup.min.js" strategy="lazyOnload" />
+        <Script src="/js/swiper-bundle.min.js" strategy="lazyOnload" />
+        <Script src="/js/jquery.meanmenu.min.js" strategy="lazyOnload" />
+        <Script src="/js/jquery.magnific-popup.min.js" strategy="lazyOnload" />
+        <Script src="/js/wow.min.js" strategy="lazyOnload" />
+        {/* main.js is last as it depends on the others */}
+        <Script src="/js/main.js" strategy="lazyOnload" />
+
       </body>
     </html>
   );
