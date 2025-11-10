@@ -102,17 +102,13 @@ const Header = ({
                 </Link>
               </div>
 
-              <div className="">
+              <div className="header-right d-flex justify-content-end align-items-center">
                 <div className="mean__menu-wrapper">
                   <div className="main-menu">
                     {/* Dynamic Navigation */}
                     <NavigationMenu items={navItems} />
                   </div>
                 </div>
-              </div>
-
-              <div className="header-right d-flex justify-content-end align-items-center">
-                
 
                 <a href="#" className="search-trigger search-icon">
                   <i className="fa-regular fa-magnifying-glass"></i>
