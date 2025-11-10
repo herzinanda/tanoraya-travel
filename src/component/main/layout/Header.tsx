@@ -1,30 +1,85 @@
-"use client"; // Header is a client component due to interactive elements (menu, search)
+"use client"; // This remains a client component for interactivity
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types";
+import NavigationMenu from "./NavigationMenu"; // Import our new component
 
-const Header = () => {
+// Define the props our Header will accept
+type HeaderProps = {
+  logo: LogoData;
+  contactInfo: ContactInfo;
+  socials: SocialLink[];
+  navItems: NavItem[];
+  ctaButton: CtaButton;
+};
+
+const Header = ({
+  logo,
+  contactInfo,
+  socials,
+  navItems,
+  ctaButton,
+}: HeaderProps) => {
+  
+  // --- Client-Side Logic ---
+
+  // State for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Effect for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.getElementById("header-sticky");
+      if (header) {
+        if (window.scrollY > 100) {
+          header.classList.add("sticky");
+        } else {
+          header.classList.remove("sticky");
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    // Cleanup function
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // --- JSX ---
+  
   return (
     <>
       {/* header-top */}
       <div className="header-top-section">
         <div className="container">
-          <div className="header-top-wrapper bg-cover" style={{ backgroundImage: 'url(/img/header/1.jpg)' }}>
+          <div
+            className="header-top-wrapper bg-cover"
+            style={{ backgroundImage: "url(/img/header/1.jpg)" }}
+          >
+            {/* Dynamic Contact Info */}
             <ul className="top-left">
               <li>
                 <i className="fa-solid fa-envelope"></i>
-                <a href="mailto:info-help@travo.com">info-help@travo.com</a>
+                <a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a>
               </li>
               <li>
                 <i className="fa-solid fa-location-dot"></i>
-                258 Street Avenue, Berlin, Germany
+                {contactInfo.address}
               </li>
             </ul>
+            
+            {/* Dynamic Socials */}
             <ul className="top-right">
-              <li><a href="#"><i className="fab fa-facebook-f"></i></a></li>
-              <li><a href="#"><i className="fab fa-twitter"></i></a></li>
-              <li><a href="#"><i className="fab fa-linkedin-in"></i></a></li>
-              <li><a href="#"><i className="fab fa-instagram"></i></a></li>
+              {socials.map((social) => (
+                <li key={social.id}>
+                  <a href={social.href}>
+                    <i className={social.iconClass}></i>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -35,90 +90,68 @@ const Header = () => {
         <div className="container">
           <div className="mega-menu-wrapper">
             <div className="header-main">
+              {/* Dynamic Logo */}
               <div className="logo">
                 <Link href="/" className="header-logo">
-                  <Image src="/img/logo/black-logo.svg" alt="logo-img" width={140} height={35} />
+                  <Image
+                    src={logo.src}
+                    alt={logo.alt}
+                    width={logo.width}
+                    height={logo.height}
+                  />
                 </Link>
               </div>
-              <div className="header-right d-flex justify-content-end align-items-center">
+
+              <div className="">
                 <div className="mean__menu-wrapper">
                   <div className="main-menu">
-                    <nav id="mobile-menu">
-                      <ul>
-                        <li className="has-dropdown active menu-thumb">
-                          <Link href="/">
-                            Home
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </Link>
-                          <ul className="submenu has-homemenu">
-                            <li>
-                              {/* ... (omitted for brevity, paste your HTML dropdown here) ... */}
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="has-dropdown active d-xl-none">
-                            <Link href="/">Home</Link>
-                            <ul className="submenu">
-                                <li><Link href="/">Home 01</Link></li>
-                                <li><Link href="/index-2">Home 02</Link></li>
-                                <li><Link href="/index-3">Home 03</Link></li>
-                            </ul>
-                        </li>
-                        <li>
-                          <Link href="/about">About Us</Link>
-                        </li>
-                        <li>
-                          <Link href="/destination-details">
-                            Destinations
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </Link>
-                          <ul className="submenu">
-                            <li><Link href="/destinations">All Destinations</Link></li>
-                            <li><Link href="/destination-details">Destination Details</Link></li>
-                          </ul>
-                        </li>
-                        <li className="has-dropdown">
-                          <Link href="/news">
-                            Pages
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </Link>
-                          <ul className="submenu">
-                            {/* ... (omitted, paste your HTML dropdown here) ... */}
-                          </ul>
-                        </li>
-                        <li>
-                          <Link href="/news-details">
-                            Blog
-                            <i className="fa-solid fa-chevron-down"></i>
-                          </Link>
-                          <ul className="submenu">
-                            <li><Link href="/news">Blog Grid</Link></li>
-                            <li><Link href="/news-classic">Blog Classic</Link></li>
-                            <li><Link href="/news-details">Blog Details</Link></li>
-                          </ul>
-                        </li>
-                        <li>
-                          <Link href="/contact">Contact Us</Link>
-                        </li>
-                      </ul>
-                    </nav>
+                    {/* Dynamic Navigation */}
+                    <NavigationMenu items={navItems} />
                   </div>
                 </div>
-                <a href="#" className="search-trigger search-icon"><i className="fa-regular fa-magnifying-glass"></i></a>
+              </div>
+
+              <div className="header-right d-flex justify-content-end align-items-center">
+                
+
+                <a href="#" className="search-trigger search-icon">
+                  <i className="fa-regular fa-magnifying-glass"></i>
+                </a>
+
+                {/* Mobile Menu Toggle */}
                 <div className="header__hamburger my-auto">
-                  <div className="sidebar__toggle">
-                    <Image src="/img/icon/bars.svg" alt="img" width={24} height={24} />
+                  <div 
+                    className="sidebar__toggle" 
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  >
+                    <Image
+                      src="/img/icon/bars.svg"
+                      alt="menu toggle"
+                      width={24}
+                      height={24}
+                    />
                   </div>
                 </div>
-                <Link href="/contact" className="theme-btn">
-                  Request A Quote
-                  <Image src="/img/icon/white-arrow.svg" alt="img" width={12} height={12} />
+
+                {/* Dynamic CTA Button */}
+                <Link href={ctaButton.href} className="theme-btn">
+                  {ctaButton.label}
+                  <Image
+                    src="/img/icon/white-arrow.svg"
+                    alt="arrow icon"
+                    width={12}
+                    height={12}
+                  />
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* You would also need to build the mobile menu/sidebar component 
+        that toggles based on the `isMobileMenuOpen` state.
+      */}
     </>
   );
 };

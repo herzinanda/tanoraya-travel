@@ -8,6 +8,14 @@ import Footer from "@/component/main/layout/Footer";
 import SearchArea from "@/component/main/layout/SearchArea";
 import OffcanvasMenu from "@/component/main/layout/OffcanvasMenu";
 
+import {
+  logo,
+  contactInfo,
+  socialLinks,
+  navItems,
+  ctaButton,
+} from "@/data/headerData";
+
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -57,7 +65,13 @@ export default function RootLayout({
         <SearchArea />
 
         {/* Header */}
-        <Header />
+        <Header
+          logo={logo}
+          contactInfo={contactInfo}
+          socials={socialLinks}
+          navItems={navItems}
+          ctaButton={ctaButton}
+        />
 
         {/* Page Content */}
         <main>{children}</main>
