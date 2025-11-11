@@ -1,3 +1,12 @@
+import { StaticImageData } from 'next/image';
+
+// Generic type for images
+export type ImageType = {
+  src: string | StaticImageData;
+  alt: string;
+};
+
+
 export type NavItem = {
   id: string;
   label: string;
