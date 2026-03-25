@@ -1,3 +1,10 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'About Us',
+  description: 'Learn about Tanoraya Travel — our story, team, and commitment to delivering unforgettable travel experiences across Indonesia and Southeast Asia.',
+}
+
 import AboutSection from '@/component/main/about/AboutSection'
 import AchievementSection from '@/component/main/about/AchievementSection'
 import TeamSection from '@/component/main/about/TeamSection'

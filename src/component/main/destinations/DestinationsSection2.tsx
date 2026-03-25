@@ -1,169 +1,76 @@
-import Image from "next/image";
-import React from "react";
+import Link from 'next/link'
+import { getDestinations } from '@/data/loader'
+import { StrapiImage } from '@/component/main/home/StrapiImage'
 
-const DestinationsSection2 = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapDestination(item: any) {
+  const img = item.destinationImages ?? null
+
+  return {
+    id: item.documentId || item.id,
+    title: item.title || '',
+    destinationUrl: item.destinationUrl || '',
+    tourCount: Array.isArray(item.tour_packages) ? item.tour_packages.length : 0,
+    imgUrl: img?.url || null,
+    imgAlt: img?.alternativeText || item.title || 'Destination',
+  }
+}
+
+const DestinationsSection2 = async () => {
+  let destinations: ReturnType<typeof mapDestination>[] = []
+
+  try {
+    const response = await getDestinations()
+    if (response?.data && Array.isArray(response.data)) {
+destinations = response.data.map(mapDestination)
+    }
+  } catch (error) {
+    console.error('Failed to fetch destinations:', error)
+  }
+
   return (
-    <>
-      <section className="destination-section2 section-padding fix">
-        <div className="container">
-          <div className="section-title text-center">
-            <span className="sub-title wow fadeInUp">
-              We Care About Your Happiness
-            </span>
-            <h2 className="wow fadeInUp" data-wow-delay=".3s">
-              We Are Your Gateway <br /> to Adventure
-            </h2>
-          </div>
-          <div className="row g-4 section-padding">
+    <section className="destination-section2 section-padding fix">
+      <div className="container">
+        <div className="row g-4">
+          {destinations.map((dest, i) => (
             <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".2s"
+              key={dest.id}
+              className={`col-lg-4 col-md-6 wow fadeInUp`}
+              data-wow-delay={`${((i % 3) + 1) * 0.2}s`}
             >
-              <div className="destination-card-items2 mt-0">
+              <Link href={`/tour-packages/tour?destination=${dest.destinationUrl}`} className="destination-card-items2 mt-0">
                 <div className="thumb">
-                  <Image
-                    src="/img/destinations/5.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
+                  {dest.imgUrl ? (
+                    <StrapiImage
+                      src={dest.imgUrl}
+                      alt={dest.imgAlt}
+                      width={420}
+                      height={460}
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src="/img/destinations/5.jpg"
+                      alt={dest.imgAlt}
+                      width={420}
+                      height={460}
+                    />
+                  )}
                   <div className="destination-content">
                     <div className="content">
                       <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">Thailand</a>
-                      </h3>
+                      <h3>{dest.title}</h3>
                     </div>
-                    <span className="style-2">1 Tour</span>
+                    <span className="style-2">{dest.tourCount} Tour{dest.tourCount !== 1 ? 's' : ''}</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".4s"
-            >
-              <div className="destination-card-items2 mt-0">
-                <div className="thumb">
-                  <Image
-                    src="/img/destinations/6.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
-                  <div className="destination-content">
-                    <div className="content">
-                      <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">Manhattan</a>
-                      </h3>
-                    </div>
-                    <span className="style-2">1 Tour</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".6s"
-            >
-              <div className="destination-card-items2 mt-0">
-                <div className="thumb">
-                  <Image
-                    src="/img/destinations/7.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
-                  <div className="destination-content">
-                    <div className="content">
-                      <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">Pearland</a>
-                      </h3>
-                    </div>
-                    <span className="style-2">1 Tour</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".2s"
-            >
-              <div className="destination-card-items2 mt-0">
-                <div className="thumb">
-                  <Image
-                    src="/img/destinations/26.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
-                  <div className="destination-content">
-                    <div className="content">
-                      <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">Maldives</a>
-                      </h3>
-                    </div>
-                    <span className="style-2">1 Tour</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".4s"
-            >
-              <div className="destination-card-items2 mt-0">
-                <div className="thumb">
-                  <Image
-                    src="/img/destinations/9.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
-                  <div className="destination-content">
-                    <div className="content">
-                      <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">Switzerland</a>
-                      </h3>
-                    </div>
-                    <span className="style-2">1 Tour</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="col-lg-4 col-md-6 wow fadeInUp"
-              data-wow-delay=".6s"
-            >
-              <div className="destination-card-items2 mt-0">
-                <div className="thumb">
-                  <Image
-                    src="/img/destinations/10.jpg"
-                    alt=""
-                    width={420}
-                    height={460}
-                  />
-                  <div className="destination-content">
-                    <div className="content">
-                      <p>Travel To</p>
-                      <h3>
-                        <a href="destination-details.html">United Kingdom</a>
-                      </h3>
-                    </div>
-                    <span className="style-2">1 Tour</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
-    </>
-  );
-};
+      </div>
+    </section>
+  )
+}
 
-export default DestinationsSection2;
+export default DestinationsSection2

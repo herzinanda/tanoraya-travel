@@ -1,3 +1,86 @@
+/* ── Rich text article content ───────────────────────────────── */
+.rich-text-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+}
+
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+}
+
+.rich-text-content blockquote {
+  border-left: 4px solid var(--primary-color, #e8793a);
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+  background: #fdf8f5;
+  border-radius: 0 6px 6px 0;
+}
+
+.rich-text-content pre {
+  background: #f4f4f4;
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+
+.rich-text-content code {
+  background: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Remove template's auto-capitalize / sentence-case on form inputs */
+.form-clt input,
+.form-clt textarea {
+  text-transform: none !important;
+}
+
+/* ── Native <select> fix ──────────────────────────────────────
+   The template uses jQuery nice-select to style dropdowns, but
+   React components aren't touched by jQuery. This makes native
+   selects match the input/textarea styling from main.css.
+──────────────────────────────────────────────────────────── */
+.form-clt select {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(91, 91, 91, 0.5);
+  outline: none;
+  color: #5b5b5b;
+  padding: 16px 0;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: inherit;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  /* custom chevron */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235b5b5b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 24px;
+}
+
+.form-clt select:focus {
+  border-bottom-color: var(--primary-color, #e8793a);
+}
+
 .font-tanoraya {
   font-family: var(--font-manrope), sans-serif;
 }
@@ -2939,6 +3022,12 @@ span {
   margin-right: 50px;
   margin-top: 30px;
 }
+
+.faq-items .toggle-itinerary {
+  color: var(--theme);
+  
+}
+
 @media (max-width: 1199px) {
   .faq-items {
     margin-right: 0;
@@ -6413,7 +6502,7 @@ span {
 .swiper.imgSlider {
   position: relative;
   bottom: 150px;
-  left: 20px;
+  left: 0px;
 }
 @media (max-width: 1199px) {
   .swiper.imgSlider {
@@ -8833,3 +8922,279 @@ input.main-search-input::placeholder {
     border-left: none;
   }
 }/*# sourceMappingURL=main.css.map */
+
+/* ── Tour Detail Hero Info Panel ──────────────────────────────── */
+.tour-hero-info {
+  padding: 32px 36px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #f0ece8;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  height: 100%;
+}
+
+.tour-hero-location {
+  color: #e8793a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tour-hero-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+.tour-hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0ece8;
+}
+
+.tour-hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.tour-hero-meta span i {
+  color: #e8793a;
+  width: 16px;
+  text-align: center;
+}
+
+.tour-hero-meta span strong {
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+.tour-hero-desc {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.75;
+  margin-bottom: 8px;
+}
+
+.tour-hero-desc p { margin-bottom: 0.75rem; }
+.tour-hero-desc p:last-child { margin-bottom: 0; }
+
+@media (max-width: 991px) {
+  .tour-hero-info {
+    padding: 24px 20px;
+  }
+  .tour-hero-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .tour-hero-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* ── Navbar Mega Menu ─────────────────────────────────────────── */
+.nav-megamenu {
+  min-width: 520px !important;
+  padding: 24px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0 24px;
+  left: -80px !important;
+}
+
+.nav-megamenu__col {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-megamenu__col--featured {
+  /* spans both rows on the right side */
+}
+
+.nav-megamenu__heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--theme);
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0ece8;
+}
+
+.nav-megamenu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-megamenu__list li {
+  display: block !important;
+  width: 100%;
+  margin: 0 !important;
+}
+
+.nav-megamenu__dest-link {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 10px;
+  padding: 6px 0 !important;
+  line-height: 1.3 !important;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-megamenu__dest-link:hover {
+  color: var(--theme) !important;
+}
+
+.nav-megamenu__dest-thumb {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.nav-megamenu__dest-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-megamenu__dest-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-megamenu__dest-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--header);
+}
+
+.nav-megamenu__dest-link:hover .nav-megamenu__dest-title {
+  color: var(--theme);
+}
+
+.nav-megamenu__dest-count {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+}
+
+.nav-megamenu__view-all {
+  margin-top: 8px !important;
+}
+
+.nav-megamenu__view-all a {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--theme) !important;
+  line-height: 1.4 !important;
+}
+
+/* Featured tour card */
+.nav-megamenu__featured-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #f0ece8;
+  text-decoration: none;
+  transition: box-shadow 0.25s;
+}
+
+.nav-megamenu__featured-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.nav-megamenu__featured-img {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  flex-shrink: 0;
+  background: #f5f5f5;
+}
+
+.nav-megamenu__featured-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-megamenu__featured-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--theme);
+}
+
+.nav-megamenu__featured-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--header);
+  line-height: 1.35;
+}
+
+.nav-megamenu__featured-card:hover .nav-megamenu__featured-title {
+  color: var(--theme);
+}
+
+.nav-megamenu__featured-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--theme);
+}
+
+/* Footer row spanning both columns */
+.nav-megamenu__footer {
+  grid-column: 1 / -1;
+  padding-top: 14px;
+  margin-top: 8px;
+  border-top: 1px solid #f0ece8;
+}
+
+.nav-megamenu__all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--header) !important;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-megamenu__all-link:hover {
+  color: var(--theme) !important;
+}
+
+.nav-megamenu__all-link i {
+  font-size: 11px;
+  transition: transform 0.2s;
+}
+
+.nav-megamenu__all-link:hover i {
+  transform: translateX(3px);
+}

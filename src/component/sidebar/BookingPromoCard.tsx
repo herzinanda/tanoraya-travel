@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageType } from '@/types';
+import { ImageType } from '@/types/index';
 import Image from 'next/image';
 
 type BookingPromoCardProps = {

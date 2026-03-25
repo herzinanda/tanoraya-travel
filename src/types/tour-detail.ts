@@ -31,6 +31,21 @@ export type TourReviewSummary = {
   categories: TourReviewCategory[];
 };
 
+export type TourVariant = {
+  itinerary?: TourPlanItem[]
+  tour_facilities?: TourInfoItem[]
+}
+
+export type TourDeparture = {
+  id: string;
+  departureDate: string;
+  returnDate?: string;
+  availableSeats: number;
+  priceOverride?: number;
+  status: 'available' | 'limited' | 'sold_out';
+  variant?: TourVariant  // ← add this
+};
+
 // The main Tour Package data type
 export type TourPackageType = {
   id: string;
@@ -39,14 +54,20 @@ export type TourPackageType = {
   descriptionHtml: string;
   galleryImages: ImageType[];
   features: string[]; // For "Experience the Difference"
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  minGroupSize?: number;
   infoGrid: TourInfoItem[];
   tourPlan: TourPlanItem[];
   mapEmbedSrc: string;
   reviewSummary: TourReviewSummary;
   reviews: ReviewType[];
   price: number;
+  departures: TourDeparture[];
   promoCard: {
     image: ImageType;
     titleHtml: string;
   };
+  tourImageThumbnail?: ImageType;
 };

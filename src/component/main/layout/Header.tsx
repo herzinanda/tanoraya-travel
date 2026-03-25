@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types";
 import NavigationMenu from "./NavigationMenu"; // Import our new component
+import { ContactInfo, CtaButton, LogoData, NavItem, SocialLink } from "@/types/index";
 
 // Define the props our Header will accept
 type HeaderProps = {

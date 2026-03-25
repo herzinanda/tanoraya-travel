@@ -1,3 +1,10 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Get in touch with Tanoraya Travel. We are here to help you plan your perfect trip to Indonesia and Southeast Asia.',
+}
+
 import ContactInfo from '@/component/main/contact/ContactInfo'
 import ContactSection from '@/component/main/contact/ContactSection'
 import MapSection from '@/component/main/contact/MapSection'

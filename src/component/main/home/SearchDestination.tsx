@@ -1,6 +1,41 @@
-import React from "react";
+'use client'
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface Destination {
+  id: string;
+  title: string;
+  destinationUrl: string;
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 const SearchDestination = () => {
+  const router = useRouter();
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [destination, setDestination] = useState("");
+  const [month, setMonth] = useState("");
+  const [guests, setGuests] = useState("");
+
+  useEffect(() => {
+    fetch("/api/destinations")
+      .then((r) => r.json())
+      .then((data) => setDestinations(data))
+      .catch(() => {});
+  }, []);
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (destination) params.set("destination", destination);
+    if (month) params.set("month", month);
+    if (guests) params.set("guests", guests);
+    router.push(`/tour-packages/tour?${params.toString()}`);
+  };
+
   return (
     <div className="hero-bottom">
       <div className="booking-list-area section-bg">
@@ -10,49 +45,41 @@ const SearchDestination = () => {
             <h6>Location</h6>
           </div>
           <div className="form">
-            <select>
-              <option>Where are you going?</option>
-              <option value="london">london</option>
-              <option value="Munich">Munich</option>
-              <option value="Berlin">Berlin</option>
-              <option value="Maldives">Maldives</option>
+            <select value={destination} onChange={(e) => setDestination(e.target.value)}>
+              <option value="">Where are you going?</option>
+              {destinations.map((d) => (
+                <option key={d.id} value={d.destinationUrl || d.title}>
+                  {d.title}
+                </option>
+              ))}
             </select>
           </div>
         </div>
         <div className="booking-list">
           <div className="icon">
             <i className="fa-light fa-calendar-days"></i>
-            <h6>Check in</h6>
+            <h6>Travel Month</h6>
           </div>
           <div className="form">
-            <div className="box">
-              <input type="date" id="calendar" name="Add Date" />
-            </div>
-          </div>
-        </div>
-        <div className="booking-list">
-          <div className="icon">
-            <i className="fa-light fa-calendar-days"></i>
-            <h6>Check Out</h6>
-          </div>
-          <div className="form">
-            <div className="box">
-              <input type="date" id="calendar2" name="Add Date" />
-            </div>
-          </div>
-        </div>
-        <div className="booking-list">
-          <div className="form">
-            <select>
-              <option>Guests</option>
-              <option value="london">01</option>
-              <option value="Munich">02</option>
-              <option value="Berlin">03</option>
-              <option value="Maldives">04</option>
+            <select value={month} onChange={(e) => setMonth(e.target.value)}>
+              <option value="">Select Month</option>
+              {MONTHS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
             </select>
           </div>
         </div>
-        <button className="theme-btn" type="submit">
+        <div className="booking-list">
+          <div className="form">
+            <select value={guests} onChange={(e) => setGuests(e.target.value)}>
+              <option value="">Guests</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                <option key={n} value={String(n)}>{n} {n === 1 ? "Guest" : "Guests"}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <button className="theme-btn" type="button" onClick={handleSearch}>
           Search
         </button>
       </div>

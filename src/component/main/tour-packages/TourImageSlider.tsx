@@ -1,8 +1,9 @@
 "use client";
 
 import React from 'react';
-import Image from 'next/image';
-import { ImageType } from '@/types';
+
+import { StrapiImage } from '@/component/main/home/StrapiImage';
+import { ImageType } from '@/types/index';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import 'swiper/css';
@@ -29,13 +30,14 @@ const TourImageSlider = ({ images }: TourImageSliderProps) => {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>
-            <div className="thumb">
-              <Image 
-                src={image.src} 
-                alt={image.alt} 
-                width={800} 
-                height={500}
-                className="w-100 h-auto"
+            <div className="thumb" style={{ borderRadius: 20, overflow: 'hidden', height: 460 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image.src as string}
+                alt={image.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
           </SwiperSlide>
@@ -55,12 +57,12 @@ const TourImageSlider = ({ images }: TourImageSliderProps) => {
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div className="thumb">
-              <Image 
-                src={image.src} 
-                alt={image.alt} 
-                width={200} 
-                height={150} 
-                className="w-100 h-auto"
+              <StrapiImage
+                src={image.src as string}
+                alt={image.alt}
+                width={200}
+                height={150}
+                className="w-100"
               />
             </div>
           </SwiperSlide>

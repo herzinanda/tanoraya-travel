@@ -1,132 +1,322 @@
-import React from 'react';
+import { Metadata } from 'next';
 import TourBookingForm from '@/component/sidebar/TourBookingForm';
 import BookingPromoCard from '@/component/sidebar/BookingPromoCard';
-
-// --- MOCK DATA ---
-// We'll create mock data that fits our new types
-import Avatar1 from "../../../../../public/img/activities/11.jpg";
-import Avatar2 from "../../../../../public/img/activities/12.jpg";
-import { TourPackageType } from '@/types/tour-detail';
+import { TourPackageType, TourDeparture } from '@/types/tour-detail';
 import Breadcrumbs from '@/component/main/shared/Breadcrumbs';
 import TourImageSlider from '@/component/main/tour-packages/TourImageSlider';
-import TourDescription from '@/component/main/tour-packages/TourDescription';
 import TourFeatures from '@/component/main/tour-packages/TourFeatures';
 import TourInfoGrid from '@/component/main/tour-packages/TourInfoGrid';
 import TourPlanAccordion from '@/component/main/tour-packages/TourPlanAccordion';
+import TourInclusionsExclusions from '@/component/main/tour-packages/TourInclusionsExclusions';
 import TourReviewSection from '@/component/main/tour-packages/TourReviewSection';
+import TourDepartureTabs from '@/component/main/tour-packages/TourDepartureTabs';
+import { getTourBySlug, getTourDepartures, getTourPackages } from '@/data/loader';
+import { getStrapiURL } from '@/utils/get-strapi-url';
+import { TourPageProvider } from '@/component/main/tour-packages/TourPageContext';
 
-const MOCK_TOUR_DATA: TourPackageType = {
-  id: 'ghorepani-poon-hill',
-  title: 'Ghorepani Poon Hill Trek',
-  locations: 'Bhutan, Maldives, Pokhara',
-  descriptionHtml: `
-    <p class="mb-3">Consectetur adipisicing elit sed do eiusmod tempor is incididunt ut
-    labore et dolore of magna aliqua. ut enim ad minim veniam made of owl the quis nostrud
-    exercitation ullamco laboris nisi ut aliquip ex ea dolor commodo consequat duis
-    aute irure and dolor in reprehenderit.Nullam semper quam mauris nec mollis felis
-    aliquam eu ut non gravida mi quam mauris nec mollis felis aliquam phasellus.</p>
-    <p>Consectetur adipisicing elit sed do eiusmod tempor is incididunt ut labore et
-    dolore of magna aliqua. ut enim ad minim veniam made of owl the quis nostrud
-    exercitation ullamco laboris nisi ut aliquip ex ea dolor commodo consequat duis
-    aute irure and dolor in reprehenderit.Nullam semper quam mauris.</p>
-  `,
-  galleryImages: [
-    { src: '/img/package/5.jpg', alt: 'Gallery 1' },
-    { src: '/img/package/6.jpg', alt: 'Gallery 2' },
-    { src: '/img/package/7.jpg', alt: 'Gallery 3' },
-    { src: '/img/package/8.jpg', alt: 'Gallery 4' },
-  ],
-  features: [
-    'Trusted, Local Travel Experts',
-    'Flexible, Hassle-Free Bookings',
-    'Real-Time Itinerary Updates',
-    'Flexible Cancellation Policies',
-    'Customized Travel Experiences',
-    'Exclusive Travel Deals',
-  ],
-  infoGrid: [
-    { id: 'i1', icon: { src: '/img/icon/27.svg', alt: '' }, label: 'Accommodation', value: '5 Star Hotel' },
-    { id: 'i2', icon: { src: '/img/icon/28.svg', alt: '' }, label: 'Admission Free', value: 'No' },
-    { id: 'i3', icon: { src: '/img/icon/29.svg', alt: '' }, label: 'Arrival City', value: 'London' },
-    { id: 'i4', icon: { src: '/img/icon/30.svg', alt: '' }, label: 'Language', value: 'English' },
-    { id: 'i5', icon: { src: '/img/icon/31.svg', alt: '' }, label: 'Hotel Transfer', value: 'Available' },
-    { id: 'i6', icon: { src: '/img/icon/32.svg', alt: '' }, label: 'Next Tour', value: 'Available' },
-    { id: 'i7', icon: { src: '/img/icon/33.svg', alt: '' }, label: '01 Guide', value: 'Guided' },
-    { id: 'i8', icon: { src: '/img/icon/34.svg', alt: '' }, label: 'Maximum Age', value: '60' },
-  ],
-  tourPlan: [
-    { id: 'p1', title: 'Arrival in Phuket and Patong Beach Exploration', descriptionHtml: '<p>Consectetur adipisicing elit sed do eiusmod tempor...</p>', image: { src: '/img/activities/13.jpg', alt: 'Phuket' } },
-    { id: 'p2', title: 'Phi Phi Islands Snorkeling Adventure', descriptionHtml: '<p>Consectetur adipisicing elit sed do eiusmod tempor...</p>', image: { src: '/img/activities/13.jpg', alt: 'Phi Phi' } },
-    { id: 'p3', title: 'Phang Nga Bay Cruise and Cultural Immersion', descriptionHtml: '<p>Consectetur adipisicing elit sed do eiusmod tempor...</p>', image: { src: '/img/activities/13.jpg', alt: 'Phang Nga' } },
-    { id: 'p4', title: 'Leisure Day and Departure', descriptionHtml: '<p>Consectetur adipisicing elit sed do eiusmod tempor...</p>', image: { src: '/img/activities/13.jpg', alt: 'Departure' } },
-  ],
-  mapEmbedSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6678.7619084840835!2d144.9618311901502!3d-37.81450084255415!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642b4758afc1d%3A0x3119cc820fdfc62e!2sEnvato!5e0!3m2!1sen!2sbd!4v1641984054261!5m2!1sen!2sbd',
-  reviewSummary: {
-    averageRating: 4.9,
-    reviewCount: 484,
-    categories: [
-      { id: 'services', label: 'Services', percentage: 90 },
-      { id: 'safety', label: 'Safety', percentage: 80 },
-      { id: 'guides', label: 'Guides', percentage: 70 },
-      { id: 'foods', label: 'Foods', percentage: 95 },
-      { id: 'hotels', label: 'Hotels', percentage: 75 },
-      { id: 'places', label: 'Places', percentage: 85 },
-    ],
-  },
-  reviews: [
-    { id: 'r1', author: 'Alexander Cameron', avatar: { src: Avatar1, alt: 'Alexander' }, rating: 5, comment: 'Neque porro est qui dolorem ipsum quia quaed inventor veritatis et quasi architecto var sed efficitur turpis gilla sed sit amet finibus eros.' },
-    { id: 'r2', author: 'Ralph Edwards', avatar: { src: Avatar2, alt: 'Ralph' }, rating: 5, comment: 'Neque porro est qui dolorem ipsum quia quaed inventor veritatis et quasi architecto var sed efficitur turpis gilla sed.' },
-  ],
-  price: 198,
-  promoCard: {
-    image: { src: '/img/activities/16.jpg', alt: 'Promo' },
-    titleHtml: 'Book Now And Enjoy <br> Amazing Savings!',
-  },
-};
-// --- END MOCK DATA ---
-
-// Async function to fetch data (simulated)
-async function getTourData(slug: string): Promise<TourPackageType> {
-  // In a real app:
-  // const res = await fetch(`https://api.example.com/tour-packages/${slug}`);
-  // const data = await res.json();
-  // return data;
-  return Promise.resolve(MOCK_TOUR_DATA);
+// Helper to get full image URL
+function getImageUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  if (url.startsWith('http')) return url;
+  return new URL(url, getStrapiURL()).href;
 }
 
+// Map Strapi Data to Frontend Type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapStrapiToTour(data: any): TourPackageType {
+  // 1. Gallery Images (prefer galleryImages field, fall back to tourGalleries)
+  const gallery = data.galleryImages || data.tourGalleries || [];
+  const mappedGallery = Array.isArray(gallery)
+    ? gallery
+      .map((img: any) => ({
+        src: getImageUrl(img.url),
+        alt: img.alternativeText || 'Gallery Image',
+      }))
+      .filter((img) => img.src) // Filter out missing images
+    : [];
+
+  // 2. Promo Image
+  const promoUrl = getImageUrl(data.promoCard?.image?.url);
+  const promoImage = promoUrl
+    ? {
+      src: promoUrl,
+      alt: data.promoCard.image.alternativeText || 'Promo'
+    }
+    : { src: '/img/activities/16.jpg', alt: 'Promo Placeholder' }; // Provide a valid fallback or handle in component
+
+  // 3. Features
+  const features = Array.isArray(data.tour_benefit)
+    ? data.tour_benefit.map((b: any) => b.tour_benefit_item)
+    : [];
+
+  // 4. Info Grid
+  const infoGrid = Array.isArray(data.tour_facilities)
+    ? data.tour_facilities.map((item: any, index: number) => ({
+      id: item.id?.toString() || `facility-${index}`,
+      icon: { src: '/img/icon/27.svg', alt: item.type_of_facilities },
+      label: item.type_of_facilities,
+      value: item.tour_facilities_text,
+    }))
+    : [];
+
+  // 5. Tour Plan
+  const tourPlan = Array.isArray(data.itinerary)
+    ? data.itinerary.map((item: any, index: number) => ({
+      id: item.id?.toString() || `plan-${index}`,
+      title: item.title,
+      descriptionHtml: item.itinerary_description,
+      image: getImageUrl(item.itinerary_image?.url)
+        ? { src: getImageUrl(item.itinerary_image.url), alt: item.title }
+        : undefined,
+    }))
+    : [];
+
+  // 6. Reviews
+  const reviews: any[] = [];
+
+  // 7. Departures — populated separately via getTourDepartures
+  const departures: TourDeparture[] = [];
+
+  return {
+    id: data.slug || data.documentId || 'unknown',
+    title: data.title,
+    locations: data.destination?.title || 'Unknown Location',
+    descriptionHtml: data.tour_description || '',
+    galleryImages: mappedGallery as { src: string; alt: string }[],
+    features: features,
+    highlights: Array.isArray(data.highlights) ? data.highlights as string[] : [],
+    inclusions: Array.isArray(data.inclusions) ? data.inclusions as string[] : [],
+    exclusions: Array.isArray(data.exclusions) ? data.exclusions as string[] : [],
+    minGroupSize: data.minGroupSize ? Number(data.minGroupSize) : undefined,
+    infoGrid: infoGrid,
+    tourPlan: tourPlan,
+    mapEmbedSrc: data.mapEmbedSrc || '',
+    reviewSummary: {
+      averageRating: 0,
+      reviewCount: 0,
+      categories: [],
+    },
+    reviews: reviews,
+    price: Number(data.Price) || 0,
+    departures,
+    promoCard: {
+      image: promoImage,
+      titleHtml: data.promoCard?.titleHtml || 'Book Now',
+    },
+    tourImageThumbnail: data.tourImageThumbnail?.url
+      ? {
+        src: getImageUrl(data.tourImageThumbnail.url)!,
+        alt: data.tourImageThumbnail.alternativeText || 'Breadcrumb',
+      }
+      : undefined,
+  };
+}
+
+export async function generateStaticParams() {
+  try {
+    const res = await getTourPackages({ pageSize: 200 })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (res?.data ?? []).map((t: any) => ({ 'tour-details': t.slug }))
+  } catch {
+    return []
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ 'tour-details': string }>
+}): Promise<Metadata> {
+  const { 'tour-details': slug } = await params
+  try {
+    const res = await getTourBySlug(slug)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = res?.data?.[0] as any
+    if (!data) return {}
+    const thumbUrl = data.tourImageThumbnail?.url
+    const imgUrl = thumbUrl
+      ? thumbUrl.startsWith('http') ? thumbUrl : new URL(thumbUrl, getStrapiURL()).href
+      : undefined
+    return {
+      title: data.title,
+      description: data.tour_description
+        ? String(data.tour_description).replace(/<[^>]+>/g, '').slice(0, 160)
+        : undefined,
+      openGraph: {
+        title: data.title,
+        description: data.tour_description
+          ? String(data.tour_description).replace(/<[^>]+>/g, '').slice(0, 160)
+          : undefined,
+        images: imgUrl ? [{ url: imgUrl }] : [],
+        type: 'website',
+      },
+    }
+  } catch {
+    return {}
+  }
+}
 
 // The Page Component (Server Component)
-export default async function TourDetailsPage({ params }: { params: { slug: string } }) {
-  
-  // 1. Fetch data on the server
-  const tour = await getTourData(params.slug);
+export default async function TourDetailsPage({ params }: { params: Promise<{ 'tour-details': string }> }) {
+
+  const { 'tour-details': slug } = await params;
+
+  // 1. Fetch tour + departures in parallel
+  let tour: TourPackageType | null = null;
+
+  try {
+    const [tourRes, depRes] = await Promise.allSettled([
+      getTourBySlug(slug),
+      getTourDepartures(slug),
+    ]);
+
+    const tourData = tourRes.status === 'fulfilled' ? tourRes.value?.data?.[0] : null;
+    if (!tourData) throw new Error('Tour not found');
+
+    tour = mapStrapiToTour(tourData);
+
+    // Merge departures + compute lowest departure price
+    if (depRes.status === 'fulfilled' && Array.isArray(depRes.value?.data)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      tour.departures = depRes.value.data.map((d: any) => ({
+        id: d.documentId || d.id,
+        departureDate: d.departureDate,
+        returnDate: d.returnDate ?? undefined,
+        availableSeats: Number(d.availableSeats) || 0,
+        priceOverride: d.priceOverride ? Number(d.priceOverride) : undefined,
+        status: d.status ?? 'available',
+        variant: d.variant ? {
+          itinerary: Array.isArray(d.variant.itinerary)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? d.variant.itinerary.map((item: any, index: number) => ({
+                id: item.id?.toString() || `vi-${index}`,
+                title: item.title,
+                descriptionHtml: item.itinerary_description ?? '',
+                image: item.image?.url
+                  ? { src: getImageUrl(item.image.url), alt: item.title }
+                  : undefined,
+              }))
+            : undefined,
+          tour_facilities: Array.isArray(d.variant.tour_facilities)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ? d.variant.tour_facilities.map((item: any, index: number) => ({
+                id: item.id?.toString() || `vf-${index}`,
+                icon: { src: '/img/icon/27.svg', alt: item.type_of_facilities },
+                label: item.type_of_facilities,
+                value: item.tour_facilities_text,
+              }))
+            : undefined,
+        } : undefined,
+      }));
+
+      // Use lowest priceOverride as the "from" price
+      const overrides = tour.departures
+        .map((d) => d.priceOverride)
+        .filter((p): p is number => typeof p === 'number' && p > 0);
+      if (overrides.length > 0) {
+        tour.price = Math.min(...overrides);
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching tour data:", error);
+  }
+
+  if (!tour) {
+    return (
+      <div className="container section-padding">
+        <h2>Tour Package Not Found</h2>
+        <p>Sorry, we couldn't find the tour package you're looking for.</p>
+      </div>
+    );
+  }
+
+  const firstUpcoming = tour.departures
+    .filter((d) => new Date(d.departureDate) >= new Date(new Date().toDateString()))
+    .sort((a, b) => new Date(a.departureDate).getTime() - new Date(b.departureDate).getTime())[0] ?? null
 
   return (
-    <>
-      {/* 2. Use the smart Breadcrumbs component */}
-      <Breadcrumbs 
-        pageTitle={tour.title} 
-        bgImage="/img/breadcrumb/breadcrumb.jpg" 
+    <TourPageProvider initial={firstUpcoming}>
+      <Breadcrumbs
+        pageTitle={tour.title}
+        bgImage={(tour.tourImageThumbnail?.src as string) || "/img/breadcrumb/breadcrumb.jpg"}
       />
 
-      {/* 3. Render the main section */}
       <section className="tour-section section-padding fix">
         <div className="container">
-          <div className="activities-details-wrapper">
-            <div className="row g-4">
-              
-              {/* --- Main Content Column (Left) --- */}
-              <div className="col-lg-8">
-                <div className="activities-details-content">
-                  <TourImageSlider images={tour.galleryImages} />
-                  <TourDescription 
-                    title={tour.title} 
-                    locations={tour.locations} 
-                    descriptionHtml={tour.descriptionHtml} 
+
+          {/* ── Hero: Slider (left) + Title Info + Availability (right) ── */}
+          <div className="row g-4 align-items-start mb-5">
+
+            {/* Slider */}
+            <div className="col-lg-7">
+              <TourImageSlider images={tour.galleryImages} />
+            </div>
+
+            {/* Title Info + Departure Availability */}
+            <div className="col-lg-5">
+              <div className="tour-hero-info">
+                <h6 className="tour-hero-location">
+                  <i className="fa-solid fa-location-dot"></i> {tour.locations}
+                </h6>
+                <h2 className="tour-hero-title">{tour.title}</h2>
+
+                {(tour.price > 0 || tour.minGroupSize) && (
+                  <div className="tour-hero-meta">
+                    {tour.price > 0 && (
+                      <span>
+                        <i className="fa-solid fa-tag"></i>
+                        From&nbsp;<strong>IDR {tour.price.toLocaleString('id-ID')}</strong>
+                      </span>
+                    )}
+                    {tour.minGroupSize && (
+                      <span>
+                        <i className="fa-solid fa-users"></i>
+                        Min group:&nbsp;<strong>{tour.minGroupSize} pax</strong>
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <div
+                  className="tour-hero-desc"
+                  dangerouslySetInnerHTML={{ __html: tour.descriptionHtml }}
+                />
+
+                <a href="#departure-dates" className="theme-btn mt-3">
+                  Check Availability&nbsp;<i className="fa-solid fa-calendar-check"></i>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+          {/* ── Full-width Departure Availability ── */}
+          <div className="row mb-4" id="departure-dates">
+            <div className="col-12">
+              <TourDepartureTabs departures={tour.departures} basePrice={tour.price} />
+            </div>
+          </div>
+
+          {/* ── Main Content + Sidebar ── */}
+          <div className="row g-4">
+
+            {/* Main content */}
+            <div className="col-lg-8">
+              <div className="activities-details-content">
+                {tour.highlights.length > 0 && (
+                  <TourFeatures
+                    features={tour.highlights}
+                    heading="Tour Highlights"
                   />
-                  <TourFeatures features={tour.features} />
-                  <TourInfoGrid info={tour.infoGrid} />
-                  <TourPlanAccordion plan={tour.tourPlan} />
+                )}
+                <TourFeatures features={tour.features} />
+                <TourInfoGrid info={tour.infoGrid} />
+                <TourPlanAccordion plan={tour.tourPlan} />
+                <TourInclusionsExclusions
+                  inclusions={tour.inclusions}
+                  exclusions={tour.exclusions}
+                />
+                {tour.mapEmbedSrc && (
                   <div className="map-area">
                     <h3>View in Map</h3>
                     <div className="google-map">
@@ -138,28 +328,29 @@ export default async function TourDetailsPage({ params }: { params: { slug: stri
                       ></iframe>
                     </div>
                   </div>
-                  <TourReviewSection 
-                    summary={tour.reviewSummary}
-                    reviews={tour.reviews}
-                  />
-                </div>
+                )}
+                <TourReviewSection
+                  summary={tour.reviewSummary}
+                  reviews={tour.reviews}
+                  tourSlug={slug}
+                />
               </div>
-
-              {/* --- Sidebar Column (Right) --- */}
-              <div className="col-lg-4">
-                <div className="main-bar">
-                  <TourBookingForm basePrice={tour.price} />
-                  <BookingPromoCard 
-                    image={tour.promoCard.image} 
-                    titleHtml={tour.promoCard.titleHtml} 
-                  />
-                </div>
-              </div>
-
             </div>
+
+            {/* Sidebar */}
+            <div className="col-lg-4">
+              <div className="main-bar" id="book-this-tour">
+                <TourBookingForm basePrice={tour.price} departures={tour.departures} />
+                <BookingPromoCard
+                  image={tour.promoCard.image}
+                  titleHtml={tour.promoCard.titleHtml}
+                />
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
-    </>
+    </TourPageProvider>
   );
 }

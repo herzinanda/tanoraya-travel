@@ -3,9 +3,10 @@ import Image from 'next/image';
 
 type TourFeaturesProps = {
   features: string[];
+  heading?: string;
 };
 
-const TourFeatures = ({ features }: TourFeaturesProps) => {
+const TourFeatures = ({ features, heading = "Experience the Difference" }: TourFeaturesProps) => {
   // Split features into two columns
   const midPoint = Math.ceil(features.length / 2);
   const column1 = features.slice(0, midPoint);
@@ -13,7 +14,7 @@ const TourFeatures = ({ features }: TourFeaturesProps) => {
 
   return (
     <div className="activities-list-item">
-      <h3>Experience the Difference</h3>
+      <h3>{heading}</h3>
       <div className="activities-item">
         <ul className="activities-list">
           {column1.map((feature, index) => (

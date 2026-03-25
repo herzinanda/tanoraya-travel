@@ -7,12 +7,34 @@ export type ImageType = {
 };
 
 
+export type NavMegaMenuDestination = {
+  id: string;
+  title: string;
+  slug: string;
+  imageUrl?: string | null;
+  tourCount?: number;
+};
+
+export type NavMegaMenuFeaturedTour = {
+  id: string;
+  title: string;
+  slug: string;
+  price?: number | null;
+  imageUrl?: string | null;
+};
+
+export type NavMegaMenu = {
+  topDestinations: NavMegaMenuDestination[];
+  featuredTour: NavMegaMenuFeaturedTour | null;
+};
+
 export type NavItem = {
   id: string;
   label: string;
   href: string;
   // This allows for nested dropdowns
-  subMenu?: NavItem[]; 
+  subMenu?: NavItem[];
+  megaMenu?: NavMegaMenu;
 };
 
 export type SocialLink = {

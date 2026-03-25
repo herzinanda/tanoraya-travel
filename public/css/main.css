@@ -2934,6 +2934,11 @@ span {
   margin-right: 50px;
   margin-top: 30px;
 }
+
+.faq-items .toggle-itinerary {
+  color: var(--theme);
+}
+
 @media (max-width: 1199px) {
   .faq-items {
     margin-right: 0;
@@ -6407,8 +6412,8 @@ span {
 
 .swiper.imgSlider {
   position: relative;
-  bottom: 150px;
-  left: 20px;
+  bottom: 20px;
+  left: 0px;
 }
 @media (max-width: 1199px) {
   .swiper.imgSlider {

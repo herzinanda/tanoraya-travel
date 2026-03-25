@@ -4,9 +4,11 @@ import { ImageType } from './index';
 export type ReviewType = {
   id: string;
   author: string;
+  name?: string;
   avatar: ImageType;
   rating: number; // e.g., 4 or 5
   comment: string;
+  body?: string;
 };
 
 // The main data type for the destination

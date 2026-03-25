@@ -1,16 +1,16 @@
 // data/headerData.ts
-import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types";
+import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types/index";
 
 export const logo: LogoData = {
-  src: "/img/logo/black-logo.svg",
+  src: "/img/logo/tanoraya-logo.svg",
   alt: "logo-img",
   width: 140,
   height: 35,
 };
 
 export const contactInfo: ContactInfo = {
-  email: "info-help@travo.com",
-  address: "258 Street Avenue, Berlin, Germany",
+  email: "info@tanoraya.com",
+  address: "Jl. Sisingamangaraja No. 12, Medan Kota, Sumatera Utara, Indonesia",
 };
 
 export const socialLinks: SocialLink[] = [
@@ -21,7 +21,7 @@ export const socialLinks: SocialLink[] = [
 ];
 
 export const ctaButton: CtaButton = {
-  href: "/contact",
+  href: "/request-a-quote",
   label: "Request A Quote",
 };
 
