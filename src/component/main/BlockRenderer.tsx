@@ -5,6 +5,10 @@ import HeroSection from "./home/HeroSection";
 import ServiceSection from "./home/ServiceSection";
 import WhyChooseUs from "./home/WhyChooseUs";
 import TopDestinationsSection from "./home/TopDestinationsSection";
+import DestinationSection from "./home/DestinationSection";
+import CTAbgSection from "./home/CTAbgSection";
+import TestimonialSection from "./home/TestimonialSection";
+import NewsSection from "./home/NewsSection";
 
 function blockRenderer(block: Block, index: number) {
   switch (block.__component) {
@@ -18,6 +22,14 @@ function blockRenderer(block: Block, index: number) {
       return <TopDestinationsSection {...block} key={index} />;
     case "blocks.why-choose-us":
       return <WhyChooseUs {...block} key={index} />;
+    case "blocks.home-best-recommended-place":
+      return <DestinationSection {...block} key={index} />;
+    case "blocks.home-cta":
+      return <CTAbgSection {...block} key={index} />;
+    case "blocks.home-testimonials":
+      return <TestimonialSection {...block} key={index} />;
+    case "blocks.home-blog":
+      return <NewsSection {...block} key={index} />;
     default:
       return null;
   }

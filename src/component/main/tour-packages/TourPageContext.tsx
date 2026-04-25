@@ -3,14 +3,33 @@
 import { createContext, useContext, useState } from 'react'
 import { TourDeparture } from '@/types/tour-detail'
 
+export type BookingMode = 'book' | 'quote'
+
+export type CustomDateRange = {
+  startDate: string
+  endDate: string
+}
+
 type TourPageCtx = {
   selectedDeparture: TourDeparture | null
   setSelectedDeparture: (d: TourDeparture) => void
+  bookingMode: BookingMode
+  setBookingMode: (m: BookingMode) => void
+  isCustomDate: boolean
+  setIsCustomDate: (v: boolean) => void
+  customDateRange: CustomDateRange
+  setCustomDateRange: (r: CustomDateRange) => void
 }
 
 const TourPageContext = createContext<TourPageCtx>({
   selectedDeparture: null,
   setSelectedDeparture: () => {},
+  bookingMode: 'book',
+  setBookingMode: () => {},
+  isCustomDate: false,
+  setIsCustomDate: () => {},
+  customDateRange: { startDate: '', endDate: '' },
+  setCustomDateRange: () => {},
 })
 
 export function TourPageProvider({
@@ -21,8 +40,16 @@ export function TourPageProvider({
   initial: TourDeparture | null
 }) {
   const [selectedDeparture, setSelectedDeparture] = useState<TourDeparture | null>(initial)
+  const [bookingMode, setBookingMode] = useState<BookingMode>('book')
+  const [isCustomDate, setIsCustomDate] = useState(false)
+  const [customDateRange, setCustomDateRange] = useState<CustomDateRange>({ startDate: '', endDate: '' })
   return (
-    <TourPageContext.Provider value={{ selectedDeparture, setSelectedDeparture }}>
+    <TourPageContext.Provider value={{
+      selectedDeparture, setSelectedDeparture,
+      bookingMode, setBookingMode,
+      isCustomDate, setIsCustomDate,
+      customDateRange, setCustomDateRange,
+    }}>
       {children}
     </TourPageContext.Provider>
   )

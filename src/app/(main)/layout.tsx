@@ -78,7 +78,7 @@ export default async function MainLayout({
         id: raw.documentId as string,
         title: raw.title as string,
         slug: raw.slug as string,
-        price: (raw.Price as number | null) ?? null,
+        price: null as number | null,
         imageUrl: getStrapiMedia(raw.tourImageThumbnail?.url ?? null),
       }
     : null;

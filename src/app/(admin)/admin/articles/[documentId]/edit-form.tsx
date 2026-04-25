@@ -27,8 +27,8 @@ export function EditArticleForm({ article }: { article: any }) {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Edit Article</h1>
-          <p className="text-text-secondary text-sm mt-1">{article.title}</p>
+          <h1 className="text-2xl font-bold tracking-tight">Edit Article</h1>
+          <p className="text-muted-foreground text-sm mt-1">{article.title}</p>
         </div>
       </div>
 
@@ -36,7 +36,7 @@ export function EditArticleForm({ article }: { article: any }) {
         <input type="hidden" name="documentId" value={article.documentId} />
 
         {state?.error && (
-          <div className="bg-danger-light text-danger text-sm px-4 py-3 rounded-md border border-danger/20">
+          <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-md border border-destructive/20">
             {state.error}
           </div>
         )}

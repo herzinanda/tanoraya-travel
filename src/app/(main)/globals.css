@@ -23,7 +23,7 @@
 }
 
 .rich-text-content blockquote {
-  border-left: 4px solid var(--primary-color, #e8793a);
+  border-left: 4px solid var(--primary-color, #F7941D);
   padding: 0.75rem 1.25rem;
   margin: 1.5rem 0;
   background: #fdf8f5;
@@ -89,8 +89,19 @@
   font-family: var(--font-dancing-script), cursive;
 }
 
+/* ── Undo Tailwind preflight leak from admin route group ──────
+   Tailwind's preflight sets img/svg/video to display:block which
+   breaks the template's inline buttons and icons.
+──────────────────────────────────────────────────────────── */
+img,
+svg,
+video {
+  display: inline;
+  vertical-align: middle;
+}
+
 /*
-Theme Name: Travo 
+Theme Name: Travo
 Author: nano_theme
 Author URI: https://themeforest.net/user/nano_theme/portfolio
 Description: Travo - Tour Booking Html Template
@@ -7596,13 +7607,8 @@ span {
 }
 
 .blog-post-details .single-blog-post .post-featured-thumb {
-  height: 460px;
   border-radius: 10px;
-}
-@media (max-width: 767px) {
-  .blog-post-details .single-blog-post .post-featured-thumb {
-    height: 400px;
-  }
+  overflow: hidden;
 }
 .blog-post-details .single-blog-post .post-featured-thumb .post {
   position: absolute;

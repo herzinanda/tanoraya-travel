@@ -3,28 +3,15 @@ import Image from 'next/image'
 import { getTourPackages } from '@/data/loader'
 import { StrapiImage } from '@/component/main/home/StrapiImage'
 import SwiperInit from '@/component/main/shared/SwiperInit'
+import { mapTourCard, filterTourCards, formatPrice } from '@/utils/map-tour-card'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapTourCard(item: any) {
-  const thumb = item.tourImageThumbnail
-  return {
-    id: item.documentId || item.id,
-    title: item.title || '',
-    slug: item.slug || '',
-    location: item.destination?.title || '',
-    price: Number(item.Price) || 0,
-    thumbUrl: thumb?.url || null,
-    thumbAlt: thumb?.alternativeText || item.title || 'Tour',
-  }
-}
-
-const DestinationSection = async () => {
+const DestinationSection = async ({ title, subtitle }: { title?: string; subtitle?: string } = {}) => {
   let tours: ReturnType<typeof mapTourCard>[] = []
 
   try {
-    const response = await getTourPackages({ pageSize: 8 })
+    const response = await getTourPackages({ pageSize: 12 })
     if (response?.data && Array.isArray(response.data)) {
-      tours = response.data.map(mapTourCard)
+      tours = filterTourCards(response.data.map(mapTourCard))
     }
   } catch (error) {
     console.error('Failed to fetch tour packages:', error)
@@ -35,12 +22,11 @@ const DestinationSection = async () => {
       <div className="container">
         <div className="section-title text-center">
           <span className="sub-title wow fadeInUp">
-            Best Recommended Places
+            {subtitle || 'Best Recommended Places'}
           </span>
-          <h2 className="wow fadeInUp" data-wow-delay=".3s">
-            Discover the World&apos;s Treasures <br />
-            with Tanoraya
-          </h2>
+          <h2 className="wow fadeInUp" data-wow-delay=".3s"
+            dangerouslySetInnerHTML={{ __html: title || 'Discover the World&apos;s Treasures <br/>with Tanoraya' }}
+          />
         </div>
 
         <div className="swiper destination-slider">
@@ -77,14 +63,17 @@ const DestinationSection = async () => {
                         <i className="fa-solid fa-location-dot"></i> {tour.location}
                       </span>
                     )}
-                    <h5>
-                      {new Intl.NumberFormat('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                        maximumFractionDigits: 0,
-                      }).format(tour.price)}
-                      <span>/Person</span>
-                    </h5>
+                    {tour.price !== null ? (
+                      <h5>
+                        <span style={{ fontSize: '0.75em', fontWeight: 400 }}>Start from </span>
+                        {formatPrice(tour.price)}
+                        <span>/Person</span>
+                      </h5>
+                    ) : (
+                      <h5 style={{ fontSize: '0.85rem', color: '#999' }}>
+                        Belum ada jadwal tersedia
+                      </h5>
+                    )}
                     <div className="booking">
                       <Link href={`/tour-packages/${tour.slug}`} className="theme-btn">
                         Read More{' '}

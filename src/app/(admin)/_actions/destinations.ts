@@ -17,7 +17,7 @@ export async function getAdminDestinations({
     populate: {
       destinationImages: { fields: ["url", "alternativeText"] },
     },
-    fields: ["documentId", "title", "destinationUrl", "description"],
+    fields: ["title", "destinationUrl"],
     ...(search?.trim() && { filters: { title: { $containsi: search.trim() } } }),
     pagination: { page, pageSize },
     sort: "title:asc",

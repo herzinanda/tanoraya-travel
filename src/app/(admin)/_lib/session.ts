@@ -4,14 +4,26 @@ import { cookies } from "next/headers";
 const COOKIE_NAME = "admin-session";
 const MAX_AGE = 60 * 60 * 24; // 24 hours
 
+export type SessionPayload = {
+  username: string;
+  email: string;
+  strapiToken: string;
+};
+
 function getSecret() {
-  const secret = process.env.ADMIN_SESSION_SECRET ?? process.env.ADMIN_PASSWORD;
-  if (!secret) throw new Error("ADMIN_SESSION_SECRET or ADMIN_PASSWORD env var is required");
+  const secret =
+    process.env.ADMIN_SESSION_SECRET ??
+    process.env.ADMIN_PASSWORD ??
+    "tanoraya-admin-secret-fallback";
   return new TextEncoder().encode(secret);
 }
 
-export async function createSession(username: string) {
-  const token = await new SignJWT({ username })
+export async function createSession(payload: SessionPayload) {
+  const token = await new SignJWT({
+    username: payload.username,
+    email: payload.email,
+    strapiToken: payload.strapiToken,
+  })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
@@ -27,14 +39,18 @@ export async function createSession(username: string) {
   });
 }
 
-export async function verifySession(): Promise<{ username: string } | null> {
+export async function verifySession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token) return null;
 
   try {
     const { payload } = await jwtVerify(token, getSecret());
-    return { username: payload.username as string };
+    return {
+      username: payload.username as string,
+      email: payload.email as string,
+      strapiToken: payload.strapiToken as string,
+    };
   } catch {
     return null;
   }
@@ -42,7 +58,13 @@ export async function verifySession(): Promise<{ username: string } | null> {
 
 export async function destroySession() {
   const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.set(COOKIE_NAME, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/admin",
+    maxAge: 0,
+  });
 }
 
 /**

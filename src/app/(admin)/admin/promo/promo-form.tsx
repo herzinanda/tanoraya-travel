@@ -17,32 +17,37 @@ export function PromoForm({ promo }: { promo: any }) {
   const [isActive, setIsActive] = useState(promo?.isActive ?? false);
 
   const imageUrl = promo?.image?.url ? getStrapiMedia(promo.image.url) : null;
+  const isExpired = promo?.expiresAt ? new Date(promo.expiresAt) < new Date() : false;
+
+  const statusBadge = isExpired
+    ? <Badge variant="destructive">Expired</Badge>
+    : isActive
+      ? <Badge variant="success">Active</Badge>
+      : <Badge variant="secondary">Inactive</Badge>;
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-text-primary">Promo Popup</h1>
-          {isActive ? (
-            <Badge variant="success">Active</Badge>
-          ) : (
-            <Badge variant="secondary">Inactive</Badge>
-          )}
+          <h1 className="text-2xl font-bold tracking-tight">Promo Popup</h1>
+          {statusBadge}
         </div>
-        <p className="text-text-secondary text-sm mt-1">
-          Configure the promotional popup displayed on the main site
+        <p className="text-muted-foreground text-sm mt-1">
+          {isExpired
+            ? `Promo expired on ${new Date(promo.expiresAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}`
+            : "Configure the promotional popup displayed on the main site"}
         </p>
       </div>
 
       {state?.success && (
-        <div className="bg-success-light text-success text-sm px-4 py-3 rounded-md border border-success/20">
+        <div className="bg-emerald-500/10 text-emerald-600 text-sm px-4 py-3 rounded-md border border-emerald-600/20">
           Promo popup updated successfully.
         </div>
       )}
 
       <form action={formAction} className="space-y-6">
         {state?.error && (
-          <div className="bg-danger-light text-danger text-sm px-4 py-3 rounded-md border border-danger/20">
+          <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-md border border-destructive/20">
             {state.error}
           </div>
         )}
@@ -60,7 +65,7 @@ export function PromoForm({ promo }: { promo: any }) {
                 onCheckedChange={setIsActive}
               />
               <input type="hidden" name="isActive" value={isActive ? "on" : ""} />
-              <span className="text-sm text-text-primary">
+              <span className="text-sm">
                 {isActive ? "Popup is visible to visitors" : "Popup is hidden"}
               </span>
             </div>

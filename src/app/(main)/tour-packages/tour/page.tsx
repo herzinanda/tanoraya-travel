@@ -1,25 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense } from 'react'
+import { Metadata } from 'next'
 import Breadcrumbs from '@/component/main/shared/Breadcrumbs'
-import { StrapiImage } from '@/component/main/home/StrapiImage'
-import { getTourPackages, getDestinations } from '@/data/loader'
+import { StrapiImage, getStrapiMedia } from '@/component/main/home/StrapiImage'
+import { getTourPackages, getDestinations, getTourPage } from '@/data/loader'
 import TourFilterSidebar from '@/component/main/tour-packages/TourFilterSidebar'
 import TourSearchBar from '@/component/main/tour-packages/TourSearchBar'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapTourCard(item: any) {
-  const thumb = item.tourImageThumbnail
-  return {
-    id: item.documentId || item.id,
-    title: item.title || '',
-    slug: item.slug || '',
-    location: item.destination?.title || '',
-    price: Number(item.Price) || 0,
-    thumbUrl: thumb?.url || null,
-    thumbAlt: thumb?.alternativeText || item.title || 'Tour',
-  }
-}
+import { mapTourCard, filterTourCards, formatPrice } from '@/utils/map-tour-card'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDestination(item: any) {
@@ -36,6 +24,16 @@ const DURATION_MAP: Record<string, { min?: number; max?: number }> = {
   '8+': { min: 8 },
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const res = await getTourPage()
+  const seo = res?.data?.seo
+
+  return {
+    title: seo?.meta_title || 'Tour Packages',
+    description: seo?.meta_description || 'Browse all Tanoraya Travel tour packages — from Lake Toba adventures to ASEAN multi-country journeys.',
+  }
+}
+
 export default async function TourListPage({
   searchParams,
 }: {
@@ -44,27 +42,35 @@ export default async function TourListPage({
   const { destination, minPrice, maxPrice, search, duration } = await searchParams
   const durationRange = duration ? DURATION_MAP[duration] : undefined
 
-  const [toursRes, destinationsRes] = await Promise.all([
+  const [toursRes, destinationsRes, tourPageRes] = await Promise.all([
     getTourPackages({
       destinationSlug: destination,
-      minPrice: minPrice ? Number(minPrice) : undefined,
-      maxPrice: maxPrice ? Number(maxPrice) : undefined,
       search,
       minDays: durationRange?.min,
       maxDays: durationRange?.max,
       pageSize: 50,
     }),
     getDestinations(),
+    getTourPage(),
   ])
 
-  const tours: ReturnType<typeof mapTourCard>[] = toursRes?.data ? toursRes.data.map(mapTourCard) : []
+  const tourPageData = tourPageRes?.data
+
+  const allTours = toursRes?.data ? toursRes.data.map(mapTourCard) : []
+  const tours = filterTourCards(allTours, {
+    minPrice: minPrice ? Number(minPrice) : undefined,
+    maxPrice: maxPrice ? Number(maxPrice) : undefined,
+  })
   const destinations: ReturnType<typeof mapDestination>[] = destinationsRes?.data ? destinationsRes.data.map(mapDestination) : []
 
   const delays = ['.2s', '.5s', '.8s']
 
   return (
     <>
-      <Breadcrumbs pageTitle="Tour Packages" bgImage="/img/breadcrumb/breadcrumb.jpg" />
+      <Breadcrumbs
+        pageTitle={tourPageData?.tourTitle || 'Tour Packages'}
+        bgImage={getStrapiMedia(tourPageData?.breadcrumbImage?.url) || '/img/breadcrumb/breadcrumb.jpg'}
+      />
 
       <section className="tour-section section-padding fix">
         <div className="container">
@@ -129,14 +135,17 @@ export default async function TourListPage({
                                 <i className="fa-solid fa-location-dot"></i> {tour.location}
                               </span>
                             )}
-                            <h5>
-                              {new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                maximumFractionDigits: 0,
-                              }).format(tour.price)}
-                              <span>/Person</span>
-                            </h5>
+                            {tour.price !== null ? (
+                              <h5>
+                                <span style={{ fontSize: '0.75em', fontWeight: 400 }}>Start from </span>
+                                {formatPrice(tour.price)}
+                                <span>/Person</span>
+                              </h5>
+                            ) : (
+                              <h5 style={{ fontSize: '0.85rem', color: '#999' }}>
+                                Belum ada jadwal tersedia
+                              </h5>
+                            )}
                             <div className="booking">
                               <Link href={`/tour-packages/${tour.slug}`} className="theme-btn">
                                 Read More{' '}

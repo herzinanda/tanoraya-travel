@@ -30,8 +30,8 @@ export default async function DestinationsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Destinations</h1>
-          <p className="text-text-secondary text-sm mt-1">Manage your travel destinations</p>
+          <h1 className="text-2xl font-bold tracking-tight">Destinations</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your travel destinations</p>
         </div>
         <Button asChild>
           <Link href="/admin/destinations/new">
@@ -49,7 +49,7 @@ export default async function DestinationsPage({
               name="search"
               defaultValue={search}
               placeholder="Search destinations..."
-              className="flex-1 h-9 px-3 text-sm border border-border rounded-md bg-surface text-text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
             <Button type="submit" variant="secondary" size="sm">
               Search
@@ -78,7 +78,7 @@ export default async function DestinationsPage({
             <TableBody>
               {destinations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-text-muted">
+                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
                     No destinations found
                   </TableCell>
                 </TableRow>
@@ -94,11 +94,11 @@ export default async function DestinationsPage({
                           className="h-10 w-14 rounded object-cover"
                         />
                       ) : (
-                        <div className="h-10 w-14 rounded bg-surface-secondary" />
+                        <div className="h-10 w-14 rounded bg-muted" />
                       )}
                     </TableCell>
                     <TableCell className="font-medium">{dest.title}</TableCell>
-                    <TableCell className="text-text-secondary">{dest.destinationUrl}</TableCell>
+                    <TableCell className="text-muted-foreground">{dest.destinationUrl}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <Button variant="ghost" size="icon" asChild>

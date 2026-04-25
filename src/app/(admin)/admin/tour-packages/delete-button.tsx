@@ -25,7 +25,7 @@ export function DeleteTourButton({
       }}
       trigger={
         <Button variant="ghost" size="icon">
-          <Trash2 className="h-4 w-4 text-danger" />
+          <Trash2 className="h-4 w-4 text-destructive" />
         </Button>
       }
     />

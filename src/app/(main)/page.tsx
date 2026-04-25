@@ -1,8 +1,3 @@
-import DestinationSection from "@/component/main/home/DestinationSection";
-import CTAbgSection from "@/component/main/home/CTAbgSection";
-import TestimonialSection from "@/component/main/home/TestimonialSection";
-import CTAbgSection2 from "@/component/main/home/CTAbgSection2";
-import NewsSection from "@/component/main/home/NewsSection";
 import { getHomePage, getActivePromo } from "@/data/loader";
 import { notFound } from "next/navigation";
 import { BlockRenderer } from "@/component/main/BlockRenderer";
@@ -49,14 +44,6 @@ export default async function Home() {
     <>
       {promo && <PromoPopup promo={promo} />}
       <BlockRenderer blocks={blocks} />
-      {/* <ServiceSection {...blocks.serviceSection} /> */}
-      {/* <TopDestinationsSection /> */}
-      {/* <WhyChooseUs /> */}
-      <DestinationSection />
-      <CTAbgSection />
-      <TestimonialSection />
-      <CTAbgSection2 />
-      <NewsSection />
     </>
   );
 }

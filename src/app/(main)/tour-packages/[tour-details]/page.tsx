@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import TourBookingForm from '@/component/sidebar/TourBookingForm';
-import BookingPromoCard from '@/component/sidebar/BookingPromoCard';
+import WhyBookWithUs from '@/component/sidebar/WhyBookWithUs';
 import { TourPackageType, TourDeparture } from '@/types/tour-detail';
 import Breadcrumbs from '@/component/main/shared/Breadcrumbs';
 import TourImageSlider from '@/component/main/tour-packages/TourImageSlider';
@@ -8,7 +8,6 @@ import TourFeatures from '@/component/main/tour-packages/TourFeatures';
 import TourInfoGrid from '@/component/main/tour-packages/TourInfoGrid';
 import TourPlanAccordion from '@/component/main/tour-packages/TourPlanAccordion';
 import TourInclusionsExclusions from '@/component/main/tour-packages/TourInclusionsExclusions';
-import TourReviewSection from '@/component/main/tour-packages/TourReviewSection';
 import TourDepartureTabs from '@/component/main/tour-packages/TourDepartureTabs';
 import { getTourBySlug, getTourDepartures, getTourPackages } from '@/data/loader';
 import { getStrapiURL } from '@/utils/get-strapi-url';
@@ -97,7 +96,14 @@ function mapStrapiToTour(data: any): TourPackageType {
       categories: [],
     },
     reviews: reviews,
-    price: Number(data.Price) || 0,
+    price: 0,
+    tourCode: data.tourCode || '',
+    itineraryFile: data.itinerary_file?.url
+      ? {
+        url: getImageUrl(data.itinerary_file.url)!,
+        name: data.itinerary_file.name || 'Itinerary.pdf',
+      }
+      : undefined,
     departures,
     promoCard: {
       image: promoImage,
@@ -184,7 +190,7 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
         returnDate: d.returnDate ?? undefined,
         availableSeats: Number(d.availableSeats) || 0,
         priceOverride: d.priceOverride ? Number(d.priceOverride) : undefined,
-        status: d.status ?? 'available',
+        status: d.statusValue ?? d.status ?? 'available',
         variant: d.variant ? {
           itinerary: Array.isArray(d.variant.itinerary)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -192,8 +198,8 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
                 id: item.id?.toString() || `vi-${index}`,
                 title: item.title,
                 descriptionHtml: item.itinerary_description ?? '',
-                image: item.image?.url
-                  ? { src: getImageUrl(item.image.url), alt: item.title }
+                image: item.itinerary_image?.url
+                  ? { src: getImageUrl(item.itinerary_image.url), alt: item.title }
                   : undefined,
               }))
             : undefined,
@@ -260,22 +266,24 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
                 </h6>
                 <h2 className="tour-hero-title">{tour.title}</h2>
 
-                {(tour.price > 0 || tour.minGroupSize) && (
-                  <div className="tour-hero-meta">
-                    {tour.price > 0 && (
-                      <span>
-                        <i className="fa-solid fa-tag"></i>
-                        From&nbsp;<strong>IDR {tour.price.toLocaleString('id-ID')}</strong>
-                      </span>
-                    )}
-                    {tour.minGroupSize && (
-                      <span>
-                        <i className="fa-solid fa-users"></i>
-                        Min group:&nbsp;<strong>{tour.minGroupSize} pax</strong>
-                      </span>
-                    )}
-                  </div>
-                )}
+                <div className="tour-hero-meta">
+                  {tour.price > 0 ? (
+                    <span>
+                      <i className="fa-solid fa-tag"></i>
+                      Start from&nbsp;<strong>IDR {tour.price.toLocaleString('id-ID')}</strong>/Person
+                    </span>
+                  ) : (
+                    <span style={{ color: '#999' }}>
+                      Belum ada jadwal tersedia
+                    </span>
+                  )}
+                  {tour.minGroupSize && (
+                    <span>
+                      <i className="fa-solid fa-users"></i>
+                      Min group:&nbsp;<strong>{tour.minGroupSize} pax</strong>
+                    </span>
+                  )}
+                </div>
 
                 <div
                   className="tour-hero-desc"
@@ -312,6 +320,21 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
                 <TourFeatures features={tour.features} />
                 <TourInfoGrid info={tour.infoGrid} />
                 <TourPlanAccordion plan={tour.tourPlan} />
+                {tour.itineraryFile && (
+                  <div className="mt-4 mb-4">
+                    <a
+                      href={tour.itineraryFile.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                      className="theme-btn"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    >
+                      <i className="fa-solid fa-file-pdf"></i>
+                      Download Itinerary
+                    </a>
+                  </div>
+                )}
                 <TourInclusionsExclusions
                   inclusions={tour.inclusions}
                   exclusions={tour.exclusions}
@@ -329,22 +352,14 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
                     </div>
                   </div>
                 )}
-                <TourReviewSection
-                  summary={tour.reviewSummary}
-                  reviews={tour.reviews}
-                  tourSlug={slug}
-                />
               </div>
             </div>
 
             {/* Sidebar */}
             <div className="col-lg-4">
               <div className="main-bar" id="book-this-tour">
-                <TourBookingForm basePrice={tour.price} departures={tour.departures} />
-                <BookingPromoCard
-                  image={tour.promoCard.image}
-                  titleHtml={tour.promoCard.titleHtml}
-                />
+                <TourBookingForm basePrice={tour.price} departures={tour.departures} tourTitle={tour.title} tourCode={tour.tourCode} />
+                <WhyBookWithUs />
               </div>
             </div>
 

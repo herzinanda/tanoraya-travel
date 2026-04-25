@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="footer-top style-new">
           <div className="logo-items">
             <Link href="/">
-              <Image src="/img/logo/white-logo.svg" alt="Tanoraya Travel" width={140} height={35} />
+              <Image src="/img/logo/tanoraya-logo-new.png" alt="Tanoraya Tour & Travel" width={200} height={50} style={{ filter: 'brightness(0) invert(1)' }} />
             </Link>
           </div>
           <div className="contact-info">

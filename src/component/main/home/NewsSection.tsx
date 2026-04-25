@@ -17,7 +17,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
-const NewsSection = async () => {
+const NewsSection = async ({ title, subtitle }: { title?: string; subtitle?: string } = {}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let posts: any[] = [];
   try {
@@ -31,9 +31,9 @@ const NewsSection = async () => {
     <section className="news-section section-padding fix">
       <div className="container">
         <div className="section-title text-center">
-          <span className="sub-title wow fadeInUp">News & Updates</span>
+          <span className="sub-title wow fadeInUp">{subtitle || 'News & Updates'}</span>
           <h2 className="wow fadeInUp" data-wow-delay=".3s">
-            Our Latest News & Articles
+            {title || 'Our Latest News & Articles'}
           </h2>
         </div>
         <div className="row">

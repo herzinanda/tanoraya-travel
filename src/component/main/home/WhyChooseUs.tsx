@@ -1,12 +1,13 @@
 import { WhyChooseUsProps } from '@/types'
 import Image from 'next/image'
-import Link from 'next/link'
 import React from 'react'
+import { StrapiImage, getStrapiMedia } from './StrapiImage'
 
 const WhyChooseUs = ({
     title,
     subtitle,
     Images,
+    videoUrl,
     whyChooseUsItem
 }: Readonly<WhyChooseUsProps>) => {
     return (
@@ -26,16 +27,35 @@ const WhyChooseUs = ({
                         <div className="row g-4">
                             <div className="col-xl-7 col-lg-6">
                                 <div className="chose-us-image">
-                                    <Image src="/img/choose-us/choose-1.jpg" alt="img" className="wow img-custom-anim-left" width={420} height={450} />
+                                    {Images?.[0] ? (
+                                        <StrapiImage src={Images[0].url} alt={Images[0].alternativeText || 'Why choose us'} width={420} height={450} className="wow img-custom-anim-left" />
+                                    ) : (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src="/img/choose-us/choose-1.jpg" alt="img" className="wow img-custom-anim-left" />
+                                    )}
                                     <div className="chose-us-image2">
-                                        <Image src="/img/choose-us/choose-2.jpg" alt="" width={225} height={320} />
+                                        {Images?.[1] ? (
+                                            <StrapiImage src={Images[1].url} alt={Images[1].alternativeText || 'Why choose us'} width={225} height={320} />
+                                        ) : (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src="/img/choose-us/choose-2.jpg" alt="" />
+                                        )}
                                     </div>
                                     <div className="chose-us-image3">
-                                        <Image src="/img/choose-us/choose-3.jpg" alt="" width={338} height={320} />
-                                        <Link href="https://www.youtube.com/watch?v=LhRXf-yEQqA"
-                                            className="video-btn ripple video-popup">
-                                            <i className="fas fa-play"></i>
-                                        </Link>
+                                        {Images?.[2] ? (
+                                            <StrapiImage src={Images[2].url} alt={Images[2].alternativeText || 'Why choose us'} width={338} height={320} />
+                                        ) : (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src="/img/choose-us/choose-3.jpg" alt="" />
+                                        )}
+                                        {videoUrl ? (
+                                            <a href={videoUrl}
+                                                className="video-btn ripple video-popup"
+                                                target="_blank"
+                                                rel="noopener noreferrer">
+                                                <i className="fas fa-play"></i>
+                                            </a>
+                                        ) : null}
                                     </div>
                                 </div>
                             </div>

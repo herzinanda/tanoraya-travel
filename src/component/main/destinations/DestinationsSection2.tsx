@@ -59,7 +59,7 @@ destinations = response.data.map(mapDestination)
                   <div className="destination-content">
                     <div className="content">
                       <p>Travel To</p>
-                      <h3>{dest.title}</h3>
+                      <h3 className="text-white">{dest.title}</h3>
                     </div>
                     <span className="style-2">{dest.tourCount} Tour{dest.tourCount !== 1 ? 's' : ''}</span>
                   </div>

@@ -116,7 +116,7 @@ const NavigationMenu = ({ items }: NavMenuProps) => {
                         </span>
                         {item.megaMenu.featuredTour.price && (
                           <span className="nav-megamenu__featured-price">
-                            From Rp{" "}
+                            Start from Rp{" "}
                             {item.megaMenu.featuredTour.price.toLocaleString(
                               "id-ID"
                             )}

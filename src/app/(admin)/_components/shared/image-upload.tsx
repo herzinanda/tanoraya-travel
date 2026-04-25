@@ -71,7 +71,7 @@ export function ImageUpload({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-medium text-text-primary mb-1.5">
+        <label className="block text-sm font-medium mb-1.5">
           {label}
         </label>
       )}
@@ -80,12 +80,12 @@ export function ImageUpload({
           <img
             src={preview}
             alt="Preview"
-            className="h-32 w-auto rounded-md border border-border object-cover"
+            className="h-32 w-auto rounded-md border object-cover"
           />
           <button
             type="button"
             onClick={handleRemove}
-            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-danger text-white flex items-center justify-center hover:bg-danger/90 cursor-pointer"
+            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:bg-destructive/90 cursor-pointer"
           >
             <X className="h-3 w-3" />
           </button>
@@ -98,11 +98,11 @@ export function ImageUpload({
           className={cn(
             "flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-md cursor-pointer transition-colors",
             isDragOver
-              ? "border-primary bg-primary-light"
-              : "border-border hover:border-text-muted"
+              ? "border-primary bg-primary/5"
+              : "border-muted-foreground/25 hover:border-muted-foreground/50"
           )}
         >
-          <div className="flex flex-col items-center gap-2 text-text-muted">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
             {isDragOver ? (
               <ImageIcon className="h-8 w-8 text-primary" />
             ) : (

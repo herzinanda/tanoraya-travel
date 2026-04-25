@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getStrapiURL } from "@/utils/get-strapi-url";
 
 interface StrapiImageProps {
@@ -22,18 +21,16 @@ export function StrapiImage({
   if (!imageUrl) return null;
 
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src={imageUrl}
       alt={alt}
       className={className}
-      width={width}
-      height={height}
       style={{
-        width: width ? `${width}px` : 'auto',
-        height: height ? `${height}px` : 'auto',
-        objectFit: "cover", // This ensures the image isn't squashed
+        width: width ? `${width}px` : undefined,
+        height: height ? `${height}px` : undefined,
+        objectFit: 'cover',
       }}
-      unoptimized
       {...rest}
     />
   );

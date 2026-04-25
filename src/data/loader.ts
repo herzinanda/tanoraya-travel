@@ -85,16 +85,12 @@ export async function getDestinations() {
 
 export async function getTourPackages({
   destinationSlug,
-  minPrice,
-  maxPrice,
   search,
   minDays,
   maxDays,
   pageSize = 8,
 }: {
   destinationSlug?: string;
-  minPrice?: number;
-  maxPrice?: number;
   search?: string;
   minDays?: number;
   maxDays?: number;
@@ -104,17 +100,11 @@ export async function getTourPackages({
   if (destinationSlug) {
     filters.destination = { destinationUrl: { $eq: destinationSlug } };
   }
-  if (minPrice !== undefined || maxPrice !== undefined) {
-    filters.Price = {
-      ...(minPrice !== undefined && { $gte: minPrice }),
-      ...(maxPrice !== undefined && { $lte: maxPrice }),
-    };
-  }
   if (search?.trim()) {
     filters.title = { $containsi: search.trim() };
   }
   if (minDays !== undefined || maxDays !== undefined) {
-    filters.totalDays = {
+    filters.duration = {
       ...(minDays !== undefined && { $gte: minDays }),
       ...(maxDays !== undefined && { $lte: maxDays }),
     };
@@ -128,8 +118,11 @@ export async function getTourPackages({
       destination: {
         fields: ["title", "destinationUrl"],
       },
+      tour_departures: {
+        fields: ["departureDate", "priceOverride", "statusValue", "availableSeats"],
+      },
     },
-    fields: ["documentId", "title", "slug", "Price"],
+    fields: ["documentId", "title", "slug", "isFeatured"],
     status: "published",
     ...(Object.keys(filters).length > 0 && { filters }),
     pagination: { pageSize },
@@ -233,6 +226,7 @@ export async function getActivePromo() {
       image: { fields: ['url', 'alternativeText'] },
     },
     fields: ['title', 'subtitle', 'description', 'badge', 'ctaLabel', 'ctaUrl', 'isActive', 'expiresAt'],
+    status: 'published',
   });
   const url = new URL(`/api/promo-popup?${query}`, BASE_URL);
   return fetchAPI(url.href, { method: 'GET', next: { revalidate: 300 } });
@@ -303,13 +297,68 @@ export async function getLatestTourForNav() {
   return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
 }
 
+export async function getAboutPage() {
+  const query = qs.stringify({
+    populate: {
+      blocks: {
+        populate: "*",
+      },
+    },
+  });
+  const url = new URL(`/api/about-page?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+}
+
+export async function getDestinationPage() {
+  const query = qs.stringify({
+    populate: {
+      heroBgImage: { fields: ["url", "alternativeText"] },
+    },
+  });
+
+  const url = new URL(`/api/destination-page?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+}
+
+export async function getBlogPage() {
+  const query = qs.stringify({
+    populate: {
+      breadcrumbImage: { fields: ["url", "alternativeText"] },
+    },
+  });
+
+  const url = new URL(`/api/blog-page?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+}
+
+export async function getTourPage() {
+  const query = qs.stringify({
+    populate: {
+      breadcrumbImage: { fields: ["url", "alternativeText"] },
+      seo: {
+        populate: {
+          meta_image: { fields: ["url", "alternativeText"] },
+        },
+      },
+    },
+  });
+
+  const url = new URL(`/api/tour-page?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+}
+
 export async function getTourDepartures(tourSlug: string) {
   const query = qs.stringify({
     filters: {
       tour_package: { slug: { $eq: tourSlug } },
     },
     populate: {
-      variant: true,
+      variant: {
+        populate: {
+          itinerary: { populate: '*' },
+          tour_facilities: true,
+        },
+      },
     },
     pagination: { pageSize: 50 },
   })

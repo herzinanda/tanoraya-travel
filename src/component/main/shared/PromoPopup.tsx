@@ -22,7 +22,7 @@ export default function PromoPopup({ promo }: { promo: PromoData }) {
   const [closing, setClosing] = useState(false)
 
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY)) return
+    // Show popup on every page load
     if (promo.expiresAt && new Date(promo.expiresAt) < new Date()) return
     const t = setTimeout(() => setVisible(true), 800)
     return () => clearTimeout(t)
@@ -33,7 +33,7 @@ export default function PromoPopup({ promo }: { promo: PromoData }) {
     setTimeout(() => {
       setVisible(false)
       setClosing(false)
-      sessionStorage.setItem(SESSION_KEY, '1')
+      // no longer persisting dismissed state
     }, 350)
   }
 

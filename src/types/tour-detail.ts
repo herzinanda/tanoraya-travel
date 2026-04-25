@@ -17,6 +17,12 @@ export type TourPlanItem = {
   image: ImageType;
 };
 
+// For downloadable itinerary file
+export type ItineraryFile = {
+  url: string;
+  name: string;
+};
+
 // For the "Customer Reviews" progress bars
 export type TourReviewCategory = {
   id: string;
@@ -64,6 +70,8 @@ export type TourPackageType = {
   reviewSummary: TourReviewSummary;
   reviews: ReviewType[];
   price: number;
+  tourCode?: string;
+  itineraryFile?: ItineraryFile;
   departures: TourDeparture[];
   promoCard: {
     image: ImageType;

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Manrope, Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { Dancing_Script, Geist, Manrope } from "next/font/google";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -41,11 +43,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en">
       <head>
         <link rel="shortcut icon" href="/img/favicon.svg" />
       </head>
-      <body className={`${manrope.variable} ${dancingScript.variable}`}>
+      <body
+        className={`${geist.variable} ${manrope.variable} ${dancingScript.variable}`}
+      >
         {children}
       </body>
     </html>

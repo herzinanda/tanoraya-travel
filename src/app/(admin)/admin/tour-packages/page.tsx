@@ -30,8 +30,8 @@ export default async function TourPackagesPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Tour Packages</h1>
-          <p className="text-text-secondary text-sm mt-1">Manage tours, variants, and departures</p>
+          <h1 className="text-2xl font-bold tracking-tight">Tour Packages</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage tours, variants, and departures</p>
         </div>
         <Button asChild>
           <Link href="/admin/tour-packages/new">
@@ -48,7 +48,7 @@ export default async function TourPackagesPage({
               name="search"
               defaultValue={search}
               placeholder="Search tour packages..."
-              className="flex-1 h-9 px-3 text-sm border border-border rounded-md bg-surface text-text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
             <Button type="submit" variant="secondary" size="sm">
               Search
@@ -72,13 +72,13 @@ export default async function TourPackagesPage({
                 <TableHead>Price</TableHead>
                 <TableHead>Days</TableHead>
                 <TableHead>Featured</TableHead>
-                <TableHead className="w-[120px]">Actions</TableHead>
+                <TableHead className="w-30">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {tours.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-text-muted">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     No tour packages found
                   </TableCell>
                 </TableRow>
@@ -87,7 +87,7 @@ export default async function TourPackagesPage({
                 tours.map((tour: any) => (
                   <TableRow key={tour.documentId}>
                     <TableCell className="font-medium">{tour.title}</TableCell>
-                    <TableCell className="text-text-secondary">
+                    <TableCell className="text-muted-foreground">
                       {tour.destination?.title ?? "—"}
                     </TableCell>
                     <TableCell>
@@ -95,7 +95,7 @@ export default async function TourPackagesPage({
                         ? `Rp ${Number(tour.Price).toLocaleString("id-ID")}`
                         : "—"}
                     </TableCell>
-                    <TableCell>{tour.totalDays ?? "—"}</TableCell>
+                    <TableCell>{tour.duration ?? "—"}</TableCell>
                     <TableCell>
                       {tour.isFeatured ? (
                         <Badge variant="success">

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -106,12 +105,11 @@ export default async function ArticleDetailPage({
                   {/* Featured Image */}
                   {featuredImgUrl && (
                     <div className="post-featured-thumb">
-                      <Image
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={featuredImgUrl}
                         alt={article.coverImage?.alternativeText ?? article.title}
-                        width={840}
-                        height={500}
-                        style={{ width: '100%', height: 'auto' }}
+                        style={{ width: '100%', height: 'auto', borderRadius: '10px', display: 'block' }}
                       />
                     </div>
                   )}

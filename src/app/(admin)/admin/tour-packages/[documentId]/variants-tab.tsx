@@ -54,7 +54,7 @@ export function VariantsTab({ tourDocumentId, variants }: { tourDocumentId: stri
             </DialogHeader>
             <form action={handleCreate} className="space-y-4">
               {error && (
-                <div className="bg-danger-light text-danger text-sm px-3 py-2 rounded-md">{error}</div>
+                <div className="bg-destructive/10 text-destructive text-sm px-3 py-2 rounded-md">{error}</div>
               )}
               <FormField label="Name" name="name" placeholder="e.g. Standard, Premium" required />
               <FormField label="Description" name="description" type="textarea" placeholder="Optional description" rows={3} />
@@ -73,13 +73,13 @@ export function VariantsTab({ tourDocumentId, variants }: { tourDocumentId: stri
               <TableHead>Name</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Price Modifier</TableHead>
-              <TableHead className="w-[60px]">Actions</TableHead>
+              <TableHead className="w-15">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {variants.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-text-muted">
+                <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
                   No variants added yet
                 </TableCell>
               </TableRow>
@@ -88,7 +88,7 @@ export function VariantsTab({ tourDocumentId, variants }: { tourDocumentId: stri
               variants.map((v: any) => (
                 <TableRow key={v.documentId}>
                   <TableCell className="font-medium">{v.name}</TableCell>
-                  <TableCell className="text-text-secondary">{v.description ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{v.description ?? "—"}</TableCell>
                   <TableCell>
                     {v.priceModifier
                       ? `+Rp ${Number(v.priceModifier).toLocaleString("id-ID")}`
@@ -104,7 +104,7 @@ export function VariantsTab({ tourDocumentId, variants }: { tourDocumentId: stri
                       }}
                       trigger={
                         <Button variant="ghost" size="icon">
-                          <Trash2 className="h-4 w-4 text-danger" />
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       }
                     />

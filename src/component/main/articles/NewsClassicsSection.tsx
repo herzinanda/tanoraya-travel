@@ -51,16 +51,12 @@ const NewsClassicsSection = async ({ page = 1 }: { page?: number }) => {
                   return (
                     <div key={article.documentId} className="news-standard-items">
                       <div className="news-thumb">
-                        {imgUrl ? (
-                          <Image
-                            src={imgUrl}
-                            alt={article.coverImage?.alternativeText ?? article.title}
-                            width={840}
-                            height={500}
-                          />
-                        ) : (
-                          <Image src="/img/news/22.jpg" alt={article.title} width={840} height={500} />
-                        )}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={imgUrl || "/img/news/22.jpg"}
+                          alt={article.coverImage?.alternativeText ?? article.title}
+                          style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                        />
                         <div className="post">
                           <h3>
                             {date.day}

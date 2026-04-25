@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Button } from "../../_components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../_components/ui/card";
 import { Badge } from "../../_components/ui/badge";
@@ -30,8 +30,8 @@ export default async function ArticlesPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Articles</h1>
-          <p className="text-text-secondary text-sm mt-1">Manage your blog posts</p>
+          <h1 className="text-2xl font-bold tracking-tight">Articles</h1>
+          <p className="text-muted-foreground text-sm mt-1">Manage your blog posts</p>
         </div>
         <Button asChild>
           <Link href="/admin/articles/new">
@@ -48,7 +48,7 @@ export default async function ArticlesPage({
               name="search"
               defaultValue={search}
               placeholder="Search articles..."
-              className="flex-1 h-9 px-3 text-sm border border-border rounded-md bg-surface text-text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
             <Button type="submit" variant="secondary" size="sm">
               Search
@@ -71,13 +71,13 @@ export default async function ArticlesPage({
                 <TableHead>Category</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Published</TableHead>
-                <TableHead className="w-[120px]">Actions</TableHead>
+                <TableHead className="w-30">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {articles.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-text-muted">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     No articles found
                   </TableCell>
                 </TableRow>
@@ -90,11 +90,11 @@ export default async function ArticlesPage({
                       {article.category ? (
                         <Badge variant="secondary">{article.category}</Badge>
                       ) : (
-                        <span className="text-text-muted">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-text-secondary">{article.author ?? "—"}</TableCell>
-                    <TableCell className="text-text-secondary text-sm">
+                    <TableCell className="text-muted-foreground">{article.author ?? "—"}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
                       {article.publishedAt
                         ? new Date(article.publishedAt).toLocaleDateString("en-US", {
                             year: "numeric",

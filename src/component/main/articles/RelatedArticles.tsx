@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { getStrapiURL } from '@/utils/get-strapi-url'
 
@@ -32,13 +31,12 @@ export default function RelatedArticles({ articles }: { articles: any[] }) {
             href={`/articles/${article.slug}`}
             style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', textDecoration: 'none' }}
           >
-            <div style={{ flexShrink: 0, borderRadius: '6px', overflow: 'hidden' }}>
-              <Image
+            <div style={{ flexShrink: 0, borderRadius: '6px', overflow: 'hidden', width: 72, height: 72 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={getImageUrl(article.coverImage?.url)}
                 alt={article.coverImage?.alternativeText || article.title}
-                width={72}
-                height={72}
-                style={{ objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               />
             </div>
             <div>

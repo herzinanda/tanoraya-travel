@@ -21,14 +21,14 @@ export default function NewArticlePage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">New Article</h1>
-          <p className="text-text-secondary text-sm mt-1">Create a new blog post</p>
+          <h1 className="text-2xl font-bold tracking-tight">New Article</h1>
+          <p className="text-muted-foreground text-sm mt-1">Create a new blog post</p>
         </div>
       </div>
 
       <form action={formAction} className="space-y-6">
         {state?.error && (
-          <div className="bg-danger-light text-danger text-sm px-4 py-3 rounded-md border border-danger/20">
+          <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-md border border-destructive/20">
             {state.error}
           </div>
         )}

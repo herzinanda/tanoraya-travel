@@ -17,7 +17,7 @@ export async function getAdminArticles({
     populate: {
       coverImage: { fields: ["url", "alternativeText"] },
     },
-    fields: ["documentId", "title", "slug", "category", "author", "publishedAt", "readTime"],
+    fields: ["title", "slug", "category", "author", "publishedAt", "readTime"],
     ...(search?.trim() && { filters: { title: { $containsi: search.trim() } } }),
     pagination: { page, pageSize },
     sort: "publishedAt:desc",

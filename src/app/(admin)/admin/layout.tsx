@@ -1,18 +1,33 @@
-import { AdminSidebar } from "../_components/layout/admin-sidebar";
-import { AdminTopbar } from "../_components/layout/admin-topbar";
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { verifySession } from "../_lib/session"
 
-export default function AdminShellLayout({
+export default async function AdminShellLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
+  const session = await verifySession()
+  const user = {
+    name: session?.username ?? "Admin",
+    email: session?.email ?? "",
+  }
+
   return (
-    <div className="min-h-screen bg-surface-secondary font-sans">
-      <AdminSidebar />
-      <div className="ml-60 transition-all duration-200">
-        <AdminTopbar />
-        <div className="p-6">{children}</div>
-      </div>
-    </div>
-  );
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" user={user} />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col p-4 lg:p-6">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }

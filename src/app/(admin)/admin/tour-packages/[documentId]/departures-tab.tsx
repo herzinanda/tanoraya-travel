@@ -64,7 +64,7 @@ export function DeparturesTab({ tourDocumentId, departures, variants }: { tourDo
             </DialogHeader>
             <form action={handleCreate} className="space-y-4">
               {error && (
-                <div className="bg-danger-light text-danger text-sm px-3 py-2 rounded-md">{error}</div>
+                <div className="bg-destructive/10 text-destructive text-sm px-3 py-2 rounded-md">{error}</div>
               )}
               <FormField label="Departure Date" name="departureDate" type="date" required />
               <FormField label="Return Date" name="returnDate" type="date" />
@@ -103,13 +103,13 @@ export function DeparturesTab({ tourDocumentId, departures, variants }: { tourDo
               <TableHead>Price Override</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Variant</TableHead>
-              <TableHead className="w-[60px]">Actions</TableHead>
+              <TableHead className="w-15">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {departures.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-text-muted">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No departures added yet
                 </TableCell>
               </TableRow>
@@ -124,7 +124,7 @@ export function DeparturesTab({ tourDocumentId, departures, variants }: { tourDo
                   <TableCell>
                     <Badge variant={statusVariant(dep.status)}>{dep.status ?? "—"}</Badge>
                   </TableCell>
-                  <TableCell className="text-text-secondary">{dep.variant?.name ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{dep.variant?.name ?? "—"}</TableCell>
                   <TableCell>
                     <ConfirmDialog
                       title="Delete Departure"
@@ -135,7 +135,7 @@ export function DeparturesTab({ tourDocumentId, departures, variants }: { tourDo
                       }}
                       trigger={
                         <Button variant="ghost" size="icon">
-                          <Trash2 className="h-4 w-4 text-danger" />
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       }
                     />

@@ -35,9 +35,82 @@ export default function TourDepartureTabs({
     .filter((d) => new Date(d.departureDate) >= new Date(new Date().toDateString()))
     .sort((a, b) => new Date(a.departureDate).getTime() - new Date(b.departureDate).getTime())
 
-  const { selectedDeparture, setSelectedDeparture } = useTourPage()
+  const { selectedDeparture, setSelectedDeparture, setBookingMode, isCustomDate, setIsCustomDate } = useTourPage()
 
-  if (upcoming.length === 0) return null
+  const customDateCTA = (
+    <div
+      style={{
+        background: isCustomDate ? '#fff8f0' : '#fafafa',
+        border: `1px solid ${isCustomDate ? 'var(--theme-color, #f26522)' : '#e8e8e8'}`,
+        borderRadius: '12px',
+        padding: '20px 24px',
+        marginTop: '16px',
+        textAlign: 'center',
+      }}
+    >
+      <i className="fa-regular fa-calendar-plus" style={{ fontSize: 28, color: 'var(--theme-color, #f26522)', marginBottom: 8, display: 'block' }}></i>
+      <p style={{ fontWeight: 600, marginBottom: 6, fontSize: '0.95rem' }}>
+        Tidak menemukan jadwal yang tepat?
+      </p>
+      <p style={{ color: '#888', fontSize: 13, marginBottom: 14 }}>
+        Pilih tanggal keberangkatan sesuai keinginan Anda, dan kami akan menghubungi Anda untuk konfirmasi ketersediaan.
+      </p>
+      {isCustomDate ? (
+        <button
+          type="button"
+          className="theme-btn"
+          onClick={() => {
+            setIsCustomDate(false)
+            if (upcoming.length > 0) setSelectedDeparture(upcoming[0])
+          }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#999', borderColor: '#999' }}
+        >
+          <i className="fa-solid fa-arrow-left"></i> Kembali ke Jadwal Tersedia
+        </button>
+      ) : (
+        <a
+          href="#book-this-tour"
+          className="theme-btn"
+          onClick={() => {
+            setIsCustomDate(true)
+            setBookingMode('quote')
+          }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+        >
+          Pilih Tanggal Sendiri <i className="fa-solid fa-calendar-pen"></i>
+        </a>
+      )}
+    </div>
+  )
+
+  if (upcoming.length === 0) {
+    return (
+      <div className="departure-section mt-4 mb-4">
+        <h4 className="mb-3" style={{ fontWeight: 600 }}>
+          <i className="fa-regular fa-calendar-days me-2" style={{ color: 'var(--theme-color, #f26522)' }}></i>
+          Tanggal Keberangkatan
+        </h4>
+        <div
+          style={{
+            background: '#fafafa',
+            border: '1px solid #e8e8e8',
+            borderRadius: '12px',
+            padding: '24px',
+            textAlign: 'center',
+          }}
+        >
+          <i className="fa-regular fa-calendar-xmark" style={{ fontSize: 36, color: '#ccc', marginBottom: 12, display: 'block' }}></i>
+          <p style={{ fontWeight: 600, marginBottom: 6, fontSize: '1rem' }}>
+            Belum ada jadwal keberangkatan yang tersedia
+          </p>
+          <p style={{ color: '#888', fontSize: 14, marginBottom: 16 }}>
+            Hubungi kami untuk informasi jadwal terbaru atau request tanggal khusus.
+          </p>
+        </div>
+        {customDateCTA}
+      </div>
+    )
+  }
 
   const selected = (selectedDeparture && upcoming.find(d => d.id === selectedDeparture.id)) ?? upcoming[0]
 
@@ -148,20 +221,44 @@ export default function TourDepartureTabs({
           </div>
         </div>
 
-        {/* Book Now CTA */}
-        {selected.status !== 'sold_out' && (
-          <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e8e8e8' }}>
+        {/* CTAs */}
+        {selected.status !== 'sold_out' && !isCustomDate && (
+          <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e8e8e8', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <a
               href="#book-this-tour"
               className="theme-btn"
+              onClick={() => setBookingMode('book')}
               style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
             >
               Book Now — {formatDate(selected.departureDate).short}
               <i className="fa-solid fa-arrow-right"></i>
             </a>
+            <a
+              href="#book-this-tour"
+              className="theme-btn rounded-full"
+              onClick={() => setBookingMode('quote')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 24px',
+                background: '#25D366',
+                color: '#fff',
+                borderRadius: '999px',
+                fontWeight: 600,
+                fontSize: '14px',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              <i className="fab fa-whatsapp" style={{ fontSize: 18 }}></i>
+              Ask Us First
+            </a>
           </div>
         )}
       </div>
+
+      {customDateCTA}
     </div>
   )
 }

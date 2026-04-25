@@ -35,7 +35,7 @@ export function FormField({
     <div className={cn("space-y-1.5", className)}>
       <Label htmlFor={name}>
         {label}
-        {required && <span className="text-danger ml-0.5">*</span>}
+        {required && <span className="text-destructive ml-0.5">*</span>}
       </Label>
       {type === "textarea" ? (
         <Textarea
@@ -65,8 +65,8 @@ export function FormField({
           required={required}
         />
       )}
-      {hint && <p className="text-xs text-text-muted">{hint}</p>}
-      {error && <p className="text-xs text-danger">{error}</p>}
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   );
 }

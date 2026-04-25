@@ -25,7 +25,8 @@ export async function strapiGet<T = unknown>(
   });
 
   if (!res.ok) {
-    console.error(`[strapiGet] ${res.status} ${res.statusText} — ${url.href}`);
+    const body = await res.text().catch(() => "");
+    console.error(`[strapiGet] ${res.status} ${res.statusText} — ${url.href}`, body);
     return null;
   }
   return res.json();
