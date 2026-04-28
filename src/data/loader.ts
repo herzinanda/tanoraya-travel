@@ -37,7 +37,7 @@ const homePageQuery = qs.stringify({
               fields: ["url", "alternativeText"],
             },
             whyChooseUsItem: true,
-          }
+          },
         },
         "blocks.home-best-recommended-place": {
           populate: "*"

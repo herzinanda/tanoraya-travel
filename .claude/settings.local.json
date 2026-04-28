@@ -5,7 +5,12 @@
       "Bash(python -c \":*)",
       "Bash(pip install:*)",
       "Bash(C:/Users/LENOVO/AppData/Local/Programs/Python/Python313/python.exe -m pip install python-docx -q)",
-      "Bash(C:/Users/LENOVO/AppData/Local/Programs/Python/Python313/python.exe -c \":*)"
+      "Bash(C:/Users/LENOVO/AppData/Local/Programs/Python/Python313/python.exe -c \":*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python -c ':*)",
+      "Bash(identify \"D:/Herzi/Projects Personal/tanoraya-travel/public/img/logo/tanoraya-logo-new.png\")",
+      "Bash(bunx tsc:*)",
+      "Bash(bun run:*)"
     ]
   }
 }

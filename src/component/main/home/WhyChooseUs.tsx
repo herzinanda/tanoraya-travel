@@ -1,102 +1,161 @@
-import { WhyChooseUsProps } from '@/types'
 import Image from 'next/image'
-import React from 'react'
-import { StrapiImage, getStrapiMedia } from './StrapiImage'
+import Link from 'next/link'
+import { Award, Sparkles, Globe, ShieldCheck, ArrowRight, type LucideIcon } from 'lucide-react'
+import { WhyChooseUsProps } from '@/types'
+import { getStrapiMedia } from './StrapiImage'
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  award: Award,
+  sparkle: Sparkles,
+  sparkles: Sparkles,
+  globe: Globe,
+  shield: ShieldCheck,
+  shieldcheck: ShieldCheck,
+}
+
+const DEFAULT_ICON_KEYS = ['award', 'sparkle', 'globe', 'shield'] as const
+
+const FALLBACK_FEATURES = [
+  { id: 1, title: 'Expert Guides', description: 'Locally trained tour leaders with 10+ years of experience.', iconName: 'award' },
+  { id: 2, title: 'Personalized Service', description: 'Itineraries shaped around your taste, pace and budget.', iconName: 'sparkle' },
+  { id: 3, title: 'All-Inclusive Packages', description: 'Flights, stays, activities — every detail handled for you.', iconName: 'globe' },
+  { id: 4, title: 'Safe & Hassle-Free', description: '24/7 support and flexible rebooking on every journey.', iconName: 'shield' },
+]
 
 const WhyChooseUs = ({
-    title,
-    subtitle,
-    Images,
-    videoUrl,
-    whyChooseUsItem
-}: Readonly<WhyChooseUsProps>) => {
-    return (
-        <>
-            <section className="choose-us-section section-padding fix section-bg">
-                <div className="left-shape float-bob-x">
-                    <Image src="/img/shape/plane-3.png" alt="img" width={370} height={205} />
-                </div>
-                <div className="dot-shape">
-                    <Image src="/img/shape/dot-1.png" alt="img" width={133} height={177} />
-                </div>
-                <div className="right-shape">
-                    <Image src="/img/choose-us/shape1.png" alt="img" width={743} height={1080} />
-                </div>
-                <div className="container">
-                    <div className="choose-us-wrapper">
-                        <div className="row g-4">
-                            <div className="col-xl-7 col-lg-6">
-                                <div className="chose-us-image">
-                                    {Images?.[0] ? (
-                                        <StrapiImage src={Images[0].url} alt={Images[0].alternativeText || 'Why choose us'} width={420} height={450} className="wow img-custom-anim-left" />
-                                    ) : (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img src="/img/choose-us/choose-1.jpg" alt="img" className="wow img-custom-anim-left" />
-                                    )}
-                                    <div className="chose-us-image2">
-                                        {Images?.[1] ? (
-                                            <StrapiImage src={Images[1].url} alt={Images[1].alternativeText || 'Why choose us'} width={225} height={320} />
-                                        ) : (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src="/img/choose-us/choose-2.jpg" alt="" />
-                                        )}
-                                    </div>
-                                    <div className="chose-us-image3">
-                                        {Images?.[2] ? (
-                                            <StrapiImage src={Images[2].url} alt={Images[2].alternativeText || 'Why choose us'} width={338} height={320} />
-                                        ) : (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src="/img/choose-us/choose-3.jpg" alt="" />
-                                        )}
-                                        {videoUrl ? (
-                                            <a href={videoUrl}
-                                                className="video-btn ripple video-popup"
-                                                target="_blank"
-                                                rel="noopener noreferrer">
-                                                <i className="fas fa-play"></i>
-                                            </a>
-                                        ) : null}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-xl-5 col-lg-6">
-                                <div className="choose-us-content">
-                                    <div className="section-title mb-0">
-                                        <span className="sub-title wow fadeInUp">
-                                            {subtitle}
-                                        </span>
-                                        <h2 className="wow fadeInUp" data-wow-delay=".3s">
-                                            {title}
-                                        </h2>
-                                    </div>
-                                    <div className="choose-us-area">
-                                        {
-                                            whyChooseUsItem.map((item, index) => {
-                                                return (
-                                                    <React.Fragment key={item.id ?? index}>
-                                                        <div className="line-image">
-                                                            <Image src="/img/shape/line-shape.png" alt="" width={2} height={192} />
-                                                        </div>
-                                                        <div className="choose-us-items wow fadeInUp" data-wow-delay=".2s">
-                                                            <h3 className="number">{index + 1}</h3>
-                                                            <div className="content">
-                                                                <h4>{item.title}</h4>
-                                                                <p>{item.description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </React.Fragment>
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  title,
+  subtitle,
+  description,
+  Images,
+  badgeNumber,
+  badgeLabel,
+  whyChooseUsItem,
+}: Readonly<Partial<WhyChooseUsProps>>) => {
+  const features =
+    whyChooseUsItem && whyChooseUsItem.length > 0 ? whyChooseUsItem : FALLBACK_FEATURES
+
+  const mainImgUrl = Images?.[0]?.url ? getStrapiMedia(Images[0].url) : null
+  const subImgUrl  = Images?.[1]?.url ? getStrapiMedia(Images[1].url) : null
+  const mainImgAlt = Images?.[0]?.alternativeText || 'Why Tanoraya'
+  const subImgAlt  = Images?.[1]?.alternativeText || ''
+
+  return (
+    <section className="t-section t-why">
+      <div className="container">
+
+        {/* ── Main grid ── */}
+        <div className="t-why__grid">
+
+          {/* Left: Content */}
+          <div>
+            <div className="t-eyebrow">{subtitle || 'Why Tanoraya'}</div>
+
+            <h2
+              className="t-section__title"
+              dangerouslySetInnerHTML={{
+                __html:
+                  title ||
+                  'Travel the world, <em>the Tanoraya way</em>',
+              }}
+            />
+
+            <p className="t-section__sub">
+              {description ||
+                "From the beaches of Bali to the peaks of the Alps, we design trips that balance comfort, adventure, and authentic local culture. Here's what sets us apart."}
+            </p>
+
+            {/* Features 2×2 */}
+            <div className="t-why__features">
+              {features.map((f, i) => {
+                const iconKey =
+                  f.iconName?.toLowerCase() ?? DEFAULT_ICON_KEYS[i % DEFAULT_ICON_KEYS.length]
+                const IconComponent = ICON_MAP[iconKey] ?? Award
+
+                return (
+                  <div key={f.id ?? i} className="t-feature">
+                    <div className="t-feature__icon">
+                      <IconComponent size={22} />
                     </div>
-                </div>
-            </section>
-        </>
-    )
+                    <div className="t-feature__title">{f.title}</div>
+                    <p className="t-feature__desc">{f.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Right: Visual */}
+          <div className="t-why__visual">
+            {/* Main image */}
+            <div className="t-why__img-main">
+              {mainImgUrl ? (
+                <Image
+                  src={mainImgUrl}
+                  alt={mainImgAlt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 960px) 100vw, 50vw"
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #1d58b8, #0b2a5b)' }} />
+              )}
+            </div>
+
+            {/* Sub image */}
+            <div className="t-why__img-sub">
+              {subImgUrl ? (
+                <Image
+                  src={subImgUrl}
+                  alt={subImgAlt}
+                  fill
+                  className="object-cover"
+                  sizes="240px"
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #ff9555, #ff7a2b)' }} />
+              )}
+            </div>
+
+            {/* Badge */}
+            <div className="t-why__badge">
+              <div className="t-why__badge__icon">
+                <Award size={18} />
+              </div>
+              <div>
+                <div className="t-why__badge__n">{badgeNumber || '15+ Years'}</div>
+                <div className="t-why__badge__l">{badgeLabel || 'Of Experience'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── CTA Banner ── */}
+        <div style={{ marginTop: 88 }}>
+          <div className="t-cta-banner">
+            <div>
+              <div className="t-eyebrow" style={{ color: 'var(--t-orange-400)' }}>
+                Ready when you are
+              </div>
+              <h2>Start your adventure today</h2>
+              <p>
+                Ready to explore the world? Get in touch with our travel experts and
+                let&apos;s plan your dream vacation together.
+              </p>
+            </div>
+            <div className="t-cta-banner__actions">
+              <Link href="/tour-packages" className="t-btn t-btn--primary">
+                Book Now <ArrowRight size={16} />
+              </Link>
+              <Link href="/contact" className="t-btn t-btn--ghost-white">
+                Talk to Us
+              </Link>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  )
 }
 
 export default WhyChooseUs

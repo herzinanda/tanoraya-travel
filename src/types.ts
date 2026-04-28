@@ -17,6 +17,7 @@ export interface WhyChooseUsItemProps {
   id?: number;
   title: string;
   description: string;
+  iconName?: string;
 }
 
 type ComponentType =
@@ -87,8 +88,11 @@ export interface HomeDestinationsProps extends Base<"blocks.home-destinations"> 
 export interface WhyChooseUsProps extends Base<"blocks.why-choose-us"> {
   title: string;
   subtitle: string;
+  description?: string;
   Images: ImageProps[];
   videoUrl?: string;
+  badgeNumber?: string;
+  badgeLabel?: string;
   whyChooseUsItem: WhyChooseUsItemProps[];
 }
 

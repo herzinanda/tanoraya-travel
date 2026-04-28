@@ -9204,3 +9204,298 @@ input.main-search-input::placeholder {
 .nav-megamenu__all-link:hover i {
   transform: translateX(3px);
 }
+
+
+/* ================================================================
+   Tanoraya Design System — Why Section & CTA Banner
+   Ported from Claude Design (tanoraya.css)
+   ================================================================ */
+
+:root {
+  --t-blue-900: #0b2a5b;
+  --t-blue-800: #133e86;
+  --t-blue-700: #1d58b8;
+  --t-blue-600: #2b6ee0;
+  --t-blue-500: #3b82f6;
+  --t-blue-400: #6aa5ff;
+  --t-blue-200: #cfe0ff;
+  --t-blue-100: #eaf2ff;
+  --t-blue-50:  #f5f9ff;
+
+  --t-orange-700: #d85a12;
+  --t-orange-600: #ef6c1f;
+  --t-orange-500: #ff7a2b;
+  --t-orange-400: #ff9555;
+  --t-orange-100: #ffe6d6;
+
+  --t-ink:    #0e1a34;
+  --t-ink-2:  #324062;
+  --t-muted:  #6b7896;
+  --t-line:   #e6ecf5;
+  --t-bg:     #ffffff;
+  --t-bg-soft:#f6f9ff;
+
+  --t-radius:    14px;
+  --t-radius-lg: 22px;
+  --t-radius-xl: 32px;
+  --t-shadow-sm: 0 2px 8px rgba(12,37,85,0.06);
+  --t-shadow-md: 0 10px 30px rgba(12,37,85,0.08);
+  --t-shadow-lg: 0 24px 60px rgba(12,37,85,0.14);
+}
+
+/* ── Shared section utility ── */
+.t-section { padding: 96px 0; position: relative; }
+
+.t-eyebrow {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--t-orange-600);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+}
+.t-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: var(--t-orange-500);
+  border-radius: 1px;
+}
+
+.t-section__title {
+  max-width: 620px;
+  color: var(--t-blue-900);
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.t-section__title em { font-style: normal; color: var(--t-orange-600); }
+
+.t-section__sub {
+  color: var(--t-muted);
+  font-size: 16px;
+  max-width: 520px;
+  margin-top: 14px;
+  line-height: 1.6;
+}
+
+/* ── Why section ── */
+.t-why {
+  background: var(--t-bg-soft);
+  position: relative;
+  overflow: hidden;
+}
+.t-why__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.t-why__features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+/* Feature cards */
+.t-feature {
+  background: #fff;
+  border-radius: var(--t-radius-lg);
+  padding: 26px;
+  border: 1px solid var(--t-line);
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.t-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--t-shadow-md);
+  border-color: transparent;
+}
+.t-feature__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--t-blue-100), #fff);
+  color: var(--t-blue-700);
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+}
+.t-feature:nth-child(2) .t-feature__icon,
+.t-feature:nth-child(3) .t-feature__icon {
+  background: linear-gradient(135deg, var(--t-orange-100), #fff);
+  color: var(--t-orange-600);
+}
+.t-feature__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--t-blue-900);
+  margin-bottom: 6px;
+}
+.t-feature__desc {
+  color: var(--t-muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Visual column */
+.t-why__visual { position: relative; }
+.t-why__img-main {
+  border-radius: var(--t-radius-xl);
+  overflow: hidden;
+  height: 520px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--t-shadow-lg);
+  position: relative;
+}
+.t-why__img-sub {
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 240px;
+  height: 200px;
+  border-radius: var(--t-radius-lg);
+  background-size: cover;
+  background-position: center;
+  border: 8px solid #fff;
+  box-shadow: var(--t-shadow-md);
+  overflow: hidden;
+}
+.t-why__badge {
+  position: absolute;
+  top: 30px;
+  right: -18px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: var(--t-shadow-md);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.t-why__badge__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--t-orange-500);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.t-why__badge__n {
+  font-weight: 800;
+  color: var(--t-blue-900);
+  font-size: 18px;
+  line-height: 1;
+}
+.t-why__badge__l {
+  font-size: 11px;
+  color: var(--t-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+/* ── CTA Banner ── */
+.t-cta-banner {
+  position: relative;
+  border-radius: var(--t-radius-xl);
+  padding: 56px;
+  background: linear-gradient(120deg, var(--t-blue-900), var(--t-blue-700));
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.t-cta-banner::before {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, rgba(255,122,43,0.35), transparent 70%);
+  z-index: -1;
+}
+.t-cta-banner h2 {
+  color: #fff;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+.t-cta-banner p {
+  color: rgba(255,255,255,0.82);
+  margin-top: 14px;
+  max-width: 520px;
+  line-height: 1.6;
+}
+.t-cta-banner__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ── Buttons ── */
+.t-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.t-btn--primary {
+  background: linear-gradient(135deg, var(--t-orange-500), var(--t-orange-600));
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(239,108,31,0.35);
+}
+.t-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 28px rgba(239,108,31,0.45);
+  color: #fff;
+}
+.t-btn--ghost-white {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.t-btn--ghost-white:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .t-why__grid { grid-template-columns: 1fr; }
+  .t-why__img-sub { display: none; }
+  .t-why__badge { right: 16px; }
+  .t-cta-banner { grid-template-columns: 1fr; padding: 40px 32px; }
+  .t-cta-banner__actions { justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+  .t-why__features { grid-template-columns: 1fr; }
+  .t-why__badge { display: none; }
+}
