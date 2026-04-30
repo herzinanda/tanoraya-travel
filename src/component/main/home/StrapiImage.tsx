@@ -39,6 +39,11 @@ export function StrapiImage({
 export function getStrapiMedia(url: string | null) {
   if (url == null) return null;
   if (url.startsWith("data:")) return url;
-  if (url.startsWith("http") || url.startsWith("//")) return url;
+  if (url.startsWith("http") || url.startsWith("//")) {
+    // Strapi returns absolute URLs based on its internal server config.
+    // Replace any internal host (localhost / 127.0.0.1) with the configured public URL.
+    const publicStrapiUrl = getStrapiURL();
+    return url.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/, publicStrapiUrl);
+  }
   return getStrapiURL() + url;
 }
