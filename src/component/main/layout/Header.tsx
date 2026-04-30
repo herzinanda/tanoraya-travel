@@ -98,6 +98,7 @@ const Header = ({
                     alt={logo.alt}
                     width={logo.width}
                     height={logo.height}
+                    style={{ width: '160px', height: 'auto' }}
                   />
                 </Link>
               </div>

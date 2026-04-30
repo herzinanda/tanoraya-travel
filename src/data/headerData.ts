@@ -4,8 +4,8 @@ import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types/i
 export const logo: LogoData = {
   src: "/img/logo/tanoraya-logo-new.png",
   alt: "Tanoraya Tour & Travel",
-  width: 200,
-  height: 50,
+  width: 3000,
+  height: 380,
 };
 
 export const contactInfo: ContactInfo = {
