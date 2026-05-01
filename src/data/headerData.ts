@@ -2,10 +2,10 @@
 import { NavItem, SocialLink, ContactInfo, LogoData, CtaButton } from "@/types/index";
 
 export const logo: LogoData = {
-  src: "/img/logo/tanoraya-logo-new.png",
+  src: "/img/logo/tanoraya-horizontal.png",
   alt: "Tanoraya Tour & Travel",
-  width: 3000,
-  height: 380,
+  width: 1200,
+  height: 300,
 };
 
 export const contactInfo: ContactInfo = {

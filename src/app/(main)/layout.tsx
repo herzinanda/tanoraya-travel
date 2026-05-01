@@ -6,7 +6,7 @@ import Footer from "@/component/main/layout/Footer";
 import SearchArea from "@/component/main/layout/SearchArea";
 import OffcanvasMenu from "@/component/main/layout/OffcanvasMenu";
 import FloatingWhatsApp from "@/component/main/shared/FloatingWhatsApp";
-import PageTransition from "@/component/main/shared/PageTransition";
+import PreLoader from "@/component/main/layout/PreLoader";
 
 import {
   logo,
@@ -122,8 +122,8 @@ export default async function MainLayout({
       <link rel="stylesheet" href="/css/flacticon.css" />
       <link rel="stylesheet" href="/css/main.css" />
 
-      {/* Page Transition */}
-      <PageTransition />
+      {/* Page Loader */}
+      <PreLoader />
       {/* Mouse Cursor */}
       <div className="mouse-cursor cursor-outer"></div>
       <div className="mouse-cursor cursor-inner"></div>
