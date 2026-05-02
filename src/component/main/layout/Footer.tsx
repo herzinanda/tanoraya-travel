@@ -38,7 +38,7 @@ const Footer = () => {
 
         <div className="footer-widget-wrapper-new style-2 style-new-area">
           <div className="row">
-            <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 wow fadeInUp" data-wow-delay=".2s">
+            <div className="col-xl-6 col-md-12 wow fadeInUp" data-wow-delay=".2s">
               <div className="single-widget-items">
                 <div className="footer-content style-3">
                   <h3>Subscribe Newsletter</h3>
@@ -54,46 +54,28 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6 ps-lg-5 wow fadeInUp" data-wow-delay=".4s">
+            <div className="col-xl-3 col-md-6 col-sm-6 ps-xl-4 wow fadeInUp" data-wow-delay=".4s">
               <div className="single-widget-items">
-                <div className="widget-head">
-                  <h4 className="style-3">Quick Links</h4>
-                </div>
                 <ul className="list-items style-3">
                   <li><Link href="/">Home</Link></li>
                   <li><Link href="/about">About Us</Link></li>
                   <li><Link href="/tour-packages">Tour Packages</Link></li>
                   <li><Link href="/articles">Travel Blog</Link></li>
                   <li><Link href="/contact">Contact Us</Link></li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="col-xl-2 col-lg-4 col-md-6 col-sm-6 ps-lg-5 wow fadeInUp" data-wow-delay=".6s">
-              <div className="single-widget-items">
-                <div className="widget-head">
-                  <h4 className="style-3">Support</h4>
-                </div>
-                <ul className="list-items style-3">
                   <li><Link href="/faq">FAQ</Link></li>
-                  <li><Link href="/request-a-quote">Request A Quote</Link></li>
-                  <li><Link href="/contact">Send A Message</Link></li>
                   <li><Link href="/legal-and-privacy">Privacy Policy</Link></li>
-                  <li><Link href="/legal-and-privacy">Terms of Use</Link></li>
                 </ul>
               </div>
             </div>
 
-            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6 ps-lg-5 wow fadeInUp" data-wow-delay=".8s">
+            <div className="col-xl-3 col-md-6 col-sm-6 ps-xl-4 wow fadeInUp" data-wow-delay=".6s">
               <div className="single-widget-items">
-                <div className="widget-head">
-                  <h4 className="style-3">Destinations</h4>
-                </div>
                 <ul className="list-items style-3">
                   <li><Link href="/tour-packages/tour?destination=sumatera-utara">Sumatera Utara</Link></li>
                   <li><Link href="/tour-packages/tour?destination=asean">ASEAN</Link></li>
                   <li><Link href="/tour-packages/tour?destination=malaysia">Malaysia</Link></li>
                   <li><Link href="/tour-packages/tour?destination=singapore">Singapore</Link></li>
+                  <li><Link href="/request-a-quote">Request A Quote</Link></li>
                 </ul>
               </div>
             </div>

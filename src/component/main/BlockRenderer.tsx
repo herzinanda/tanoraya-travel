@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Block } from "@/types";
 
 import AboutSection from "./home/AboutSection";
@@ -15,14 +16,14 @@ function blockRenderer(block: Block, index: number) {
   switch (block.__component) {
     case "blocks.hero-section":
       return (
-        <>
-          <HeroSection {...block} key={index} />
+        <Fragment key={index}>
+          <HeroSection {...block} />
           <section style={{ background: "#f4f6fa", padding: "40px 0 48px" }}>
             <div className="container">
               <SearchDestination />
             </div>
           </section>
-        </>
+        </Fragment>
       );
     case "blocks.home-about":
       return <AboutSection {...block} key={index} />;
