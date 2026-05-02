@@ -142,7 +142,7 @@ Version: 1.0.0
   --body: #fff;
   --black: #000;
   --white: #fff;
-  --theme: #fa6741;
+  --theme: #E48C20;
   --theme-2: #4da628;
   --theme-3: #f1ea78;
   --header: #0e0e0e;
@@ -5063,7 +5063,7 @@ span {
 .header-top-section {
   position: relative;
   position: relative;
-  border-top: 5px solid #fa6741;
+  /* border-top: 5px solid #E48C20; */
 }
 @media (max-width: 1199px) {
   .header-top-section {

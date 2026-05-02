@@ -55,10 +55,7 @@ const Header = ({
       {/* header-top */}
       <div className="header-top-section">
         <div className="container">
-          <div
-            className="header-top-wrapper bg-cover"
-            style={{ backgroundImage: "url(/img/header/1.jpg)" }}
-          >
+          <div className="header-top-wrapper">
             {/* Dynamic Contact Info */}
             <ul className="top-left">
               <li>
