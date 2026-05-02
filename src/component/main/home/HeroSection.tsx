@@ -3,7 +3,6 @@
 import Button from "@/component/main/ui/Button";
 import Image from "next/image";
 import Link from "next/link";
-import SearchDestination from "./SearchDestination";
 import type { HeroSectionProps } from "@/types";
 import { getStrapiMedia } from "./StrapiImage";
 
@@ -56,7 +55,6 @@ const HeroSection = ({
             </div>
           </div>
         </div>
-        <SearchDestination />
       </div>
     </section>
   );

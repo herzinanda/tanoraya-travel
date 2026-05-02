@@ -44,11 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="shortcut icon" href="/img/logo/tanoraya-icon.png" />
-        <link rel="icon" type="image/png" href="/img/logo/tanoraya-icon.png" />
-      </head>
-      <body
+<body
         className={`${geist.variable} ${manrope.variable} ${dancingScript.variable}`}
       >
         {children}

@@ -110,13 +110,13 @@ const Header = ({
                     <NavigationMenu items={navItems} />
                   </div>
                 </div>
-
+{/* 
                 <a href="#" className="search-trigger search-icon">
                   <i className="fa-regular fa-magnifying-glass"></i>
-                </a>
+                </a> */}
 
                 {/* Mobile Menu Toggle */}
-                <div className="header__hamburger my-auto">
+                {/* <div className="header__hamburger my-auto">
                   <div 
                     className="sidebar__toggle" 
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -128,7 +128,7 @@ const Header = ({
                       height={24}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Dynamic CTA Button */}
                 <Link href={ctaButton.href} className="theme-btn">
