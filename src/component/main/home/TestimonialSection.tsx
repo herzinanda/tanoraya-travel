@@ -61,12 +61,12 @@ const TestimonialSection = ({
                 {title || 'What Our Clients Say'}
               </h2>
             </div>
-            <div className="about-button wow fadeInUp" data-wow-delay=".7s">
+            {/* <div className="about-button wow fadeInUp" data-wow-delay=".7s">
               <Link href={button?.url || '/contact'} className="theme-btn">
                 {button?.text || 'Read More'}
                 <Image src="/img/icon/white-arrow.svg" alt="img" width={22} height={16} />
               </Link>
-            </div>
+            </div> */}
           </div>
           <div className="swiper testimonial-slider">
             <div className="swiper-wrapper">

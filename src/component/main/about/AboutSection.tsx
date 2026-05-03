@@ -10,7 +10,7 @@ const AboutSection = ({
   aboutText,
   ctaAbout,
   aboutImages,
-}: Readonly<AboutHeroProps>) => {
+}: Readonly<Partial<AboutHeroProps>>) => {
   const images = aboutImages || []
 
   return (
@@ -49,24 +49,29 @@ const AboutSection = ({
             <div className="col-xl-6 col-lg-6 col-md-6">
               <div className="about-content">
                 <div className="section-title">
-                  <span className="sub-title wow fadeInUp">{subtitle}</span>
+                  <span className="sub-title wow fadeInUp">{subtitle || 'We Care About Your Happiness'}</span>
                   <h2 className="wow fadeInUp" data-wow-delay=".3s">
-                    {title}
+                    {title || 'We Are Your Gateway to Adventure'}
                   </h2>
                 </div>
                 <p className="mt-4 mt-md-0 wow fadeInUp" data-wow-delay=".5s">
-                  {aboutText}
+                  {aboutText || 'At Tanoraya Travel, we believe in the transformative power of travel. As avid explorers ourselves, we understand the desire to uncover new experiences, forge meaningful connections, and create memories that last a lifetime.'}
                 </p>
-                {ctaAbout?.text && (
-                  <div className="about-button wow fadeInUp" data-wow-delay=".7s">
+                <div className="about-button wow fadeInUp" data-wow-delay=".7s">
+                  {ctaAbout?.text ? (
                     <Link href={ctaAbout.url || '#'} className="theme-btn">
                       {ctaAbout.text}
                       {ctaAbout.withArrow && (
                         <Image src="/img/icon/white-arrow.svg" alt="img" width={22} height={16} />
                       )}
                     </Link>
-                  </div>
-                )}
+                  ) : (
+                    <Link href="/tour-packages" className="theme-btn">
+                      Explore Tours
+                      <Image src="/img/icon/white-arrow.svg" alt="img" width={22} height={16} />
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
             <div className="col-xl-3 col-lg-6 col-md-6">

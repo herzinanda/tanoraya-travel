@@ -15,11 +15,11 @@ const TestimonialSection = () => {
                         What Our Clients Say
                     </h2>
                 </div>
-                <div className="about-button wow fadeInUp" data-wow-delay=".7s">
+                {/* <div className="about-button wow fadeInUp" data-wow-delay=".7s">
                     <a href="contact.html" className="theme-btn">Read More
                         <Image src="/img/icon/white-arrow.svg" alt="img" width={22} height={16}/>
                     </a>
-                </div>
+                </div> */}
             </div>
             <div className="swiper testimonial-slider">
                 <div className="swiper-wrapper">

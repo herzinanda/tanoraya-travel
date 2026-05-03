@@ -301,7 +301,36 @@ export async function getAboutPage() {
   const query = qs.stringify({
     populate: {
       blocks: {
-        populate: "*",
+        on: {
+          "blocks.about-hero": {
+            populate: {
+              aboutImages: { fields: ["url", "alternativeText"] },
+              ctaAbout: true,
+            },
+          },
+          "blocks.achievement": {
+            populate: {
+              achievementItems: true,
+              achievementCTAButton: true,
+            },
+          },
+          "blocks.why-choose-us": {
+            populate: {
+              Images: { fields: ["url", "alternativeText"] },
+              whyChooseUsItem: true,
+            },
+          },
+          "blocks.home-testimonials": {
+            populate: {
+              testimonialItems: {
+                populate: {
+                  avatar: { fields: ["url", "alternativeText"] },
+                },
+              },
+              button: true,
+            },
+          },
+        },
       },
     },
   });
