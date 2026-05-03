@@ -37,6 +37,13 @@ export type TourReviewSummary = {
   categories: TourReviewCategory[];
 };
 
+/** One row in a group-pricing table: minPax–maxPax → pricePerPerson */
+export type PriceTier = {
+  minPax: number
+  maxPax: number | null  // null = no upper limit
+  pricePerPerson: number
+}
+
 export type TourVariant = {
   itinerary?: TourPlanItem[]
   tour_facilities?: TourInfoItem[]
@@ -48,8 +55,10 @@ export type TourDeparture = {
   returnDate?: string;
   availableSeats: number;
   priceOverride?: number;
+  /** Group pricing tiers — more pax = lower price per person */
+  priceTiers?: PriceTier[]
   status: 'available' | 'limited' | 'sold_out';
-  variant?: TourVariant  // ← add this
+  variant?: TourVariant
 };
 
 // The main Tour Package data type

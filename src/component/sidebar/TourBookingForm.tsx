@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { TourDeparture } from '@/types/tour-detail'
 import { submitBooking } from '@/app/actions/booking'
 import { useTourPage } from '@/component/main/tour-packages/TourPageContext'
+import { getEffectivePrice } from '@/utils/price-tiers'
 
 const WA_NUMBER = '6281166666666'
 const TITLES = ['Mr.', 'Mrs.', 'Ms.']
@@ -11,9 +12,12 @@ const TITLES = ['Mr.', 'Mrs.', 'Ms.']
 const formatDate = (dateStr: string) =>
   new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
 
+const fmtIDR = (n: number) =>
+  new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n)
+
 type Props = { basePrice: number; departures: TourDeparture[]; tourTitle?: string; tourCode?: string }
 
-export default function TourBookingForm({ departures, tourTitle, tourCode }: Props) {
+export default function TourBookingForm({ basePrice, departures, tourTitle, tourCode }: Props) {
   const upcoming = departures
     .filter((d) => new Date(d.departureDate) >= new Date(new Date().toDateString()))
     .sort((a, b) => new Date(a.departureDate).getTime() - new Date(b.departureDate).getTime())
@@ -23,15 +27,23 @@ export default function TourBookingForm({ departures, tourTitle, tourCode }: Pro
     bookingMode, setBookingMode,
     isCustomDate, setIsCustomDate,
     customDateRange, setCustomDateRange,
+    numParticipants, setNumParticipants,
   } = useTourPage()
   const activeDepId = selectedDeparture?.id ?? upcoming[0]?.id ?? ''
+
+  // Live price calculation
+  const activeDep = selectedDeparture ?? upcoming[0] ?? null
+  const pricePerPerson = activeDep
+    ? getEffectivePrice(numParticipants, activeDep.priceTiers, activeDep.priceOverride ?? basePrice)
+    : basePrice
+  const totalPrice = pricePerPerson * numParticipants
+  const hasTiers = (activeDep?.priceTiers?.length ?? 0) > 0
 
   const [bookerTitle, setBookerTitle] = useState('Mr.')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [numParticipants, setNumParticipants] = useState(1)
   const [notes, setNotes] = useState('')
 
   const [loading, setLoading] = useState(false)
@@ -328,13 +340,31 @@ export default function TourBookingForm({ departures, tourTitle, tourCode }: Pro
           {/* Number of participants */}
           <div className="mb-3">
             <label>Number of Participants</label>
-            <input
-              type="number"
-              min={1}
-              max={50}
-              value={numParticipants}
-              onChange={(e) => setNumParticipants(Math.max(1, Math.min(50, Number(e.target.value))))}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <button
+                type="button"
+                onClick={() => setNumParticipants(Math.max(1, numParticipants - 1))}
+                style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid #ddd', background: '#fff', fontWeight: 700, fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >−</button>
+              <input
+                type="number"
+                min={1}
+                max={50}
+                value={numParticipants}
+                onChange={(e) => setNumParticipants(Math.max(1, Math.min(50, Number(e.target.value))))}
+                style={{ width: 60, textAlign: 'center' }}
+              />
+              <button
+                type="button"
+                onClick={() => setNumParticipants(Math.min(50, numParticipants + 1))}
+                style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid #ddd', background: '#fff', fontWeight: 700, fontSize: 18, cursor: 'pointer', lineHeight: 1 }}
+              >+</button>
+              {hasTiers && (
+                <span style={{ fontSize: 12, color: 'var(--theme)', fontWeight: 600, marginLeft: 4 }}>
+                  Group rate active
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Notes */}
@@ -357,6 +387,34 @@ export default function TourBookingForm({ departures, tourTitle, tourCode }: Pro
               style={{ width: '100%', resize: 'vertical' }}
             />
           </div>
+
+          {/* Live price summary */}
+          {pricePerPerson > 0 && !isCustomDate && (
+            <div style={{
+              background: 'linear-gradient(135deg, #fff8f0, #fff3e6)',
+              border: '1px solid var(--theme)',
+              borderRadius: 10,
+              padding: '12px 16px',
+              marginBottom: 16,
+            }}>
+              <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600, marginBottom: 8 }}>
+                Price Summary
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#555', marginBottom: 6 }}>
+                <span>{fmtIDR(pricePerPerson)} × {numParticipants} pax</span>
+                {hasTiers && <span style={{ color: 'var(--theme)', fontWeight: 600 }}>Group rate</span>}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #f7c08a', paddingTop: 8 }}>
+                <span style={{ fontWeight: 600, fontSize: 14 }}>Total</span>
+                <span style={{ fontWeight: 700, fontSize: 20, color: 'var(--header)' }}>{fmtIDR(totalPrice)}</span>
+              </div>
+              {hasTiers && (
+                <p style={{ fontSize: 11, color: '#aaa', marginTop: 6, marginBottom: 0 }}>
+                  * Price per person adjusts automatically by group size
+                </p>
+              )}
+            </div>
+          )}
 
           {error && (
             <div className="mb-3" style={{ color: '#e74c3c', fontSize: 13, padding: '8px 12px', background: '#fdf0f0', borderRadius: 6 }}>

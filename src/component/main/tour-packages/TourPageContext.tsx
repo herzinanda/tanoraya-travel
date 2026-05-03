@@ -19,6 +19,9 @@ type TourPageCtx = {
   setIsCustomDate: (v: boolean) => void
   customDateRange: CustomDateRange
   setCustomDateRange: (r: CustomDateRange) => void
+  /** Shared pax count — drives live price in both departure tabs and booking form */
+  numParticipants: number
+  setNumParticipants: (n: number) => void
 }
 
 const TourPageContext = createContext<TourPageCtx>({
@@ -30,6 +33,8 @@ const TourPageContext = createContext<TourPageCtx>({
   setIsCustomDate: () => {},
   customDateRange: { startDate: '', endDate: '' },
   setCustomDateRange: () => {},
+  numParticipants: 1,
+  setNumParticipants: () => {},
 })
 
 export function TourPageProvider({
@@ -43,12 +48,14 @@ export function TourPageProvider({
   const [bookingMode, setBookingMode] = useState<BookingMode>('book')
   const [isCustomDate, setIsCustomDate] = useState(false)
   const [customDateRange, setCustomDateRange] = useState<CustomDateRange>({ startDate: '', endDate: '' })
+  const [numParticipants, setNumParticipants] = useState(1)
   return (
     <TourPageContext.Provider value={{
       selectedDeparture, setSelectedDeparture,
       bookingMode, setBookingMode,
       isCustomDate, setIsCustomDate,
       customDateRange, setCustomDateRange,
+      numParticipants, setNumParticipants,
     }}>
       {children}
     </TourPageContext.Provider>

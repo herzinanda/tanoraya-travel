@@ -12,6 +12,7 @@ import TourDepartureTabs from '@/component/main/tour-packages/TourDepartureTabs'
 import { getTourBySlug, getTourDepartures, getTourPackages } from '@/data/loader';
 import { getStrapiURL } from '@/utils/get-strapi-url';
 import { TourPageProvider } from '@/component/main/tour-packages/TourPageContext';
+import { getLowestTierPrice } from '@/utils/price-tiers';
 
 // Helper to get full image URL
 function getImageUrl(url: string | null | undefined): string | undefined {
@@ -190,6 +191,7 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
         returnDate: d.returnDate ?? undefined,
         availableSeats: Number(d.availableSeats) || 0,
         priceOverride: d.priceOverride ? Number(d.priceOverride) : undefined,
+        priceTiers: Array.isArray(d.priceTiers) && d.priceTiers.length > 0 ? d.priceTiers : undefined,
         status: d.statusValue ?? d.status ?? 'available',
         variant: d.variant ? {
           itinerary: Array.isArray(d.variant.itinerary)
@@ -215,12 +217,17 @@ export default async function TourDetailsPage({ params }: { params: Promise<{ 't
         } : undefined,
       }));
 
-      // Use lowest priceOverride as the "from" price
-      const overrides = tour.departures
-        .map((d) => d.priceOverride)
-        .filter((p): p is number => typeof p === 'number' && p > 0);
-      if (overrides.length > 0) {
-        tour.price = Math.min(...overrides);
+      // Compute lowest "Start from" price across all departures.
+      // For tiers: use lowest tier price; otherwise fall back to priceOverride.
+      const startFromCandidates = tour.departures
+        .map((d) => {
+          if (d.priceTiers && d.priceTiers.length > 0)
+            return getLowestTierPrice(d.priceTiers, d.priceOverride ?? 0)
+          return d.priceOverride ?? 0
+        })
+        .filter((p) => p > 0)
+      if (startFromCandidates.length > 0) {
+        tour.price = Math.min(...startFromCandidates)
       }
     }
   } catch (error) {

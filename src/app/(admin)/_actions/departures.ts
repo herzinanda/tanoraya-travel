@@ -14,15 +14,25 @@ export async function getAdminDepartures(tourDocumentId: string) {
   });
 }
 
+function parseTiers(formData: FormData) {
+  try {
+    const raw = formData.get("priceTiers") as string | null
+    if (!raw) return null
+    const arr = JSON.parse(raw)
+    return Array.isArray(arr) && arr.length > 0 ? arr : null
+  } catch { return null }
+}
+
 export async function createDeparture(tourDocumentId: string, formData: FormData) {
   const data: Record<string, unknown> = {
     departureDate: formData.get("departureDate") as string,
     returnDate: formData.get("returnDate") as string || null,
     availableSeats: Number(formData.get("availableSeats")) || 0,
     priceOverride: Number(formData.get("priceOverride")) || null,
-    status: formData.get("status") as string || "open",
+    statusValue: formData.get("status") as string || "available",
     tour_package: tourDocumentId,
     variant: formData.get("variant") || null,
+    priceTiers: parseTiers(formData),
   };
 
   const result = await strapiPost("/api/tour-departures", data);
@@ -46,8 +56,9 @@ export async function updateDeparture(
     returnDate: formData.get("returnDate") as string || null,
     availableSeats: Number(formData.get("availableSeats")) || 0,
     priceOverride: Number(formData.get("priceOverride")) || null,
-    status: formData.get("status") as string || "open",
+    statusValue: formData.get("status") as string || "available",
     variant: formData.get("variant") || null,
+    priceTiers: parseTiers(formData),
   };
 
   const result = await strapiPut(`/api/tour-departures/${departureDocId}`, data);

@@ -2,6 +2,7 @@
 
 import { TourDeparture } from '@/types/tour-detail'
 import { useTourPage } from '@/component/main/tour-packages/TourPageContext'
+import { getEffectivePrice, getLowestTierPrice } from '@/utils/price-tiers'
 
 const fmt = (val: number) =>
   new Intl.NumberFormat('id-ID', {
@@ -35,7 +36,7 @@ export default function TourDepartureTabs({
     .filter((d) => new Date(d.departureDate) >= new Date(new Date().toDateString()))
     .sort((a, b) => new Date(a.departureDate).getTime() - new Date(b.departureDate).getTime())
 
-  const { selectedDeparture, setSelectedDeparture, setBookingMode, isCustomDate, setIsCustomDate } = useTourPage()
+  const { selectedDeparture, setSelectedDeparture, setBookingMode, isCustomDate, setIsCustomDate, numParticipants, setNumParticipants } = useTourPage()
 
   const customDateCTA = (
     <div
@@ -208,16 +209,35 @@ export default function TourDepartureTabs({
           </div>
 
           <div className="col-6 col-sm-3">
-            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>Price / Person</div>
-            <div
-              style={{
-                fontWeight: 700,
-                fontSize: '18px',
-                color: 'var(--theme-color, #f26522)',
-              }}
-            >
-              {fmt(selected.priceOverride ?? basePrice)}
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '4px' }}>
+              Participants
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <button type="button" onClick={() => setNumParticipants(Math.max(1, numParticipants - 1))}
+                style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #ddd', background: '#fff', fontWeight: 700, fontSize: 16, cursor: 'pointer', lineHeight: 1 }}>−</button>
+              <span style={{ fontWeight: 700, fontSize: 16, minWidth: 22, textAlign: 'center' }}>{numParticipants}</span>
+              <button type="button" onClick={() => setNumParticipants(Math.min(50, numParticipants + 1))}
+                style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #ddd', background: '#fff', fontWeight: 700, fontSize: 16, cursor: 'pointer', lineHeight: 1 }}>+</button>
+            </div>
+          </div>
+
+          <div className="col-6 col-sm-3">
+            <div style={{ fontSize: '14px', color: '#888', marginBottom: '2px' }}>
+              Price / Person
+            </div>
+            {(selected.priceTiers?.length ?? 0) > 0 && (
+              <div style={{ fontSize: '11px', color: 'var(--theme)', fontWeight: 600, marginBottom: 2 }}>
+                Group rate · {selected.priceTiers!.length} tiers
+              </div>
+            )}
+            <div style={{ fontWeight: 700, fontSize: '18px', color: 'var(--header)' }}>
+              {fmt(getEffectivePrice(numParticipants, selected.priceTiers, selected.priceOverride ?? basePrice))}
+            </div>
+            {(selected.priceTiers?.length ?? 0) > 0 && (
+              <div style={{ fontSize: '11px', color: '#aaa' }}>
+                Start from {fmt(getLowestTierPrice(selected.priceTiers, selected.priceOverride ?? basePrice))}
+              </div>
+            )}
           </div>
         </div>
 
