@@ -179,11 +179,11 @@ const HeroSection = ({
                   {ctaPrimary && (
                     <Button href={ctaPrimary.url}>{ctaPrimary.text}</Button>
                   )}
-                  {ctaSecondary && (
+                  {/* {ctaSecondary && (
                     <Button href={ctaSecondary.url} variant="style-2">
                       {ctaSecondary.text}
                     </Button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

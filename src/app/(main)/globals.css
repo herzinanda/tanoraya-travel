@@ -3031,7 +3031,7 @@ span {
 
 .faq-items {
   margin-right: 50px;
-  margin-top: 30px;
+  margin-top: 30px !important;
 }
 
 .faq-items .toggle-itinerary {
@@ -3691,8 +3691,8 @@ span {
 }
 
 .activities-details-content h3 {
-  margin-bottom: 20px;
-  font-size: 36px;
+  margin-bottom: 26px !important;
+  font-size: 28px !important;
 }
 @media (max-width: 1199px) {
   .activities-details-content h3 {
@@ -3700,13 +3700,13 @@ span {
   }
 }
 .activities-details-content .activities-list-item {
-  margin-top: 30px;
+  margin-top: 16px !important;
 }
 .activities-details-content .activities-list-item .activities-item {
   display: flex;
   align-items: center;
-  gap: 60px;
-  margin-top: 15px;
+  /* gap: 60px; */
+  /* margin-top: 15px; */
 }
 @media (max-width: 1199px) {
   .activities-details-content .activities-list-item .activities-item {
@@ -3727,7 +3727,7 @@ span {
   color: var(--header);
   font-size: 16px;
   font-weight: 500;
-  line-height: 32px;
+  line-height: 24px !important;
 }
 .activities-details-content .activities-list-item .activities-item .activities-list li:not(:last-child) {
   margin-bottom: 15px;
@@ -3827,7 +3827,7 @@ span {
 }
 .activities-details-content .faq-items {
   margin-top: 50px;
-  margin-bottom: 50px;
+  margin-bottom: 0px !important;
 }
 .activities-details-content .faq-items h3 {
   margin-bottom: 20px;
@@ -3837,7 +3837,7 @@ span {
   background-color: var(--bg);
   border-radius: 12px;
   box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.06);
-  margin-bottom: 30px;
+  margin-bottom: 20px !important;
 }
 .activities-details-content .faq-items .accordion-item .accordion-header {
   border: none;
@@ -4235,6 +4235,10 @@ span {
   height: 100%;
   border-radius: 20px;
   overflow: hidden;
+}
+
+.related-tours-section {
+  margin-top: 50px;
 }
 
 .footer-top {

@@ -3630,7 +3630,7 @@ span {
   line-height: 32px;
 }
 .activities-details-content .activities-list-item .activities-item .activities-list li:not(:last-child) {
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 .activities-details-content .activities-list-item .activities-item .activities-list li svg {
   margin-right: 5px;

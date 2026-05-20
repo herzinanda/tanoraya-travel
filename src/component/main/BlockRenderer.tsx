@@ -59,9 +59,12 @@ const BLOCK_ORDER: Record<string, number> = {
 };
 
 export function BlockRenderer({ blocks }: { blocks: Block[] }) {
-  const sorted = [...blocks].sort(
-    (a, b) =>
-      (BLOCK_ORDER[a.__component] ?? 99) - (BLOCK_ORDER[b.__component] ?? 99)
-  );
+  const sorted = [...blocks].sort((a, b) => {
+    const aOrder = BLOCK_ORDER[a.__component ?? ""] ?? 99;
+    const bOrder = BLOCK_ORDER[b.__component ?? ""] ?? 99;
+
+    return aOrder - bOrder;
+  });
+
   return sorted.map((block, index) => blockRenderer(block, index));
 }

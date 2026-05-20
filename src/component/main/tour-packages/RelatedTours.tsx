@@ -1,38 +1,44 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { getTourPackages } from '@/data/loader'
-import { mapTourCard, formatPrice } from '@/utils/map-tour-card'
-import { StrapiImage } from '@/component/main/home/StrapiImage'
+import Link from "next/link";
+import Image from "next/image";
+import { getTourPackages } from "@/data/loader";
+import { mapTourCard, formatPrice, type TourCard } from "@/utils/map-tour-card";
+import { StrapiImage } from "@/component/main/home/StrapiImage";
 
 type Props = {
-  currentSlug: string
-  destinationSlug?: string
-}
+  currentSlug: string;
+  destinationSlug?: string;
+};
 
 async function fetchRelated(currentSlug: string, destinationSlug?: string) {
   // 1. Try same-destination first
   if (destinationSlug) {
-    const res = await getTourPackages({ destinationSlug, pageSize: 10 })
-    const tours = (res?.data ?? [])
+    const res = await getTourPackages({ destinationSlug, pageSize: 10 });
+    const tours: TourCard[] = ((res?.data ?? []) as unknown[])
       .map(mapTourCard)
-      .filter((t) => t.slug !== currentSlug)
-      .slice(0, 3)
+      .filter((t: TourCard) => t.slug !== currentSlug)
+      .slice(0, 3);
 
-    if (tours.length > 0) return tours
+    if (tours.length > 0) return tours;
   }
 
   // 2. Fall back to any published tours
-  const res = await getTourPackages({ pageSize: 10 })
-  return (res?.data ?? [])
+  const res = await getTourPackages({ pageSize: 10 });
+
+  const tours: TourCard[] = ((res?.data ?? []) as unknown[])
     .map(mapTourCard)
-    .filter((t) => t.slug !== currentSlug)
-    .slice(0, 3)
+    .filter((t: TourCard) => t.slug !== currentSlug)
+    .slice(0, 3);
+
+  return tours;
 }
 
-export default async function RelatedTours({ currentSlug, destinationSlug }: Props) {
-  const tours = await fetchRelated(currentSlug, destinationSlug)
+export default async function RelatedTours({
+  currentSlug,
+  destinationSlug,
+}: Props) {
+  const tours = await fetchRelated(currentSlug, destinationSlug);
 
-  if (tours.length === 0) return null
+  if (tours.length === 0) return null;
 
   return (
     <section className="related-tours-section section-padding section-bg fix">
@@ -80,7 +86,9 @@ export default async function RelatedTours({ currentSlug, destinationSlug }: Pro
 
                 <div className="destination-content">
                   <h4>
-                    <Link href={`/tour-packages/${tour.slug}`}>{tour.title}</Link>
+                    <Link href={`/tour-packages/${tour.slug}`}>
+                      {tour.title}
+                    </Link>
                   </h4>
 
                   {tour.location && (
@@ -91,20 +99,30 @@ export default async function RelatedTours({ currentSlug, destinationSlug }: Pro
 
                   {tour.price !== null ? (
                     <h5>
-                      <span style={{ fontSize: '0.75em', fontWeight: 400 }}>Start from </span>
+                      <span style={{ fontSize: "0.75em", fontWeight: 400 }}>
+                        Start from{" "}
+                      </span>
                       {formatPrice(tour.price)}
                       <span>/Person</span>
                     </h5>
                   ) : (
-                    <h5 style={{ fontSize: '0.85rem', color: 'var(--text)' }}>
+                    <h5 style={{ fontSize: "0.85rem", color: "var(--text)" }}>
                       Contact us for pricing
                     </h5>
                   )}
 
                   <div className="booking">
-                    <Link href={`/tour-packages/${tour.slug}`} className="theme-btn">
-                      View Tour{' '}
-                      <Image src="/img/icon/theme-arrow.svg" alt="" width={22} height={16} />
+                    <Link
+                      href={`/tour-packages/${tour.slug}`}
+                      className="theme-btn"
+                    >
+                      View Tour{" "}
+                      <Image
+                        src="/img/icon/theme-arrow.svg"
+                        alt=""
+                        width={22}
+                        height={16}
+                      />
                     </Link>
                   </div>
                 </div>
@@ -114,5 +132,5 @@ export default async function RelatedTours({ currentSlug, destinationSlug }: Pro
         </div>
       </div>
     </section>
-  )
+  );
 }

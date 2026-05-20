@@ -65,6 +65,7 @@ export type TourDeparture = {
 export type TourPackageType = {
   id: string;
   title: string;
+  slug: string;
   locations: string;
   descriptionHtml: string;
   galleryImages: ImageType[];
