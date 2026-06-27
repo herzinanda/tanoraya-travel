@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, LayoutGrid } from "lucide-react";
 import { Button } from "../../_components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../_components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../_components/ui/table";
 import { Pagination } from "../../_components/shared/pagination";
+import { ClickableRow, RowActions } from "../../_components/shared/clickable-row";
 import { getAdminDestinations } from "../../_actions/destinations";
 import { getStrapiMedia } from "@/component/main/home/StrapiImage";
 import { DeleteDestinationButton } from "./delete-button";
@@ -33,12 +34,20 @@ export default async function DestinationsPage({
           <h1 className="text-2xl font-bold tracking-tight">Destinations</h1>
           <p className="text-muted-foreground text-sm mt-1">Manage your travel destinations</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/destinations/new">
-            <Plus className="h-4 w-4" />
-            Add Destination
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href="/admin/homepage-destinations">
+              <LayoutGrid className="h-4 w-4" />
+              Homepage Picks
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/destinations/new">
+              <Plus className="h-4 w-4" />
+              Add Destination
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Search */}
@@ -85,7 +94,7 @@ export default async function DestinationsPage({
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 destinations.map((dest: any) => (
-                  <TableRow key={dest.documentId}>
+                  <ClickableRow key={dest.documentId} href={`/admin/destinations/${dest.documentId}`}>
                     <TableCell>
                       {dest.destinationImages?.url ? (
                         <img
@@ -100,16 +109,16 @@ export default async function DestinationsPage({
                     <TableCell className="font-medium">{dest.title}</TableCell>
                     <TableCell className="text-muted-foreground">{dest.destinationUrl}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
+                      <RowActions>
                         <Button variant="ghost" size="icon" asChild>
                           <Link href={`/admin/destinations/${dest.documentId}`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
                         </Button>
                         <DeleteDestinationButton documentId={dest.documentId} title={dest.title} />
-                      </div>
+                      </RowActions>
                     </TableCell>
-                  </TableRow>
+                  </ClickableRow>
                 ))
               )}
             </TableBody>

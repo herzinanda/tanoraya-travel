@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../_components/ui/c
 import { Badge } from "../../_components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../_components/ui/table";
 import { Pagination } from "../../_components/shared/pagination";
+import { ClickableRow, RowActions } from "../../_components/shared/clickable-row";
 import { getAdminArticles } from "../../_actions/articles";
 import { DeleteArticleButton } from "./delete-button";
 
@@ -84,7 +85,7 @@ export default async function ArticlesPage({
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 articles.map((article: any) => (
-                  <TableRow key={article.documentId}>
+                  <ClickableRow key={article.documentId} href={`/admin/articles/${article.documentId}`}>
                     <TableCell className="font-medium">{article.title}</TableCell>
                     <TableCell>
                       {article.category ? (
@@ -104,16 +105,16 @@ export default async function ArticlesPage({
                         : "Draft"}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
+                      <RowActions>
                         <Button variant="ghost" size="icon" asChild>
                           <Link href={`/admin/articles/${article.documentId}`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
                         </Button>
                         <DeleteArticleButton documentId={article.documentId} title={article.title} />
-                      </div>
+                      </RowActions>
                     </TableCell>
-                  </TableRow>
+                  </ClickableRow>
                 ))
               )}
             </TableBody>

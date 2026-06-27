@@ -53,14 +53,6 @@ export default function NewDestinationPage() {
               hint="Used in the URL: /destination/[slug]"
             />
 
-            <FormField
-              label="Description"
-              name="description"
-              type="textarea"
-              placeholder="Describe this destination..."
-              rows={5}
-            />
-
             <ImageUpload
               name="destinationImages"
               label="Destination Image"

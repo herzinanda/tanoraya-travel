@@ -17,6 +17,7 @@ export function EditDestinationForm({ destination }: { destination: any }) {
   const currentImageUrl = destination.destinationImages?.url
     ? getStrapiMedia(destination.destinationImages.url)
     : null;
+  const currentImageId = destination.destinationImages?.id ?? null;
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -61,18 +62,11 @@ export function EditDestinationForm({ destination }: { destination: any }) {
               hint="Used in the URL: /destination/[slug]"
             />
 
-            <FormField
-              label="Description"
-              name="description"
-              type="textarea"
-              defaultValue={destination.description}
-              rows={5}
-            />
-
             <ImageUpload
               name="destinationImages"
               label="Destination Image"
               currentImageUrl={currentImageUrl}
+              currentImageId={currentImageId}
             />
 
             <div className="flex gap-3 pt-2">

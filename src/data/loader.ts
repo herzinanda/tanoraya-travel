@@ -83,6 +83,22 @@ export async function getDestinations() {
   return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
 }
 
+export async function getDestinationsByIds(documentIds: string[]) {
+  if (!documentIds.length) return null;
+  const query = qs.stringify({
+    populate: {
+      destinationImages: { fields: ["url", "alternativeText"] },
+      tour_packages: { count: true },
+    },
+    filters: { documentId: { $in: documentIds } },
+    fields: ["documentId", "title", "destinationUrl"],
+    status: "published",
+    pagination: { pageSize: documentIds.length },
+  });
+  const url = new URL(`/api/destinations?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+}
+
 export async function getTourPackages({
   destinationSlug,
   search,

@@ -1,7 +1,8 @@
 import { HomeDestinationsProps } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getDestinations } from '@/data/loader'
+import { getDestinations, getDestinationsByIds } from '@/data/loader'
+import { readHomepageDestinationIds } from '@/data/homepage-selections'
 import { StrapiImage } from './StrapiImage'
 
 const FALLBACK_IMAGES = [
@@ -13,6 +14,19 @@ const FALLBACK_IMAGES = [
   '/img/destination/new/10.jpg',
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalize(item: any, i: number) {
+  return {
+    id: item.documentId || item.id,
+    title: item.title || '',
+    destinationUrl: item.destinationUrl || '',
+    tourCount: Array.isArray(item.tour_packages) ? item.tour_packages.length : 0,
+    imgUrl: item.destinationImages?.url || null,
+    imgAlt: item.destinationImages?.alternativeText || item.title || 'Destination',
+    fallback: FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
+  }
+}
+
 const TopDestinationsSection = async ({
   title,
   subtitle,
@@ -21,24 +35,33 @@ const TopDestinationsSection = async ({
   let destinations: any[] = []
 
   try {
-    const res = await getDestinations()
-    if (res?.data && Array.isArray(res.data)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      destinations = res.data.slice(0, 6).map((item: any, i: number) => ({
-        id: item.documentId || item.id,
-        title: item.title || '',
-        destinationUrl: item.destinationUrl || '',
-        tourCount: Array.isArray(item.tour_packages) ? item.tour_packages.length : 0,
-        imgUrl: item.destinationImages?.url || null,
-        imgAlt: item.destinationImages?.alternativeText || item.title || 'Destination',
-        fallback: FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
-      }))
+    const selectedIds = readHomepageDestinationIds()
+
+    if (selectedIds.length > 0) {
+      const res = await getDestinationsByIds(selectedIds)
+      if (res?.data && Array.isArray(res.data)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const byId = new Map(res.data.map((d: any) => [d.documentId, d]))
+        destinations = selectedIds
+          .map((id, i) => {
+            const item = byId.get(id)
+            return item ? normalize(item, i) : null
+          })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter(Boolean) as any[]
+      }
+    } else {
+      const res = await getDestinations()
+      if (res?.data && Array.isArray(res.data)) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        destinations = res.data.slice(0, 6).map((item: any, i: number) => normalize(item, i))
+      }
     }
   } catch (err) {
     console.error('Failed to fetch destinations for TopDestinationsSection:', err)
   }
 
-  // Pad with placeholders if fewer than 6 destinations
+  // Pad to 6 if fewer returned
   while (destinations.length < 6) {
     const i = destinations.length
     destinations.push({

@@ -29,7 +29,7 @@ export function LoginForm({
       {/* Logo */}
       <div className="flex flex-col items-center gap-2">
         <img
-          src="/img/logo/tanoraya-logo-new.png"
+          src="/img/logo/tanoraya-horizontal.png"
           alt="Tanoraya Tour & Travel"
           className="h-10 w-auto"
         />

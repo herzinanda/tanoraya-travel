@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../_components/ui/c
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../_components/ui/table";
 import { Badge } from "../../_components/ui/badge";
 import { Pagination } from "../../_components/shared/pagination";
+import { ClickableRow, RowActions } from "../../_components/shared/clickable-row";
 import { getAdminTourPackages } from "../../_actions/tour-packages";
 import { DeleteTourButton } from "./delete-button";
 
@@ -85,7 +86,7 @@ export default async function TourPackagesPage({
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 tours.map((tour: any) => (
-                  <TableRow key={tour.documentId}>
+                  <ClickableRow key={tour.documentId} href={`/admin/tour-packages/${tour.documentId}`}>
                     <TableCell className="font-medium">{tour.title}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {tour.destination?.title ?? "—"}
@@ -107,16 +108,16 @@ export default async function TourPackagesPage({
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
+                      <RowActions>
                         <Button variant="ghost" size="icon" asChild>
                           <Link href={`/admin/tour-packages/${tour.documentId}`}>
                             <Pencil className="h-4 w-4" />
                           </Link>
                         </Button>
                         <DeleteTourButton documentId={tour.documentId} title={tour.title} />
-                      </div>
+                      </RowActions>
                     </TableCell>
-                  </TableRow>
+                  </ClickableRow>
                 ))
               )}
             </TableBody>
