@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import NavigationMenu from "./NavigationMenu"; // Import our new component
 import { ContactInfo, CtaButton, LogoData, NavItem, SocialLink } from "@/types/index";
 
@@ -24,9 +24,6 @@ const Header = ({
 }: HeaderProps) => {
   
   // --- Client-Side Logic ---
-
-  // State for mobile menu
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Effect for sticky header
   useEffect(() => {
@@ -101,31 +98,12 @@ const Header = ({
               </div>
 
               <div className="header-right d-flex justify-content-end align-items-center">
-                <div className="mean__menu-wrapper">
+                {/* Desktop nav — hidden below xl (1200px), matching MeanMenu's meanScreenWidth: 1199 */}
+                <div className="mean__menu-wrapper d-none d-xl-block">
                   <div className="main-menu">
-                    {/* Dynamic Navigation */}
                     <NavigationMenu items={navItems} />
                   </div>
                 </div>
-{/* 
-                <a href="#" className="search-trigger search-icon">
-                  <i className="fa-regular fa-magnifying-glass"></i>
-                </a> */}
-
-                {/* Mobile Menu Toggle */}
-                {/* <div className="header__hamburger my-auto">
-                  <div 
-                    className="sidebar__toggle" 
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                  >
-                    <Image
-                      src="/img/icon/bars.svg"
-                      alt="menu toggle"
-                      width={24}
-                      height={24}
-                    />
-                  </div>
-                </div> */}
 
                 {/* Dynamic CTA Button */}
                 <Link href={ctaButton.href} className="theme-btn">
@@ -137,15 +115,19 @@ const Header = ({
                     height={12}
                   />
                 </Link>
+
+                {/* Hamburger — shown below xl, opens the offcanvas (jQuery .sidebar__toggle handler in main.js) */}
+                <div className="header__hamburger d-xl-none my-auto">
+                  <div className="sidebar__toggle" role="button" aria-label="Open menu">
+                    <i className="fas fa-bars"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* You would also need to build the mobile menu/sidebar component 
-        that toggles based on the `isMobileMenuOpen` state.
-      */}
     </>
   );
 };

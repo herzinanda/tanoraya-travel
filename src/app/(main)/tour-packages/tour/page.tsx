@@ -80,95 +80,87 @@ export default async function TourListPage({
             <TourSearchBar initialQuery={search ?? ''} />
           </Suspense>
 
-          <div className="row g-4">
+          {/* Filter Bar — full width, above the card grid */}
+          <Suspense fallback={<div style={{ height: 56 }} />}>
+            <TourFilterSidebar destinations={destinations} horizontal />
+          </Suspense>
 
-            {/* Main Content */}
-            <div className="col-lg-8">
-              <div className="tour-wrapper">
-                {/* Result count */}
-                {(search || destination) && (
-                  <p className="mb-4" style={{ color: '#666' }}>
-                    {tours.length} package{tours.length !== 1 ? 's' : ''} found
-                    {search && <> for &ldquo;<strong>{search}</strong>&rdquo;</>}
-                    {destination && <> in <strong>{destination.replace(/-/g, ' ')}</strong></>}
-                  </p>
-                )}
-                {tours.length === 0 ? (
-                  <div className="py-5 text-center">
-                    <p>No tour packages found{destination ? ` for this destination` : ''}.</p>
-                  </div>
-                ) : (
-                  <div className="row g-4">
-                    {tours.map((tour, i) => (
-                      <div
-                        key={tour.id}
-                        className="col-md-6 wow fadeInUp"
-                        data-wow-delay={delays[i % 3]}
-                      >
-                        <div className="destination-card-items style-2">
-                          <div className="destination-thumb">
-                            {tour.thumbUrl ? (
-                              <StrapiImage
-                                src={tour.thumbUrl}
-                                alt={tour.thumbAlt}
-                                width={500}
-                                height={300}
-                              />
-                            ) : (
-                              <Image
-                                src="/img/destinations/1.jpg"
-                                alt={tour.thumbAlt}
-                                width={500}
-                                height={300}
-                              />
-                            )}
-                            <div className="heart">
-                              <i className="fa-solid fa-heart"></i>
-                            </div>
-                          </div>
-                          <div className="destination-content">
-                            <h4>
-                              <Link href={`/tour-packages/${tour.slug}`}>{tour.title}</Link>
-                            </h4>
-                            {tour.location && (
-                              <span className="place">
-                                <i className="fa-solid fa-location-dot"></i> {tour.location}
-                              </span>
-                            )}
-                            {tour.price !== null ? (
-                              <h5>
-                                <span style={{ fontSize: '0.75em', fontWeight: 400 }}>Start from </span>
-                                {formatPrice(tour.price)}
-                                <span>/Person</span>
-                              </h5>
-                            ) : (
-                              <h5 style={{ fontSize: '0.85rem', color: '#999' }}>
-                                Belum ada jadwal tersedia
-                              </h5>
-                            )}
-                            <div className="booking">
-                              <Link href={`/tour-packages/${tour.slug}`} className="theme-btn">
-                                Read More{' '}
-                                <Image src="/img/icon/theme-arrow.svg" alt="arrow" width={22} height={16} />
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
+          {/* Result count */}
+          {(search || destination) && (
+            <p className="mb-4" style={{ color: '#666' }}>
+              {tours.length} package{tours.length !== 1 ? 's' : ''} found
+              {search && <> for &ldquo;<strong>{search}</strong>&rdquo;</>}
+              {destination && <> in <strong>{destination.replace(/-/g, ' ')}</strong></>}
+            </p>
+          )}
+
+          {/* Tour cards — full width, 3 cols on desktop */}
+          {tours.length === 0 ? (
+            <div className="py-5 text-center">
+              <p>No tour packages found{destination ? ` for this destination` : ''}.</p>
+            </div>
+          ) : (
+            <div className="row g-4">
+              {tours.map((tour, i) => (
+                <div
+                  key={tour.id}
+                  className="col-xl-4 col-md-6 wow fadeInUp"
+                  data-wow-delay={delays[i % 3]}
+                >
+                  <div className="destination-card-items style-2">
+                    <div className="destination-thumb">
+                      {tour.thumbUrl ? (
+                        <StrapiImage
+                          src={tour.thumbUrl}
+                          alt={tour.thumbAlt}
+                          width={500}
+                          height={300}
+                        />
+                      ) : (
+                        <Image
+                          src="/img/destinations/1.jpg"
+                          alt={tour.thumbAlt}
+                          width={500}
+                          height={300}
+                        />
+                      )}
+                      <div className="heart">
+                        <i className="fa-solid fa-heart"></i>
                       </div>
-                    ))}
+                    </div>
+                    <div className="destination-content">
+                      <h4>
+                        <Link href={`/tour-packages/${tour.slug}`}>{tour.title}</Link>
+                      </h4>
+                      {tour.location && (
+                        <span className="place">
+                          <i className="fa-solid fa-location-dot"></i> {tour.location}
+                        </span>
+                      )}
+                      {tour.price !== null ? (
+                        <h5>
+                          <span style={{ fontSize: '0.75em', fontWeight: 400 }}>Start from </span>
+                          {formatPrice(tour.price)}
+                          <span>/Person</span>
+                        </h5>
+                      ) : (
+                        <h5 style={{ fontSize: '0.85rem', color: '#999' }}>
+                          Belum ada jadwal tersedia
+                        </h5>
+                      )}
+                      <div className="booking">
+                        <Link href={`/tour-packages/${tour.slug}`} className="theme-btn">
+                          Read More{' '}
+                          <Image src="/img/icon/theme-arrow.svg" alt="arrow" width={22} height={16} />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              ))}
             </div>
+          )}
 
-            {/* Sidebar */}
-            <div className="col-lg-4">
-              <Suspense fallback={<div className="main-sidebar mt-0" />}>
-                <TourFilterSidebar destinations={destinations} />
-              </Suspense>
-            </div>
-
-          </div>
         </div>
       </section>
     </>

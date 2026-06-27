@@ -17,7 +17,7 @@ const AboutSection = ({
       <div className="container">
         <div className="about-wrapper">
           <div className="row g-4">
-            <div className="col-xl-3 col-lg-6 col-md-6">
+            <div className="col-xl-3 d-none d-xl-block">
               <div className="about-left-image">
                 {images[0] && (
                   <StrapiImage
@@ -41,7 +41,7 @@ const AboutSection = ({
                 </div>
               </div>
             </div>
-            <div className="col-xl-6 col-lg-6 col-md-6">
+            <div className="col-xl-6 col-12">
               <div className="about-content">
                 <div className="section-title">
                   <span className="sub-title wow fadeInUp">{subtitle}</span>
@@ -57,7 +57,7 @@ const AboutSection = ({
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-lg-6 col-md-6">
+            <div className="col-xl-3 d-none d-xl-block">
               <div className="about-right-image">
                 {images[2] && (
                   <StrapiImage

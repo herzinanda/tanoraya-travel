@@ -12,7 +12,7 @@ const OffcanvasMenu = () => {
                     <div className="offcanvas__top mb-5 d-flex justify-content-between align-items-center">
                         <div className="offcanvas__logo">
                             <Link href="/">
-                                <Image src="/img/logo/tanoraya-logo-new.png" alt="Tanoraya Tour & Travel" width={160} height={40}/>
+                                <Image src="/img/logo/tanoraya-horizontal.png" alt="Tanoraya Tour & Travel" width={160} height={40} style={{ height: '30px', width: 'auto' }}/>
                             </Link>
                         </div>
                         <div className="offcanvas__close">

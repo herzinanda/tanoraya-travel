@@ -59,36 +59,19 @@ export default function PreLoader() {
           z-index: 2;
           width: 160px;
           height: auto;
-          animation: tanoLogoFadeIn 0.6s ease-out both;
+          animation: tanoLogoPulse 1.5s ease-in-out infinite;
         }
 
-        @keyframes tanoLogoFadeIn {
-          from { opacity: 0; transform: scale(0.7); }
-          to   { opacity: 1; transform: scale(1); }
-        }
-
-        /* Spinning dashed circle */
-        .tano-spinner-ring {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          animation: tanoSpin 2.5s linear infinite;
-        }
-
-        .tano-spinner-ring svg {
-          width: 100%;
-          height: 100%;
-        }
-
-        @keyframes tanoSpin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
+        @keyframes tanoLogoPulse {
+          0%   { transform: scale(1); }
+          50%  { transform: scale(1.1); }
+          100% { transform: scale(1); }
         }
 
         @media (max-width: 576px) {
           .tano-loader-wrap {
-            width: 220px;
-            height: 220px;
+            width: 180px;
+            height: 180px;
           }
           .tano-loader-logo {
             width: 120px;
@@ -98,30 +81,6 @@ export default function PreLoader() {
 
       <div className={`tano-preloader${fadeOut ? ' fade-out' : ''}`}>
         <div className="tano-loader-wrap">
-          {/* Spinning dashed circle */}
-          <div className="tano-spinner-ring">
-            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="tano-ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1a3272" />
-                  <stop offset="50%" stopColor="#F7941D" />
-                  <stop offset="100%" stopColor="#1a3272" />
-                </linearGradient>
-              </defs>
-              <circle
-                cx="100"
-                cy="100"
-                r="95"
-                fill="none"
-                stroke="url(#tano-ring-grad)"
-                strokeWidth="3"
-                strokeDasharray="12 8"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-
-          {/* Logo */}
           <Image
             className="tano-loader-logo"
             src="/img/logo/tanoraya-vertical.png"

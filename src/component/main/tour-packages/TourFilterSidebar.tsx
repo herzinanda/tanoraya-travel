@@ -18,7 +18,7 @@ interface Destination {
   destinationUrl: string
 }
 
-export default function TourFilterSidebar({ destinations }: { destinations: Destination[] }) {
+export default function TourFilterSidebar({ destinations, horizontal = false }: { destinations: Destination[]; horizontal?: boolean }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -95,6 +95,80 @@ export default function TourFilterSidebar({ destinations }: { destinations: Dest
 
   const minPercent = ((minVal - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
   const maxPercent = ((maxVal - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
+
+  if (horizontal) {
+    return (
+      <div className="tour-filter-bar mb-4">
+        {/* Destination */}
+        <div className="tfb-group">
+          <span className="tfb-label">Destination</span>
+          <div className="tfb-options">
+            {destinations.map((dest) => (
+              <button
+                key={dest.id}
+                onClick={() => toggleDestination(dest.destinationUrl)}
+                className={`tfb-chip${selected === dest.destinationUrl ? ' active' : ''}`}
+              >
+                {dest.title}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Duration */}
+        <div className="tfb-group">
+          <span className="tfb-label">Duration</span>
+          <div className="tfb-options">
+            {DURATION_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => toggleDuration(opt.value)}
+                className={`tfb-chip${selectedDuration === opt.value ? ' active' : ''}`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Price */}
+        <div className="tfb-group tfb-group--price">
+          <span className="tfb-label">Price Range</span>
+          <div className="tfb-price-inputs">
+            <div className="slider-container" style={{ position: 'relative', height: '36px' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: `${minPercent}%`,
+                  width: `${maxPercent - minPercent}%`,
+                  height: '4px',
+                  background: '#1a3272',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                }}
+              />
+              <input type="range" className="slider" min={MIN_PRICE} max={MAX_PRICE} step={STEP} value={minVal} onChange={handleMinChange} style={{ position: 'absolute', width: '100%', zIndex: 2 }} />
+              <input type="range" className="slider" min={MIN_PRICE} max={MAX_PRICE} step={STEP} value={maxVal} onChange={handleMaxChange} style={{ position: 'absolute', width: '100%', zIndex: 2 }} />
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#555', marginTop: 4 }}>
+              {fmt(minVal)} – {fmt(maxVal)}
+            </div>
+          </div>
+        </div>
+
+        {/* Clear */}
+        {hasActiveFilters && (
+          <div className="tfb-group tfb-group--clear">
+            <button onClick={handleClearFilters} className="tfb-clear">
+              <i className="fa-solid fa-xmark me-1"></i> Clear
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="main-sidebar mt-0">

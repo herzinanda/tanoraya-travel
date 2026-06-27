@@ -36,7 +36,7 @@ function blockRenderer(block: Block, index: number) {
     case "blocks.home-best-recommended-place":
       return <DestinationSection {...block} key={index} />;
     case "blocks.home-cta":
-      return <CTAbgSection {...block} key={index} />;
+      return null;
     case "blocks.home-testimonials":
       return <TestimonialSection {...block} key={index} />;
     case "blocks.home-blog":

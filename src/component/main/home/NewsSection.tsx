@@ -31,42 +31,60 @@ const NewsSection = async ({ title, subtitle }: { title?: string; subtitle?: str
     <section className="news-section section-padding fix">
       <div className="container">
         <div className="section-title text-center">
-          <span className="sub-title wow fadeInUp">{subtitle || 'News & Updates'}</span>
+          <span className="sub-title wow fadeInUp">{subtitle || "News & Updates"}</span>
           <h2 className="wow fadeInUp" data-wow-delay=".3s">
-            {title || 'Our Latest News & Articles'}
+            {title || "Our Latest News & Articles"}
           </h2>
         </div>
-        <div className="row">
+
+        <div className="row g-4">
           {posts.map((post, i) => (
             <div
               key={post.documentId || post.id}
-              className="col-lg-4 col-md-6 wow fadeInUp"
+              className="col-lg-4 col-md-6 d-flex wow fadeInUp"
               data-wow-delay={`${(i + 1) * 0.2}s`}
             >
-              <div className="news-items">
-                <div className="news-image">
+              <article className="tn-news-card">
+                <div className="tn-news-card__img-wrap">
                   <Image
                     src={getImageUrl(post.coverImage?.url)}
                     alt={post.coverImage?.alternativeText || post.title}
-                    width={420}
-                    height={450}
-                    style={{ objectFit: "cover" }}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 992px) 50vw, 33vw"
+                    className="tn-news-card__img"
                   />
-                  <div className="news-content">
-                    <h4>
-                      <Link href={`/articles/${post.slug}`}>{post.title}</Link>
-                    </h4>
-                    <div className="author-items">
-                      <div className="author-info">
-                        <h6>{post.author || "Tanoraya Travel"}</h6>
-                        <span>{formatDate(post.publishedAt)}</span>
-                      </div>
-                    </div>
+                </div>
+
+                <div className="tn-news-card__body">
+                  <div className="tn-news-card__meta">
+                    <span className="tn-news-card__date">
+                      <i className="fa-regular fa-calendar"></i>
+                      {formatDate(post.publishedAt)}
+                    </span>
+                  </div>
+
+                  <h4 className="tn-news-card__title">
+                    <Link href={`/articles/${post.slug}`}>{post.title}</Link>
+                  </h4>
+
+                  <div className="tn-news-card__footer">
+                    <span className="tn-news-card__author">
+                      {post.author || "Tanoraya Travel"}
+                    </span>
+                    <Link href={`/articles/${post.slug}`} className="tn-news-card__link">
+                      Read More <i className="fa-solid fa-arrow-right"></i>
+                    </Link>
                   </div>
                 </div>
-              </div>
+              </article>
             </div>
           ))}
+        </div>
+
+        <div className="text-center mt-5 wow fadeInUp" data-wow-delay=".3s">
+          <Link href="/articles" className="tn-btn-navy">
+            See All Articles <i className="fa-solid fa-arrow-right"></i>
+          </Link>
         </div>
       </div>
     </section>

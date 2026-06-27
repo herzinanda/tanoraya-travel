@@ -86,30 +86,24 @@ const TopDestinationsSection = async ({
             {title}
           </h2>
         </div>
-        <div className="new-top-destination-wrapper">
-          <div className="row">
-            <div className="col-lg-6">
-              <div className="row">
-                <div className="col-md-6">
-                  <DestCard dest={d0} width={308} height={285} />
-                  <DestCard dest={d1} width={308} height={285} />
-                </div>
-                <div className="col-md-6">
-                  <DestCard dest={d2} width={307} height={600} />
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="row">
-                <div className="col-md-6">
-                  <DestCard dest={d3} width={308} height={360} />
-                  <DestCard dest={d4} width={308} height={360} />
-                </div>
-                <div className="col-md-6">
-                  <DestCard dest={d5} width={307} height={360} />
-                </div>
-              </div>
-            </div>
+        <div className="dest-bento-grid">
+          <div className="dest-bento-wide">
+            <DestCard dest={d0} width={616} height={280} />
+          </div>
+          <div>
+            <DestCard dest={d1} width={308} height={280} />
+          </div>
+          <div>
+            <DestCard dest={d2} width={308} height={280} />
+          </div>
+          <div>
+            <DestCard dest={d3} width={308} height={280} />
+          </div>
+          <div>
+            <DestCard dest={d4} width={308} height={280} />
+          </div>
+          <div className="dest-bento-wide">
+            <DestCard dest={d5} width={616} height={280} />
           </div>
         </div>
       </div>

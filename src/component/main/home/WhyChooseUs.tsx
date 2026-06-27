@@ -76,8 +76,10 @@ const WhyChooseUs = ({
                     <div className="t-feature__icon">
                       <IconComponent size={22} />
                     </div>
-                    <div className="t-feature__title">{f.title}</div>
-                    <p className="t-feature__desc">{f.description}</p>
+                    <div className="t-feature__body">
+                      <div className="t-feature__title">{f.title}</div>
+                      <p className="t-feature__desc">{f.description}</p>
+                    </div>
                   </div>
                 )
               })}

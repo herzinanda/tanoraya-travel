@@ -44,7 +44,7 @@ const NavigationMenu = ({ items }: NavMenuProps) => {
               </ul>
             )}
 
-            {/* Mega menu panel */}
+            {/* Desktop mega menu panel — hidden in mobile MeanMenu context via CSS */}
             {item.megaMenu && (
               <div className="submenu nav-megamenu">
                 {/* Destinations column */}
@@ -135,6 +135,26 @@ const NavigationMenu = ({ items }: NavMenuProps) => {
                   </Link>
                 </div>
               </div>
+            )}
+
+            {/* Mobile fallback: placed AFTER the megamenu div so MeanMenu's
+                expand button (.prev("ul")) finds it as the immediate prev sibling */}
+            {item.megaMenu && (
+              <ul className="submenu mobile-submenu-fallback">
+                <li>
+                  <Link href="/tour-packages/tour">All Tour Packages</Link>
+                </li>
+                {item.megaMenu.topDestinations.map((dest) => (
+                  <li key={dest.id}>
+                    <Link href={`/tour-packages/tour?destination=${dest.slug}`}>
+                      {dest.title}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link href="/destination">All Destinations</Link>
+                </li>
+              </ul>
             )}
           </li>
         ))}
