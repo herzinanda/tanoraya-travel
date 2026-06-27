@@ -11,7 +11,7 @@ export default async function HomepageDestinationsPage() {
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const allDestinations = (destResult?.data ?? []).map((d: any) => ({
+  const allDestinations = ((destResult?.data ?? []) as any[]).map((d: any) => ({
     documentId: d.documentId,
     title: d.title,
     destinationUrl: d.destinationUrl,

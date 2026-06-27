@@ -11,6 +11,7 @@ interface ImageUploadProps {
   currentImageId?: number | null;
   onRemove?: () => void;
   accept?: string;
+  multiple?: boolean;
   className?: string;
 }
 
@@ -21,6 +22,8 @@ export function ImageUpload({
   currentImageId,
   onRemove,
   accept = "image/*",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  multiple,
   className,
 }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(currentImageUrl ?? null);
