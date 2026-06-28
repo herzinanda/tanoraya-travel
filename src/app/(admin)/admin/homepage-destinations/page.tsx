@@ -7,7 +7,7 @@ export const metadata = { title: "Homepage Destinations" };
 export default async function HomepageDestinationsPage() {
   const [destResult, selectedIds] = await Promise.all([
     getAdminDestinations({ pageSize: 100 }),
-    Promise.resolve(readHomepageDestinationIds()),
+    readHomepageDestinationIds(),
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

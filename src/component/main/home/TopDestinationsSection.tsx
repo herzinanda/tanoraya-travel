@@ -35,7 +35,7 @@ const TopDestinationsSection = async ({
   let destinations: any[] = []
 
   try {
-    const selectedIds = readHomepageDestinationIds()
+    const selectedIds = await readHomepageDestinationIds()
 
     if (selectedIds.length > 0) {
       const res = await getDestinationsByIds(selectedIds)

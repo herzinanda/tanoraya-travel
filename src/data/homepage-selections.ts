@@ -1,20 +1,43 @@
-import fs from "fs";
-import path from "path";
+import { getStrapiURL } from "@/utils/get-strapi-url";
 
-const FILE = path.join(process.cwd(), "data", "homepage-destinations.json");
+const BASE_URL = getStrapiURL();
 
-export function readHomepageDestinationIds(): string[] {
+async function fetchStrapiSettings() {
   try {
-    if (!fs.existsSync(FILE)) return [];
-    const json = JSON.parse(fs.readFileSync(FILE, "utf-8"));
-    return Array.isArray(json.documentIds) ? json.documentIds.slice(0, 6) : [];
+    const token = process.env.STRAPI_API_TOKEN;
+    const res = await fetch(`${BASE_URL}/api/site-setting`, {
+      headers: { ...(token && { Authorization: `Bearer ${token}` }) },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json?.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function readHomepageDestinationIds(): Promise<string[]> {
+  const data = await fetchStrapiSettings();
+  if (!data?.featuredDestinationIds) return [];
+  try {
+    const parsed = JSON.parse(data.featuredDestinationIds);
+    return Array.isArray(parsed) ? parsed.slice(0, 6) : [];
   } catch {
     return [];
   }
 }
 
-export function writeHomepageDestinationIds(ids: string[]): void {
-  const dir = path.dirname(FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(FILE, JSON.stringify({ documentIds: ids.slice(0, 6) }, null, 2), "utf-8");
+export async function writeHomepageDestinationIds(ids: string[]): Promise<void> {
+  const token = process.env.STRAPI_API_TOKEN;
+  await fetch(`${BASE_URL}/api/site-setting`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+    body: JSON.stringify({
+      data: { featuredDestinationIds: JSON.stringify(ids.slice(0, 6)) },
+    }),
+  });
 }
