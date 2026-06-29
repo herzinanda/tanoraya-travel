@@ -69,7 +69,7 @@ export async function getHomePage() {
 
   url.search = homePageQuery;
 
-  return fetchAPI(url.href, { method: "GET" });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getDestinations() {
@@ -80,7 +80,7 @@ export async function getDestinations() {
 
   const path = `/api/destinations?${query}`;
   const url = new URL(path, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getDestinationsByIds(documentIds: string[]) {
@@ -96,7 +96,7 @@ export async function getDestinationsByIds(documentIds: string[]) {
     pagination: { pageSize: documentIds.length },
   });
   const url = new URL(`/api/destinations?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getTourPackages({
@@ -146,7 +146,7 @@ export async function getTourPackages({
 
   const path = `/api/tour-packages?${query}`;
   const url = new URL(path, BASE_URL);
-  return fetchAPI(url.href, { method: "GET" });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getArticles({
@@ -164,7 +164,7 @@ export async function getArticles({
   });
 
   const url = new URL(`/api/blog-posts?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET" });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getRelatedArticles(category: string, excludeSlug: string) {
@@ -183,7 +183,7 @@ export async function getRelatedArticles(category: string, excludeSlug: string) 
   });
 
   const url = new URL(`/api/blog-posts?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET" });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getArticleBySlug(slug: string) {
@@ -196,7 +196,7 @@ export async function getArticleBySlug(slug: string) {
   });
 
   const url = new URL(`/api/blog-posts?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET" });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getActivities() {
@@ -209,7 +209,7 @@ export async function getActivities() {
 
   const path = `/api/activities?${query}`;
   const url = new URL(path, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getFAQs() {
@@ -221,19 +221,19 @@ export async function getFAQs() {
     pagination: { pageSize: 100 },
   });
   const url = new URL(`/api/faqs?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getPrivacyPolicy() {
   const query = qs.stringify({ fields: ['content', 'lastUpdated'] });
   const url = new URL(`/api/privacy-policy?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getTermsOfUse() {
   const query = qs.stringify({ fields: ['content', 'lastUpdated'] });
   const url = new URL(`/api/terms-of-use?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getActivePromo() {
@@ -245,7 +245,7 @@ export async function getActivePromo() {
     status: 'published',
   });
   const url = new URL(`/api/promo-popup?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 300 } });
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 300, tags: ["strapi"] } });
 }
 
 export async function getTourBySlug(slug: string) {
@@ -257,7 +257,7 @@ export async function getTourBySlug(slug: string) {
 
   const path = `/api/tour-packages?${query}`
   const url = new URL(path, BASE_URL)
-  return fetchAPI(url.href, { method: 'GET' })
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } })
 }
 
 export async function getTopDestinationsForNav() {
@@ -271,7 +271,7 @@ export async function getTopDestinationsForNav() {
     pagination: { pageSize: 50 },
   });
   const url = new URL(`/api/destinations?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getLatestFeaturedTourForNav() {
@@ -286,7 +286,7 @@ export async function getLatestFeaturedTourForNav() {
     pagination: { pageSize: 1 },
   });
   const url = new URL(`/api/tour-packages?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getMinDeparturePriceForTour(tourSlug: string) {
@@ -296,7 +296,7 @@ export async function getMinDeparturePriceForTour(tourSlug: string) {
     pagination: { pageSize: 100 },
   });
   const url = new URL(`/api/tour-departures?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getLatestTourForNav() {
@@ -310,7 +310,7 @@ export async function getLatestTourForNav() {
     pagination: { pageSize: 1 },
   });
   const url = new URL(`/api/tour-packages?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getAboutPage() {
@@ -351,7 +351,7 @@ export async function getAboutPage() {
     },
   });
   const url = new URL(`/api/about-page?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getDestinationPage() {
@@ -362,7 +362,7 @@ export async function getDestinationPage() {
   });
 
   const url = new URL(`/api/destination-page?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getBlogPage() {
@@ -373,7 +373,7 @@ export async function getBlogPage() {
   });
 
   const url = new URL(`/api/blog-page?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getTourPage() {
@@ -389,7 +389,7 @@ export async function getTourPage() {
   });
 
   const url = new URL(`/api/tour-page?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: "GET", next: { revalidate: 3600, tags: ["strapi"] } });
 }
 
 export async function getTourDepartures(tourSlug: string) {
@@ -410,7 +410,7 @@ export async function getTourDepartures(tourSlug: string) {
 
   const path = `/api/tour-departures?${query}`
   const url = new URL(path, BASE_URL)
-  return fetchAPI(url.href, { method: 'GET' })
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } })
 }
 
 export async function getTestimonials({ pageSize = 6 }: { pageSize?: number } = {}) {
@@ -425,5 +425,5 @@ export async function getTestimonials({ pageSize = 6 }: { pageSize?: number } = 
     pagination: { pageSize },
   });
   const url = new URL(`/api/reviews?${query}`, BASE_URL);
-  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600 } });
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600, tags: ["strapi"] } });
 }
