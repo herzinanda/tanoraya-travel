@@ -142,20 +142,29 @@ export default async function ArticleDetailPage({
                     <h3 className="mt-3 mb-3">{article.title}</h3>
 
                     {/* Rich Text Content */}
-                    <RichTextRenderer content={article.content ?? []} />
+                    <RichTextRenderer content={article.content ?? null} />
                   </div>
                 </div>
 
                 {/* Tags + Share */}
                 <div className="row tag-share-wrap mt-4 mb-5">
                   <div className="col-lg-8 col-12">
-                    {article.category && (
-                      <div className="tagcloud">
+                    <div className="tagcloud">
+                      {article.category && (
                         <Link href={`/articles?category=${article.category.toLowerCase()}`}>
                           {article.category}
                         </Link>
-                      </div>
-                    )}
+                      )}
+                      {Array.isArray(article.tags) &&
+                        article.tags.map((tag: string) => (
+                          <Link
+                            key={tag}
+                            href={`/articles?tag=${encodeURIComponent(tag.toLowerCase())}`}
+                          >
+                            {tag}
+                          </Link>
+                        ))}
+                    </div>
                   </div>
                   <div className="col-lg-4 col-12 mt-3 mt-lg-0 text-lg-end">
                     <ShareButtons

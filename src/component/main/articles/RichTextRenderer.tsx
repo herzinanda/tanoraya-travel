@@ -1,3 +1,4 @@
+import ReactMarkdown from "react-markdown";
 import Image from "next/image";
 import { getStrapiURL } from "@/utils/get-strapi-url";
 
@@ -9,6 +10,7 @@ function getImageUrl(url: string): string {
   return new URL(url, getStrapiURL()).href;
 }
 
+// Legacy renderer for Strapi blocks format
 function renderInlineChildren(children: BlockNode[]): React.ReactNode {
   return children.map((child: BlockNode, i: number) => {
     if (child.type === "text") {
@@ -35,12 +37,10 @@ function renderBlock(block: BlockNode, index: number): React.ReactNode {
   switch (block.type) {
     case "paragraph":
       return <p key={index}>{renderInlineChildren(block.children)}</p>;
-
     case "heading": {
       const Tag = `h${block.level}` as keyof React.JSX.IntrinsicElements;
       return <Tag key={index}>{renderInlineChildren(block.children)}</Tag>;
     }
-
     case "list":
       if (block.format === "ordered") {
         return (
@@ -58,21 +58,18 @@ function renderBlock(block: BlockNode, index: number): React.ReactNode {
           ))}
         </ul>
       );
-
     case "quote":
       return (
         <blockquote key={index} className="hilight-text mt-4 mb-4">
           <p>{renderInlineChildren(block.children)}</p>
         </blockquote>
       );
-
     case "code":
       return (
         <pre key={index}>
           <code>{renderInlineChildren(block.children)}</code>
         </pre>
       );
-
     case "image": {
       const src = getImageUrl(block.image?.url ?? "");
       if (!src) return null;
@@ -88,13 +85,57 @@ function renderBlock(block: BlockNode, index: number): React.ReactNode {
         </div>
       );
     }
-
     default:
       return null;
   }
 }
 
-export function RichTextRenderer({ content }: { content: BlockNode[] }) {
-  if (!Array.isArray(content) || content.length === 0) return null;
-  return <div className="rich-text-content">{content.map(renderBlock)}</div>;
+export function RichTextRenderer({ content }: { content: string | BlockNode[] | null | undefined }) {
+  if (!content) return null;
+
+  // Strapi richtext — markdown string
+  if (typeof content === "string") {
+    return (
+      <div className="rich-text-content article-markdown">
+        <ReactMarkdown
+          components={{
+            h1: ({ children }) => <h2>{children}</h2>,
+            h2: ({ children }) => <h3>{children}</h3>,
+            h3: ({ children }) => <h4>{children}</h4>,
+            p: ({ children }) => <p>{children}</p>,
+            blockquote: ({ children }) => (
+              <blockquote className="hilight-text mt-4 mb-4">{children}</blockquote>
+            ),
+            pre: ({ children }) => <pre>{children}</pre>,
+            code: ({ children, className }) =>
+              className ? (
+                <code className={className}>{children}</code>
+              ) : (
+                <code>{children}</code>
+              ),
+            ul: ({ children }) => <ul>{children}</ul>,
+            ol: ({ children }) => <ol>{children}</ol>,
+            li: ({ children }) => <li>{children}</li>,
+            a: ({ href, children }) => (
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            ),
+            strong: ({ children }) => <strong>{children}</strong>,
+            em: ({ children }) => <em>{children}</em>,
+            hr: () => <hr className="my-4" />,
+          }}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
+  }
+
+  // Legacy Strapi blocks format — array
+  if (Array.isArray(content) && content.length > 0) {
+    return <div className="rich-text-content">{content.map(renderBlock)}</div>;
+  }
+
+  return null;
 }

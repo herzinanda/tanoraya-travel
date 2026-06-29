@@ -192,6 +192,7 @@ export async function getArticleBySlug(slug: string) {
     populate: {
       coverImage: { fields: ["url", "alternativeText"] },
     },
+    fields: ["title", "slug", "excerpt", "content", "author", "category", "tags", "readTime", "publishedAt"],
     status: "published",
   });
 

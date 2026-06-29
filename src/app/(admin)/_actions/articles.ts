@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { strapiGet, strapiPost, strapiPut, strapiDelete, strapiUpload } from "../_lib/strapi-admin";
+import { strapiGet, strapiPost, strapiPut, strapiDelete } from "../_lib/strapi-admin";
 
 export async function getAdminArticles({
   page = 1,
@@ -27,20 +27,32 @@ export async function getAdminArticles({
 export async function getAdminArticle(documentId: string) {
   return strapiGet(`/api/blog-posts/${documentId}`, {
     populate: {
-      coverImage: { fields: ["url", "alternativeText"] },
+      coverImage: { fields: ["id", "url", "alternativeText"] },
     },
   });
 }
 
+export async function checkArticleSlug(slug: string, excludeDocumentId?: string): Promise<boolean> {
+  if (!slug) return false;
+  const result = await strapiGet("/api/blog-posts", {
+    filters: { slug: { $eq: slug } },
+    fields: ["slug", "documentId"],
+    pagination: { pageSize: 1 },
+  });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const items = (result?.data as any[]) ?? [];
+  if (!items.length) return false;
+  if (excludeDocumentId && items[0]?.documentId === excludeDocumentId) return false;
+  return true;
+}
+
 export async function createArticle(_prev: unknown, formData: FormData) {
   const data = extractArticleData(formData);
-  const coverFile = formData.get("coverImage") as File | null;
 
-  if (coverFile && coverFile.size > 0) {
-    const uploadForm = new FormData();
-    uploadForm.append("files", coverFile);
-    const uploaded = await strapiUpload(uploadForm);
-    if (uploaded) data.coverImage = uploaded.id;
+  const coverImageId = formData.get("coverImage") as string;
+  if (coverImageId && coverImageId !== "") {
+    const id = parseInt(coverImageId, 10);
+    if (!isNaN(id)) data.coverImage = id;
   }
 
   const result = await strapiPost("/api/blog-posts", data);
@@ -57,13 +69,13 @@ export async function createArticle(_prev: unknown, formData: FormData) {
 export async function updateArticle(_prev: unknown, formData: FormData) {
   const documentId = formData.get("documentId") as string;
   const data = extractArticleData(formData);
-  const coverFile = formData.get("coverImage") as File | null;
 
-  if (coverFile && coverFile.size > 0) {
-    const uploadForm = new FormData();
-    uploadForm.append("files", coverFile);
-    const uploaded = await strapiUpload(uploadForm);
-    if (uploaded) data.coverImage = uploaded.id;
+  const coverImageId = formData.get("coverImage") as string;
+  if (coverImageId && coverImageId !== "") {
+    const id = parseInt(coverImageId, 10);
+    if (!isNaN(id)) data.coverImage = id;
+  } else {
+    data.coverImage = null;
   }
 
   const result = await strapiPut(`/api/blog-posts/${documentId}`, data);
@@ -85,6 +97,14 @@ export async function deleteArticle(documentId: string) {
 }
 
 function extractArticleData(formData: FormData): Record<string, unknown> {
+  const tagsRaw = formData.get("tags") as string;
+  const tags = tagsRaw
+    ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
+    : [];
+
+  const readTimeRaw = formData.get("readTime") as string;
+  const readTime = readTimeRaw ? parseInt(readTimeRaw, 10) || null : null;
+
   return {
     title: formData.get("title") as string,
     slug: formData.get("slug") as string,
@@ -92,6 +112,7 @@ function extractArticleData(formData: FormData): Record<string, unknown> {
     content: formData.get("content") as string,
     category: formData.get("category") as string,
     author: formData.get("author") as string,
-    readTime: formData.get("readTime") as string,
+    readTime,
+    tags,
   };
 }
