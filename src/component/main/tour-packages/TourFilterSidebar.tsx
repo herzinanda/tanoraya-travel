@@ -1,10 +1,5 @@
 'use client'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { useState, useRef } from 'react'
-
-const MIN_PRICE = 0
-const MAX_PRICE = 100_000_000
-const STEP = 500_000
 
 const DURATION_OPTIONS = [
   { label: '1 – 3 Days', value: '1-3', min: 1, max: 3 },
@@ -25,14 +20,6 @@ export default function TourFilterSidebar({ destinations, horizontal = false }: 
   const selected = searchParams.get('destination') ?? ''
   const selectedDuration = searchParams.get('duration') ?? ''
 
-  const [minVal, setMinVal] = useState(
-    Number(searchParams.get('minPrice') ?? MIN_PRICE)
-  )
-  const [maxVal, setMaxVal] = useState(
-    Number(searchParams.get('maxPrice') ?? MAX_PRICE)
-  )
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
   const pushUrl = (overrides: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString())
     Object.entries(overrides).forEach(([k, v]) => {
@@ -51,50 +38,11 @@ export default function TourFilterSidebar({ destinations, horizontal = false }: 
     pushUrl({ duration: selectedDuration === value ? null : value })
   }
 
-  const schedulePrice = (min: number, max: number) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => {
-      pushUrl({
-        minPrice: min === MIN_PRICE ? null : String(min),
-        maxPrice: max === MAX_PRICE ? null : String(max),
-      })
-    }, 400)
-  }
-
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Math.min(Number(e.target.value), maxVal - STEP)
-    setMinVal(val)
-    schedulePrice(val, maxVal)
-  }
-
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = Math.max(Number(e.target.value), minVal + STEP)
-    setMaxVal(val)
-    schedulePrice(minVal, val)
-  }
-
   const handleClearFilters = () => {
-    setMinVal(MIN_PRICE)
-    setMaxVal(MAX_PRICE)
     router.push(pathname, { scroll: false })
   }
 
-  const hasActiveFilters =
-    !!selected ||
-    !!selectedDuration ||
-    searchParams.has('minPrice') ||
-    searchParams.has('maxPrice') ||
-    searchParams.has('search')
-
-  const fmt = (val: number) =>
-    new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0,
-    }).format(val)
-
-  const minPercent = ((minVal - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
-  const maxPercent = ((maxVal - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100
+  const hasActiveFilters = !!selected || !!selectedDuration || searchParams.has('search')
 
   if (horizontal) {
     return (
@@ -128,33 +76,6 @@ export default function TourFilterSidebar({ destinations, horizontal = false }: 
                 {opt.label}
               </button>
             ))}
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="tfb-group tfb-group--price">
-          <span className="tfb-label">Price Range</span>
-          <div className="tfb-price-inputs">
-            <div className="slider-container" style={{ position: 'relative', height: '36px' }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: `${minPercent}%`,
-                  width: `${maxPercent - minPercent}%`,
-                  height: '4px',
-                  background: '#1a3272',
-                  transform: 'translateY(-50%)',
-                  pointerEvents: 'none',
-                  zIndex: 1,
-                }}
-              />
-              <input type="range" className="slider" min={MIN_PRICE} max={MAX_PRICE} step={STEP} value={minVal} onChange={handleMinChange} style={{ position: 'absolute', width: '100%', zIndex: 2 }} />
-              <input type="range" className="slider" min={MIN_PRICE} max={MAX_PRICE} step={STEP} value={maxVal} onChange={handleMaxChange} style={{ position: 'absolute', width: '100%', zIndex: 2 }} />
-            </div>
-            <div style={{ fontSize: '0.78rem', color: '#555', marginTop: 4 }}>
-              {fmt(minVal)} – {fmt(maxVal)}
-            </div>
           </div>
         </div>
 
@@ -243,59 +164,6 @@ export default function TourFilterSidebar({ destinations, horizontal = false }: 
               </span>
             </label>
           ))}
-        </div>
-      </div>
-
-      {/* Price Range Filter */}
-      <div className="single-sidebar-widget">
-        <div className="wid-title style-2">
-          <h3>Price Range</h3>
-          <i className="fa-solid fa-chevron-down"></i>
-        </div>
-        <div className="price-range-wrapper">
-          <div
-            className="slider-container"
-            style={{ position: 'relative', height: '40px' }}
-          >
-            {/* Track fill */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: `${minPercent}%`,
-                width: `${maxPercent - minPercent}%`,
-                height: '4px',
-                background: 'var(--theme-color, #f26522)',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none',
-                zIndex: 1,
-              }}
-            />
-            <input
-              type="range"
-              className="slider"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
-              step={STEP}
-              value={minVal}
-              onChange={handleMinChange}
-              style={{ position: 'absolute', width: '100%', zIndex: 2 }}
-            />
-            <input
-              type="range"
-              className="slider"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
-              step={STEP}
-              value={maxVal}
-              onChange={handleMaxChange}
-              style={{ position: 'absolute', width: '100%', zIndex: 2 }}
-            />
-          </div>
-          <div className="price-text pt-4 d-flex flex-column gap-1" style={{ fontSize: '0.85rem' }}>
-            <span>Min: <strong>{fmt(minVal)}</strong></span>
-            <span>Max: <strong>{fmt(maxVal)}</strong></span>
-          </div>
         </div>
       </div>
 

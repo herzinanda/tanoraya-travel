@@ -412,3 +412,18 @@ export async function getTourDepartures(tourSlug: string) {
   const url = new URL(path, BASE_URL)
   return fetchAPI(url.href, { method: 'GET' })
 }
+
+export async function getTestimonials({ pageSize = 6 }: { pageSize?: number } = {}) {
+  const query = qs.stringify({
+    filters: { isApproved: { $eq: true } },
+    populate: {
+      avatar: { fields: ['url', 'alternativeText'] },
+    },
+    fields: ['reviewerName', 'rating_overall', 'comment', 'role', 'location'],
+    sort: 'publishedAt:DESC',
+    status: 'published',
+    pagination: { pageSize },
+  });
+  const url = new URL(`/api/reviews?${query}`, BASE_URL);
+  return fetchAPI(url.href, { method: 'GET', next: { revalidate: 3600 } });
+}

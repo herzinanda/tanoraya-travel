@@ -1,52 +1,61 @@
 import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
 import { HomeTestimonialsProps } from '@/types'
 import { getStrapiMedia } from './StrapiImage'
+import SwiperInit from '@/component/main/shared/SwiperInit'
+import { getTestimonials } from '@/data/loader'
 
-const FALLBACK_TESTIMONIALS = [
-  {
-    name: 'Benjamin Carter',
-    role: 'Ceo & Owner',
-    location: 'New York, NY',
-    comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
-    avatar: '/img/testimonial/3.png',
-    rating: 5,
-  },
-  {
-    name: 'Lucas Thompson',
-    role: 'Ceo & Owner',
-    location: 'New York, NY',
-    comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
-    avatar: '/img/testimonial/4.png',
-    rating: 5,
-  },
-  {
-    name: 'Elena Gordon',
-    role: 'Ceo & Owner',
-    location: 'New York, NY',
-    comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
-    avatar: '/img/testimonial/5.png',
-    rating: 5,
-  },
-]
+const FALLBACK_AVATARS = ['/img/testimonial/3.png', '/img/testimonial/4.png', '/img/testimonial/5.png']
 
-const TestimonialSection = ({
+const TestimonialSection = async ({
   title,
   subtitle,
-  button,
-  testimonialItems,
 }: Readonly<Partial<HomeTestimonialsProps>>) => {
-  const items = testimonialItems && testimonialItems.length > 0
-    ? testimonialItems.map((item) => ({
-        name: item.name,
-        role: item.role || '',
-        location: item.location || '',
-        comment: item.comment,
-        avatar: item.avatar?.url ? getStrapiMedia(item.avatar.url) : '/img/testimonial/3.png',
-        rating: item.rating ?? 5,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let reviews: any[] = []
+  try {
+    const res = await getTestimonials({ pageSize: 6 })
+    if (res?.data) reviews = res.data
+  } catch {}
+
+  const items = reviews.length > 0
+    ? reviews.map((r: any, i: number) => ({  // eslint-disable-line @typescript-eslint/no-explicit-any
+        name: r.reviewerName ?? '',
+        role: r.role ?? '',
+        location: r.location ?? '',
+        comment: r.comment ?? '',
+        avatar: r.avatar?.url ? getStrapiMedia(r.avatar.url) : FALLBACK_AVATARS[i % FALLBACK_AVATARS.length],
+        rating: r.rating_overall ?? 5,
+        isStrapi: !!r.avatar?.url,
       }))
-    : FALLBACK_TESTIMONIALS
+    : [
+        {
+          name: 'Benjamin Carter',
+          role: 'CEO & Owner',
+          location: 'New York, NY',
+          comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
+          avatar: '/img/testimonial/3.png',
+          rating: 5,
+          isStrapi: false,
+        },
+        {
+          name: 'Lucas Thompson',
+          role: 'CEO & Owner',
+          location: 'New York, NY',
+          comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
+          avatar: '/img/testimonial/4.png',
+          rating: 5,
+          isStrapi: false,
+        },
+        {
+          name: 'Elena Gordon',
+          role: 'CEO & Owner',
+          location: 'New York, NY',
+          comment: '"Incredible customer service attention to detail. Express Travel truly goes above and beyond to ensure their clients have a memorable experience. Can\'t wait to travel with them again!"',
+          avatar: '/img/testimonial/5.png',
+          rating: 5,
+          isStrapi: false,
+        },
+      ]
 
   return (
     <>
@@ -61,12 +70,6 @@ const TestimonialSection = ({
                 {title || 'What Our Clients Say'}
               </h2>
             </div>
-            {/* <div className="about-button wow fadeInUp" data-wow-delay=".7s">
-              <Link href={button?.url || '/contact'} className="theme-btn">
-                {button?.text || 'Read More'}
-                <Image src="/img/icon/white-arrow.svg" alt="img" width={22} height={16} />
-              </Link>
-            </div> */}
           </div>
           <div className="swiper testimonial-slider">
             <div className="swiper-wrapper">
@@ -104,7 +107,8 @@ const TestimonialSection = ({
                           alt={item.name}
                           width={60}
                           height={60}
-                          unoptimized={item.avatar !== '/img/testimonial/3.png' && item.avatar !== '/img/testimonial/4.png' && item.avatar !== '/img/testimonial/5.png'}
+                          unoptimized={item.isStrapi}
+                          style={{ objectFit: 'cover' }}
                         />
                       </div>
                       <div className="info-text">
@@ -119,6 +123,16 @@ const TestimonialSection = ({
           </div>
         </div>
       </section>
+      <SwiperInit
+        selector=".testimonial-slider"
+        slidesPerView={3}
+        spaceBetween={30}
+        breakpoints={{
+          0: { slidesPerView: 1 },
+          767: { slidesPerView: 2 },
+          1199: { slidesPerView: 3 },
+        }}
+      />
     </>
   )
 }

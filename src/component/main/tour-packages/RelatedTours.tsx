@@ -52,7 +52,7 @@ export default async function RelatedTours({
         </div>
 
         {/* Tour cards */}
-        <div className="row g-4">
+        <div className="row g-4 tn-related-row">
           {tours.map((tour, i) => (
             <div
               key={tour.id}

@@ -37,7 +37,7 @@ const NewsSection = async ({ title, subtitle }: { title?: string; subtitle?: str
           </h2>
         </div>
 
-        <div className="row g-4">
+        <div className="row g-4 tn-news-row">
           {posts.map((post, i) => (
             <div
               key={post.documentId || post.id}

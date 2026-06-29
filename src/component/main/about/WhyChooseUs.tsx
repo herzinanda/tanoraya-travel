@@ -24,7 +24,7 @@ const WhyChooseUs = ({
       <div className="container">
         <div className="choose-us-wrapper">
           <div className="row g-4">
-            <div className="col-xl-7 col-lg-6">
+            <div className="col-xl-7 col-lg-6 d-none d-lg-block">
               <div className="chose-us-image">
                 {Images?.[0] ? (
                   <StrapiImage src={Images[0].url} alt={Images[0].alternativeText || 'Why choose us'} width={420} height={450} className="wow img-custom-anim-left" />

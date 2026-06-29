@@ -7,7 +7,7 @@ import { StrapiImage, getStrapiMedia } from '@/component/main/home/StrapiImage'
 import { getTourPackages, getDestinations, getTourPage } from '@/data/loader'
 import TourFilterSidebar from '@/component/main/tour-packages/TourFilterSidebar'
 import TourSearchBar from '@/component/main/tour-packages/TourSearchBar'
-import { mapTourCard, filterTourCards, formatPrice } from '@/utils/map-tour-card'
+import { mapTourCard, formatPrice } from '@/utils/map-tour-card'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDestination(item: any) {
@@ -37,9 +37,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TourListPage({
   searchParams,
 }: {
-  searchParams: Promise<{ destination?: string; minPrice?: string; maxPrice?: string; search?: string; duration?: string }>
+  searchParams: Promise<{ destination?: string; search?: string; duration?: string }>
 }) {
-  const { destination, minPrice, maxPrice, search, duration } = await searchParams
+  const { destination, search, duration } = await searchParams
   const durationRange = duration ? DURATION_MAP[duration] : undefined
 
   const [toursRes, destinationsRes, tourPageRes] = await Promise.all([
@@ -56,11 +56,7 @@ export default async function TourListPage({
 
   const tourPageData = tourPageRes?.data
 
-  const allTours = toursRes?.data ? toursRes.data.map(mapTourCard) : []
-  const tours = filterTourCards(allTours, {
-    minPrice: minPrice ? Number(minPrice) : undefined,
-    maxPrice: maxPrice ? Number(maxPrice) : undefined,
-  })
+  const tours = toursRes?.data ? toursRes.data.map(mapTourCard) : []
   const destinations: ReturnType<typeof mapDestination>[] = destinationsRes?.data ? destinationsRes.data.map(mapDestination) : []
 
   const delays = ['.2s', '.5s', '.8s']

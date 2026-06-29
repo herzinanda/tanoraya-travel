@@ -8628,6 +8628,19 @@ input.main-search-input::placeholder {
   align-items: center;
   gap: 15px;
 }
+.testimonial-main-item .client-info-item .client-image {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.testimonial-main-item .client-info-item .client-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
 .testimonial-section2 {
   position: relative;
@@ -9492,14 +9505,12 @@ input.main-search-input::placeholder {
 /* ── Responsive ── */
 @media (max-width: 960px) {
   .t-why__grid { grid-template-columns: 1fr; }
-  .t-why__img-sub { display: none; }
-  .t-why__badge { right: 16px; }
+  .t-why__visual { display: none; }
   .t-cta-banner { grid-template-columns: 1fr; padding: 40px 32px; }
   .t-cta-banner__actions { justify-content: flex-start; }
 }
 @media (max-width: 600px) {
   .t-why__features { grid-template-columns: 1fr; }
-  .t-why__badge { display: none; }
 }
 
 /* ── Mobile base font size ── */
@@ -9633,4 +9644,60 @@ input.main-search-input::placeholder {
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(247, 148, 29, 0.35);
+}
+
+/* ── Related Tours mobile horizontal scroll ── */
+@media (max-width: 767px) {
+  .related-tours-section .section-title {
+    margin-bottom: 32px;
+  }
+  .tn-related-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #1a3272 #eef0f7;
+    gap: 0;
+  }
+  .tn-related-row > [class*="col-"] {
+    flex: 0 0 82vw !important;
+    max-width: 82vw !important;
+    width: 82vw !important;
+    scroll-snap-align: start;
+    padding-left: 12px;
+    padding-right: 4px;
+  }
+  .tn-related-row > [class*="col-"]:last-child {
+    padding-right: 12px;
+  }
+}
+
+/* ── News section mobile horizontal scroll ── */
+@media (max-width: 767px) {
+  .tn-news-row {
+    margin-top: 32px;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #1a3272 #eef0f7;
+    gap: 0;
+  }
+  .tn-news-row > [class*="col-"] {
+    flex: 0 0 82vw !important;
+    max-width: 82vw !important;
+    width: 82vw !important;
+    scroll-snap-align: start;
+    padding-left: 12px;
+    padding-right: 4px;
+  }
+  .tn-news-row > [class*="col-"]:last-child {
+    padding-right: 12px;
+  }
 }
