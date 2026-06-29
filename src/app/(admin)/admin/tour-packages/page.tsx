@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Star } from "lucide-react";
+import { Plus, Pencil, Trash2, Star, Globe, FileEdit } from "lucide-react";
 import { Button } from "../../_components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../_components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../_components/ui/table";
@@ -70,8 +70,8 @@ export default async function TourPackagesPage({
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Destination</TableHead>
-                <TableHead>Price</TableHead>
                 <TableHead>Days</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Featured</TableHead>
                 <TableHead className="w-30">Actions</TableHead>
               </TableRow>
@@ -91,12 +91,20 @@ export default async function TourPackagesPage({
                     <TableCell className="text-muted-foreground">
                       {tour.destination?.title ?? "—"}
                     </TableCell>
-                    <TableCell>
-                      {tour.Price
-                        ? `Rp ${Number(tour.Price).toLocaleString("id-ID")}`
-                        : "—"}
-                    </TableCell>
                     <TableCell>{tour.duration ?? "—"}</TableCell>
+                    <TableCell>
+                      {tour.publishedAt ? (
+                        <Badge variant="success">
+                          <Globe className="h-3 w-3 mr-1" />
+                          Published
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary">
+                          <FileEdit className="h-3 w-3 mr-1" />
+                          Draft
+                        </Badge>
+                      )}
+                    </TableCell>
                     <TableCell>
                       {tour.isFeatured ? (
                         <Badge variant="success">

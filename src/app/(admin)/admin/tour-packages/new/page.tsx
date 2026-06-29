@@ -2,23 +2,46 @@
 
 import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../_components/ui/card";
 import { Button } from "../../../_components/ui/button";
 import { FormField } from "../../../_components/shared/form-field";
 import { ImageUpload } from "../../../_components/shared/image-upload";
 import { createTourPackage, getAllDestinationsForSelect } from "../../../_actions/tour-packages";
 
+function toSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export default function NewTourPackagePage() {
   const [state, formAction, isPending] = useActionState(createTourPackage, null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [destinations, setDestinations] = useState<any[]>([]);
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
 
   useEffect(() => {
     getAllDestinationsForSelect().then((res) => {
       if (res?.data) setDestinations(res.data as unknown[]);
     });
   }, []);
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    if (!slugTouched) setSlug(toSlug(newTitle));
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSlug(e.target.value);
+    setSlugTouched(true);
+  };
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -49,21 +72,45 @@ export default function NewTourPackagePage() {
           <CardContent className="space-y-5">
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2">
-                <FormField label="Title" name="title" placeholder="e.g. Bali Adventure Tour" required />
+                <label className="block text-sm font-medium mb-1.5">
+                  Title <span className="text-destructive">*</span>
+                </label>
+                <input
+                  name="title"
+                  value={title}
+                  onChange={handleTitleChange}
+                  placeholder="e.g. Bali Adventure Tour"
+                  required
+                  className="w-full h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                />
               </div>
               <FormField label="Tour Code" name="tourCode" placeholder="e.g. BLI" hint="3-5 char code for booking ref" />
             </div>
 
-            <FormField label="URL Slug" name="slug" placeholder="e.g. bali-adventure-tour" required hint="Used in the URL: /tour-packages/[slug]" />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField label="Base Price (Rp)" name="Price" type="number" placeholder="0" required />
-              <FormField label="Price Per Person (Rp)" name="pricePerPerson" type="number" placeholder="0" hint="Display price, optional" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField label="Discount Price (Rp)" name="discountPrice" type="number" placeholder="0" hint="Strikethrough price, optional" />
-              <div />
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                URL Slug <span className="text-destructive">*</span>
+              </label>
+              <div className="flex gap-2">
+                <input
+                  name="slug"
+                  value={slug}
+                  onChange={handleSlugChange}
+                  placeholder="e.g. bali-adventure-tour"
+                  required
+                  className="flex-1 h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                />
+                {slugTouched && (
+                  <button
+                    type="button"
+                    onClick={() => { setSlug(toSlug(title)); setSlugTouched(false); }}
+                    className="h-9 px-3 text-xs border border-input rounded-md hover:bg-muted flex items-center gap-1 text-muted-foreground"
+                  >
+                    <RefreshCw className="h-3 w-3" /> Reset
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Used in the URL: /tour-packages/[slug]. Auto-generated from title.</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -97,16 +144,13 @@ export default function NewTourPackagePage() {
           </CardContent>
         </Card>
 
-        {/* Content */}
+        {/* Description */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Content</CardTitle>
+            <CardTitle className="text-base">Description</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <FormField label="Description" name="tour_description" type="textarea" placeholder="Tour description (supports HTML)..." rows={6} />
-            <FormField label="Highlights" name="highlights" type="textarea" placeholder="One highlight per line..." rows={4} hint="Enter each highlight on a new line" />
-            <FormField label="Inclusions" name="inclusions" type="textarea" placeholder="One inclusion per line..." rows={4} hint="What's included in the tour" />
-            <FormField label="Exclusions" name="exclusions" type="textarea" placeholder="One exclusion per line..." rows={4} hint="What's not included" />
+            <FormField label="Tour Description" name="tour_description" type="textarea" placeholder="Tour description..." rows={6} />
             <FormField label="Map Embed URL" name="mapEmbedSrc" placeholder="Google Maps embed URL" />
           </CardContent>
         </Card>

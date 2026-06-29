@@ -11,6 +11,7 @@ import { Label } from "../../../_components/ui/label";
 import { updateTourComponents, uploadItineraryFile } from "../../../_actions/tour-packages";
 import { getStrapiMedia } from "@/component/main/home/StrapiImage";
 
+type StringItem = { value: string };
 type BenefitItem = { id?: number; tour_benefit_item: string };
 type FacilityItem = {
   id?: number;
@@ -25,9 +26,26 @@ type ItineraryItem = {
   itinerary_description: string;
 };
 
+function toStringItems(arr: unknown): StringItem[] {
+  if (!Array.isArray(arr)) return [];
+  return arr.map((v) => ({ value: typeof v === "string" ? v : String(v) }));
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ComponentsTab({ tour }: { tour: any }) {
   const router = useRouter();
+
+  // Highlights
+  const [highlights, setHighlights] = useState<StringItem[]>(toStringItems(tour.highlights));
+  const [highlightSaving, setHighlightSaving] = useState(false);
+
+  // Inclusions
+  const [inclusions, setInclusions] = useState<StringItem[]>(toStringItems(tour.inclusions));
+  const [inclusionSaving, setInclusionSaving] = useState(false);
+
+  // Exclusions
+  const [exclusions, setExclusions] = useState<StringItem[]>(toStringItems(tour.exclusions));
+  const [exclusionSaving, setExclusionSaving] = useState(false);
 
   // Tour Benefits
   const [benefits, setBenefits] = useState<BenefitItem[]>(
@@ -53,6 +71,33 @@ export function ComponentsTab({ tour }: { tour: any }) {
 
   const existingFile = tour.itinerary_file;
   const existingFileUrl = existingFile?.url ? getStrapiMedia(existingFile.url) : null;
+
+  // ── Highlights ──
+  const saveHighlights = async () => {
+    setHighlightSaving(true);
+    const values = highlights.filter((h) => h.value.trim()).map((h) => h.value);
+    await updateTourComponents(tour.documentId, { highlights: values });
+    setHighlightSaving(false);
+    router.refresh();
+  };
+
+  // ── Inclusions ──
+  const saveInclusions = async () => {
+    setInclusionSaving(true);
+    const values = inclusions.filter((h) => h.value.trim()).map((h) => h.value);
+    await updateTourComponents(tour.documentId, { inclusions: values });
+    setInclusionSaving(false);
+    router.refresh();
+  };
+
+  // ── Exclusions ──
+  const saveExclusions = async () => {
+    setExclusionSaving(true);
+    const values = exclusions.filter((h) => h.value.trim()).map((h) => h.value);
+    await updateTourComponents(tour.documentId, { exclusions: values });
+    setExclusionSaving(false);
+    router.refresh();
+  };
 
   // ── Benefits ──
   const addBenefit = () => setBenefits([...benefits, { tour_benefit_item: "" }]);
@@ -141,8 +186,96 @@ export function ComponentsTab({ tour }: { tour: any }) {
     }
   };
 
+  function StringListSection({
+    title,
+    items,
+    setItems,
+    onSave,
+    saving,
+    placeholder,
+  }: {
+    title: string;
+    items: StringItem[];
+    setItems: (items: StringItem[]) => void;
+    onSave: () => void;
+    saving: boolean;
+    placeholder: string;
+  }) {
+    return (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-base">{title} ({items.length})</CardTitle>
+          <Button type="button" size="sm" variant="outline" onClick={() => setItems([...items, { value: "" }])}>
+            <Plus className="h-4 w-4 mr-1" /> Add
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {items.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-4">No items added yet</p>
+          )}
+          {items.map((item, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <Input
+                value={item.value}
+                onChange={(e) => {
+                  const updated = [...items];
+                  updated[i] = { value: e.target.value };
+                  setItems(updated);
+                }}
+                placeholder={placeholder}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setItems(items.filter((_, idx) => idx !== i))}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            </div>
+          ))}
+          {items.length > 0 && (
+            <Button onClick={onSave} disabled={saving} size="sm">
+              {saving ? "Saving..." : `Save ${title}`}
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6 max-w-3xl">
+      {/* ── Highlights ── */}
+      <StringListSection
+        title="Highlights"
+        items={highlights}
+        setItems={setHighlights}
+        onSave={saveHighlights}
+        saving={highlightSaving}
+        placeholder="e.g. Stunning sunrise at Mount Bromo"
+      />
+
+      {/* ── Inclusions ── */}
+      <StringListSection
+        title="Inclusions"
+        items={inclusions}
+        setItems={setInclusions}
+        onSave={saveInclusions}
+        saving={inclusionSaving}
+        placeholder="e.g. Hotel accommodation (3 nights)"
+      />
+
+      {/* ── Exclusions ── */}
+      <StringListSection
+        title="Exclusions"
+        items={exclusions}
+        setItems={setExclusions}
+        onSave={saveExclusions}
+        saving={exclusionSaving}
+        placeholder="e.g. International flights"
+      />
+
       {/* ── Tour Benefits ── */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">

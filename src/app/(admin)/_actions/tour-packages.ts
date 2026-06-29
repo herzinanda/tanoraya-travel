@@ -18,7 +18,8 @@ export async function getAdminTourPackages({
       tourImageThumbnail: { fields: ["url", "alternativeText"] },
       destination: { fields: ["title", "destinationUrl"] },
     },
-    fields: ["title", "slug", "Price", "duration", "isFeatured", "tourCode"],
+    fields: ["title", "slug", "duration", "isFeatured", "tourCode", "publishedAt"],
+    status: "draft",
     ...(search?.trim() && { filters: { title: { $containsi: search.trim() } } }),
     pagination: { page, pageSize },
     sort: "title:asc",
@@ -28,6 +29,7 @@ export async function getAdminTourPackages({
 export async function getAdminTourPackage(documentId: string) {
   return strapiGet(`/api/tour-packages/${documentId}`, {
     populate: "*",
+    status: "draft",
   });
 }
 
@@ -141,6 +143,32 @@ export async function deleteTourPackage(documentId: string) {
   return { success: true };
 }
 
+export async function publishTourPackage(documentId: string) {
+  const result = await strapiPut(`/api/tour-packages/${documentId}`, {
+    publishedAt: new Date().toISOString(),
+  });
+  if (!result || result.error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return { error: (result?.error as any)?.message ?? "Failed to publish." };
+  }
+  revalidatePath("/admin/tour-packages");
+  revalidatePath(`/admin/tour-packages/${documentId}`);
+  return { success: true };
+}
+
+export async function unpublishTourPackage(documentId: string) {
+  const result = await strapiPut(`/api/tour-packages/${documentId}`, {
+    publishedAt: null,
+  });
+  if (!result || result.error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return { error: (result?.error as any)?.message ?? "Failed to unpublish." };
+  }
+  revalidatePath("/admin/tour-packages");
+  revalidatePath(`/admin/tour-packages/${documentId}`);
+  return { success: true };
+}
+
 async function uploadMultipleFiles(formData: FormData, fieldName: string): Promise<number[]> {
   const files = formData.getAll(fieldName) as File[];
   const ids: number[] = [];
@@ -155,14 +183,6 @@ async function uploadMultipleFiles(formData: FormData, fieldName: string): Promi
   return ids;
 }
 
-function linesToJson(text: string | null): string[] {
-  if (!text) return [];
-  return text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
 function extractTourData(formData: FormData): Record<string, unknown> {
   const destination = formData.get("destination") as string;
 
@@ -171,9 +191,6 @@ function extractTourData(formData: FormData): Record<string, unknown> {
     title: formData.get("title") as string,
     slug: formData.get("slug") as string,
     tour_description: formData.get("tour_description") as string,
-    Price: Number(formData.get("Price")) || 0,
-    pricePerPerson: Number(formData.get("pricePerPerson")) || undefined,
-    discountPrice: Number(formData.get("discountPrice")) || undefined,
     duration: Number(formData.get("duration")) || 1,
     durationNights: Number(formData.get("durationNights")) || undefined,
     minGroupSize: Number(formData.get("minGroupSize")) || undefined,
@@ -181,9 +198,6 @@ function extractTourData(formData: FormData): Record<string, unknown> {
     difficulty: (formData.get("difficulty") as string) || undefined,
     isFeatured: formData.get("isFeatured") === "on",
     destination: destination || null,
-    highlights: linesToJson(formData.get("highlights") as string),
-    inclusions: linesToJson(formData.get("inclusions") as string),
-    exclusions: linesToJson(formData.get("exclusions") as string),
     mapEmbedSrc: formData.get("mapEmbedSrc") as string,
     metaTitle: (formData.get("metaTitle") as string) || undefined,
     metaDescription: (formData.get("metaDescription") as string) || undefined,

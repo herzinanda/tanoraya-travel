@@ -2,22 +2,27 @@
 
 import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Globe, FileEdit, RefreshCw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../_components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../_components/ui/card";
 import { Button } from "../../../_components/ui/button";
+import { Badge } from "../../../_components/ui/badge";
 import { FormField } from "../../../_components/shared/form-field";
 import { ImageUpload } from "../../../_components/shared/image-upload";
-import { updateTourPackage, getAllDestinationsForSelect } from "../../../_actions/tour-packages";
+import { updateTourPackage, getAllDestinationsForSelect, publishTourPackage, unpublishTourPackage } from "../../../_actions/tour-packages";
 import { getStrapiMedia } from "@/component/main/home/StrapiImage";
 import { DeparturesTab } from "./departures-tab";
 import { VariantsTab } from "./variants-tab";
 import { ComponentsTab } from "./components-tab";
+import { useRouter } from "next/navigation";
 
-function jsonToLines(val: unknown): string {
-  if (Array.isArray(val)) return val.join("\n");
-  if (typeof val === "string") return val;
-  return "";
+function toSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,6 +30,12 @@ export function EditTourTabs({ tour, departures, variants }: { tour: any; depart
   const [state, formAction, isPending] = useActionState(updateTourPackage, null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [destinations, setDestinations] = useState<any[]>([]);
+  const [title, setTitle] = useState(tour.title ?? "");
+  const [slug, setSlug] = useState(tour.slug ?? "");
+  const [isPublished, setIsPublished] = useState(!!tour.publishedAt);
+  const [publishing, setPublishing] = useState(false);
+  const [publishError, setPublishError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     getAllDestinationsForSelect().then((res) => {
@@ -36,26 +47,67 @@ export function EditTourTabs({ tour, departures, variants }: { tour: any; depart
     ? getStrapiMedia(tour.tourImageThumbnail.url)
     : null;
 
-  // Existing gallery images
   const galleryImages = Array.isArray(tour.galleryImages)
     ? tour.galleryImages
     : Array.isArray(tour.tourGalleries)
       ? tour.tourGalleries
       : [];
 
+  const handlePublishToggle = async () => {
+    setPublishing(true);
+    setPublishError("");
+    const result = isPublished
+      ? await unpublishTourPackage(tour.documentId)
+      : await publishTourPackage(tour.documentId);
+    if (result?.error) {
+      setPublishError(result.error);
+    } else {
+      setIsPublished(!isPublished);
+      router.refresh();
+    }
+    setPublishing(false);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/admin/tour-packages">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Edit Tour Package</h1>
-          <p className="text-muted-foreground text-sm mt-1">{tour.title}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/admin/tour-packages">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Edit Tour Package</h1>
+            <p className="text-muted-foreground text-sm mt-1">{tour.title}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {isPublished ? (
+            <Badge variant="success" className="text-sm px-3 py-1">
+              <Globe className="h-3.5 w-3.5 mr-1.5" /> Published
+            </Badge>
+          ) : (
+            <Badge variant="secondary" className="text-sm px-3 py-1">
+              <FileEdit className="h-3.5 w-3.5 mr-1.5" /> Draft
+            </Badge>
+          )}
+          <Button
+            variant={isPublished ? "outline" : "default"}
+            size="sm"
+            onClick={handlePublishToggle}
+            disabled={publishing}
+          >
+            {publishing ? "..." : isPublished ? "Unpublish" : "Publish"}
+          </Button>
         </div>
       </div>
+
+      {publishError && (
+        <div className="bg-destructive/10 text-destructive text-sm px-4 py-3 rounded-md border border-destructive/20">
+          {publishError}
+        </div>
+      )}
 
       <Tabs defaultValue="details">
         <TabsList>
@@ -95,21 +147,41 @@ export function EditTourTabs({ tour, departures, variants }: { tour: any; depart
               <CardContent className="space-y-5">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="col-span-2">
-                    <FormField label="Title" name="title" defaultValue={tour.title} required />
+                    <label className="block text-sm font-medium mb-1.5">
+                      Title <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      name="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                      className="w-full h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    />
                   </div>
                   <FormField label="Tour Code" name="tourCode" defaultValue={tour.tourCode ?? ""} hint="3-5 char code for booking ref" />
                 </div>
 
-                <FormField label="URL Slug" name="slug" defaultValue={tour.slug} required hint="Used in the URL: /tour-packages/[slug]" />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField label="Base Price (Rp)" name="Price" type="number" defaultValue={tour.Price} required />
-                  <FormField label="Price Per Person (Rp)" name="pricePerPerson" type="number" defaultValue={tour.pricePerPerson ?? ""} hint="Display price, optional" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField label="Discount Price (Rp)" name="discountPrice" type="number" defaultValue={tour.discountPrice ?? ""} hint="Strikethrough price, optional" />
-                  <div />
+                <div>
+                  <label className="block text-sm font-medium mb-1.5">
+                    URL Slug <span className="text-destructive">*</span>
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      name="slug"
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value)}
+                      required
+                      className="flex-1 h-9 px-3 text-sm border border-input rounded-md bg-transparent outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSlug(toSlug(title))}
+                      className="h-9 px-3 text-xs border border-input rounded-md hover:bg-muted flex items-center gap-1 text-muted-foreground"
+                    >
+                      <RefreshCw className="h-3 w-3" /> From title
+                    </button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">Used in the URL: /tour-packages/[slug]</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -149,16 +221,13 @@ export function EditTourTabs({ tour, departures, variants }: { tour: any; depart
               </CardContent>
             </Card>
 
-            {/* Content */}
+            {/* Description */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Content</CardTitle>
+                <CardTitle className="text-base">Description</CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
-                <FormField label="Description" name="tour_description" type="textarea" defaultValue={tour.tour_description} rows={6} />
-                <FormField label="Highlights" name="highlights" type="textarea" defaultValue={jsonToLines(tour.highlights)} rows={4} hint="One per line" />
-                <FormField label="Inclusions" name="inclusions" type="textarea" defaultValue={jsonToLines(tour.inclusions)} rows={4} hint="One per line" />
-                <FormField label="Exclusions" name="exclusions" type="textarea" defaultValue={jsonToLines(tour.exclusions)} rows={4} hint="One per line" />
+                <FormField label="Tour Description" name="tour_description" type="textarea" defaultValue={tour.tour_description} rows={6} />
                 <FormField label="Map Embed URL" name="mapEmbedSrc" defaultValue={tour.mapEmbedSrc} />
               </CardContent>
             </Card>
