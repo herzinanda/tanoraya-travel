@@ -22,7 +22,6 @@ export async function getAdminBookings({
   dateTo?: string;
   sort?: string;
 } = {}) {
-  // Build date filters
   const dateFilters = buildDateFilters(dateFilter, dateFrom, dateTo);
 
   return strapiGet("/api/bookings", {

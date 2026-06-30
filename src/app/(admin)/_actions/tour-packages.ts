@@ -44,17 +44,11 @@ export async function getAllDestinationsForSelect() {
 export async function createTourPackage(_prev: unknown, formData: FormData) {
   const data = extractTourData(formData);
 
-  // Upload thumbnail
-  const thumbnailFile = formData.get("tourImageThumbnail") as File | null;
-  if (thumbnailFile && thumbnailFile.size > 0) {
-    const uploadForm = new FormData();
-    uploadForm.append("files", thumbnailFile);
-    const uploaded = await strapiUpload(uploadForm);
-    if (uploaded) data.tourImageThumbnail = uploaded.id;
-  }
+  // ImageUpload uploads immediately and stores the Strapi media ID in a hidden input
+  const thumbnailId = Number(formData.get("tourImageThumbnail"));
+  if (thumbnailId) data.tourImageThumbnail = thumbnailId;
 
-  // Upload gallery images
-  const galleryIds = await uploadMultipleFiles(formData, "galleryImages");
+  const galleryIds = (formData.getAll("galleryImages") as string[]).map(Number).filter(Boolean);
   if (galleryIds.length > 0) data.galleryImages = galleryIds;
 
   const result = await strapiPost("/api/tour-packages", data);
@@ -72,23 +66,16 @@ export async function updateTourPackage(_prev: unknown, formData: FormData) {
   const documentId = formData.get("documentId") as string;
   const data = extractTourData(formData);
 
-  // Upload thumbnail if new file provided
-  const thumbnailFile = formData.get("tourImageThumbnail") as File | null;
-  if (thumbnailFile && thumbnailFile.size > 0) {
-    const uploadForm = new FormData();
-    uploadForm.append("files", thumbnailFile);
-    const uploaded = await strapiUpload(uploadForm);
-    if (uploaded) data.tourImageThumbnail = uploaded.id;
-  }
+  // ImageUpload uploads immediately and stores the Strapi media ID in a hidden input
+  const thumbnailId = Number(formData.get("tourImageThumbnail"));
+  if (thumbnailId) data.tourImageThumbnail = thumbnailId;
 
-  // Upload new gallery images
-  const galleryIds = await uploadMultipleFiles(formData, "galleryImages");
-  if (galleryIds.length > 0) {
-    // Get existing gallery IDs to merge
-    const existingIds = formData.get("existingGalleryIds") as string;
-    const existing = existingIds ? existingIds.split(",").map(Number).filter(Boolean) : [];
-    data.galleryImages = [...existing, ...galleryIds];
-  }
+  // Merge existing gallery IDs with any newly uploaded ones
+  const existingIds = (formData.get("existingGalleryIds") as string)
+    ?.split(",").map(Number).filter(Boolean) ?? [];
+  const newGalleryIds = (formData.getAll("galleryImages") as string[]).map(Number).filter(Boolean);
+  const allGalleryIds = [...existingIds, ...newGalleryIds];
+  if (allGalleryIds.length > 0) data.galleryImages = allGalleryIds;
 
   const result = await strapiPut(`/api/tour-packages/${documentId}`, data);
 
@@ -169,24 +156,12 @@ export async function unpublishTourPackage(documentId: string) {
   return { success: true };
 }
 
-async function uploadMultipleFiles(formData: FormData, fieldName: string): Promise<number[]> {
-  const files = formData.getAll(fieldName) as File[];
-  const ids: number[] = [];
-  for (const file of files) {
-    if (file && file.size > 0) {
-      const uploadForm = new FormData();
-      uploadForm.append("files", file);
-      const uploaded = await strapiUpload(uploadForm);
-      if (uploaded) ids.push(uploaded.id);
-    }
-  }
-  return ids;
-}
-
 function extractTourData(formData: FormData): Record<string, unknown> {
   const destination = formData.get("destination") as string;
 
   return {
+    // Price is required in Strapi schema; set 0 as default since pricing is managed in departures
+    Price: 0,
     tourCode: (formData.get("tourCode") as string) || undefined,
     title: formData.get("title") as string,
     slug: formData.get("slug") as string,
@@ -198,7 +173,6 @@ function extractTourData(formData: FormData): Record<string, unknown> {
     difficulty: (formData.get("difficulty") as string) || undefined,
     isFeatured: formData.get("isFeatured") === "on",
     destination: destination || null,
-    mapEmbedSrc: formData.get("mapEmbedSrc") as string,
     metaTitle: (formData.get("metaTitle") as string) || undefined,
     metaDescription: (formData.get("metaDescription") as string) || undefined,
   };

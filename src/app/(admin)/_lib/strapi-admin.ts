@@ -106,14 +106,10 @@ export async function strapiUpload(formData: FormData): Promise<{ id: number; ur
   }
 
   const json = await res.json();
-  // Strapi upload returns an array of uploaded files
   const file = Array.isArray(json) ? json[0] : json;
   return file ? { id: file.id, url: file.url } : null;
 }
 
-/**
- * Fetch a simple count of entries for a content type.
- */
 export async function strapiCount(path: string, filters?: Record<string, unknown>): Promise<number> {
   const res = await strapiGet(path, {
     pagination: { pageSize: 1 },

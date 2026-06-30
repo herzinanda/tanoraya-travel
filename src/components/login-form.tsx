@@ -52,13 +52,13 @@ export function LoginForm({
                 </div>
               )}
               <Field>
-                <FieldLabel htmlFor="identifier">Email or Username</FieldLabel>
+                <FieldLabel htmlFor="identifier">Email</FieldLabel>
                 <Input
                   id="identifier"
                   name="identifier"
-                  type="text"
+                  type="email"
                   placeholder="admin@tanoraya.com"
-                  autoComplete="username"
+                  autoComplete="email"
                   required
                 />
               </Field>

@@ -125,9 +125,9 @@ export default function NewTourPackagePage() {
 
             <FormField label="Difficulty" name="difficulty" type="select">
               <option value="">— Select —</option>
-              <option value="easy">Easy</option>
-              <option value="moderate">Moderate</option>
-              <option value="challenging">Challenging</option>
+              <option value="Easy">Easy</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Challenging">Challenging</option>
             </FormField>
 
             <FormField label="Destination" name="destination" type="select" hint="Link to a destination">
@@ -151,7 +151,6 @@ export default function NewTourPackagePage() {
           </CardHeader>
           <CardContent className="space-y-5">
             <FormField label="Tour Description" name="tour_description" type="textarea" placeholder="Tour description..." rows={6} />
-            <FormField label="Map Embed URL" name="mapEmbedSrc" placeholder="Google Maps embed URL" />
           </CardContent>
         </Card>
 
