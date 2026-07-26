@@ -4,6 +4,9 @@ import { getTourPackages } from '@/data/loader'
 import { StrapiImage } from '@/component/main/home/StrapiImage'
 import SwiperInit from '@/component/main/shared/SwiperInit'
 import { mapTourCard, filterTourCards, formatPrice } from '@/utils/map-tour-card'
+import { padForLoop } from '@/utils/swiper-loop'
+
+const SLIDES_PER_VIEW = 4
 
 const DestinationSection = async ({ title, subtitle }: { title?: string; subtitle?: string } = {}) => {
   let tours: ReturnType<typeof mapTourCard>[] = []
@@ -31,8 +34,8 @@ const DestinationSection = async ({ title, subtitle }: { title?: string; subtitl
 
         <div className="swiper destination-slider">
           <div className="swiper-wrapper">
-            {tours.map((tour) => (
-              <div key={tour.id} className="swiper-slide">
+            {padForLoop(tours, SLIDES_PER_VIEW).map((tour, i) => (
+              <div key={`${tour.id}-${i}`} className="swiper-slide">
                 <div className="destination-card-items">
                   <div className="destination-thumb">
                     {tour.thumbUrl ? (
@@ -100,14 +103,16 @@ const DestinationSection = async ({ title, subtitle }: { title?: string; subtitl
 
       <SwiperInit
         selector=".destination-slider"
-        slidesPerView={4}
+        slidesPerView={SLIDES_PER_VIEW}
         spaceBetween={24}
+        autoplayDelay={2000}
+        speed={2000}
         paginationEl=".swiper-dot4 .dot"
         breakpoints={{
           0: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
           992: { slidesPerView: 3 },
-          1200: { slidesPerView: 4 },
+          1200: { slidesPerView: SLIDES_PER_VIEW },
         }}
       />
     </section>

@@ -3,6 +3,9 @@ import { HomeTestimonialsProps } from '@/types'
 import { getStrapiMedia } from './StrapiImage'
 import SwiperInit from '@/component/main/shared/SwiperInit'
 import { getTestimonials } from '@/data/loader'
+import { padForLoop } from '@/utils/swiper-loop'
+
+const SLIDES_PER_VIEW = 3
 
 const FALLBACK_AVATARS = ['/img/testimonial/3.png', '/img/testimonial/4.png', '/img/testimonial/5.png']
 
@@ -17,7 +20,7 @@ const TestimonialSection = async ({
     if (res?.data) reviews = res.data
   } catch {}
 
-  const items = reviews.length > 0
+  const source = reviews.length > 0
     ? reviews.map((r: any, i: number) => ({  // eslint-disable-line @typescript-eslint/no-explicit-any
         name: r.reviewerName ?? '',
         role: r.role ?? '',
@@ -56,6 +59,10 @@ const TestimonialSection = async ({
           isStrapi: false,
         },
       ]
+
+  // Too few approved reviews would make Swiper drop out of loop mode and stall
+  // autoplay on the last slide, so repeat them until there are enough.
+  const items = padForLoop(source, SLIDES_PER_VIEW)
 
   return (
     <>
@@ -125,12 +132,14 @@ const TestimonialSection = async ({
       </section>
       <SwiperInit
         selector=".testimonial-slider"
-        slidesPerView={3}
+        slidesPerView={SLIDES_PER_VIEW}
         spaceBetween={30}
+        autoplayDelay={2000}
+        speed={2000}
         breakpoints={{
           0: { slidesPerView: 1 },
           767: { slidesPerView: 2 },
-          1199: { slidesPerView: 3 },
+          1199: { slidesPerView: SLIDES_PER_VIEW },
         }}
       />
     </>
