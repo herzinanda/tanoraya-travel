@@ -141,39 +141,9 @@
       });
     }
 
-    //>> Testimonial Slider Start <<//
-    if ($(".testimonial-slider").length > 0) {
-      const testimonialSlider = new Swiper(".testimonial-slider", {
-        spaceBetween: 30,
-        speed: 2000,
-        loop: true,
-        autoplay: {
-          delay: 2000,
-          disableOnInteraction: false,
-        },
-        navigation: {
-          prevEl: ".array-prev",
-          nextEl: ".array-next",
-        },
-        breakpoints: {
-          1199: {
-            slidesPerView: 3,
-          },
-          991: {
-            slidesPerView: 2,
-          },
-          767: {
-            slidesPerView: 2,
-          },
-          575: {
-            slidesPerView: 1,
-          },
-          0: {
-            slidesPerView: 1,
-          },
-        },
-      });
-    }
+    //>> ".testimonial-slider" is initialised by <SwiperInit> in React.        <<//
+    //>> Do not init it here as well: Swiper has no re-init guard, so both     <<//
+    //>> instances stay alive on the same element and fight over the wrapper.  <<//
 
     //>> Testimonial Slider Start <<//
     if ($(".testimonial-slider2").length > 0) {
@@ -260,36 +230,8 @@
       });
     }
 
-    //>> destination Slider Start <<//
-    if ($(".destination-slider").length > 0) {
-      const destinationSlider = new Swiper(".destination-slider", {
-        spaceBetween: 30,
-        speed: 2000,
-        loop: true,
-        autoplay: {
-          delay: 2000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: ".dot",
-          clickable: true,
-        },
-        breakpoints: {
-          1200: {
-            slidesPerView: 4,
-          },
-          992: {
-            slidesPerView: 2,
-          },
-          576: {
-            slidesPerView: 2,
-          },
-          0: {
-            slidesPerView: 1,
-          },
-        },
-      });
-    }
+    //>> ".destination-slider" is initialised by <SwiperInit> in React.        <<//
+    //>> Do not init it here as well (see the testimonial-slider note above).  <<//
 
     //>> destination Slider Start <<//
     if ($(".destination-slider2").length > 0) {

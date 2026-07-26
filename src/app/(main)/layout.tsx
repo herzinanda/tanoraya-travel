@@ -155,14 +155,21 @@ export default async function MainLayout({
         src="/js/bootstrap.bundle.min.js"
         strategy="beforeInteractive"
       />
-      <Script src="/js/jquery.nice-select.min.js" strategy="lazyOnload" />
-      <Script src="/js/jquery.waypoints.js" strategy="lazyOnload" />
-      <Script src="/js/jquery.counterup.min.js" strategy="lazyOnload" />
-      <Script src="/js/swiper-bundle.min.js" strategy="lazyOnload" />
-      <Script src="/js/jquery.meanmenu.min.js" strategy="lazyOnload" />
-      <Script src="/js/jquery.magnific-popup.min.js" strategy="lazyOnload" />
-      <Script src="/js/wow.min.js" strategy="lazyOnload" />
-      <Script src="/js/main.js" strategy="lazyOnload" />
+      {/*
+        next/script injects these with document.createElement, which defaults to
+        async — execution order then follows download order, not JSX order. Over
+        a CDN the small main.js can beat the 140 KB swiper bundle and blow up on
+        `Swiper is not defined`, taking the whole $(document).ready block with it.
+        async={false} restores ordered execution; main.js must run last.
+      */}
+      <Script src="/js/jquery.nice-select.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/jquery.waypoints.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/jquery.counterup.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/swiper-bundle.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/jquery.meanmenu.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/jquery.magnific-popup.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/wow.min.js" strategy="afterInteractive" async={false} />
+      <Script src="/js/main.js" strategy="afterInteractive" async={false} />
     </>
   );
 }
